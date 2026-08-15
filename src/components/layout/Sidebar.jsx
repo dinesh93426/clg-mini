@@ -12,7 +12,7 @@ export const Sidebar = ({ isOpen, setIsOpen }) => {
   const { user, logout } = useAuth();
   if (!user) return null;
 
-  const role = user.role.toLowerCase();
+  const role = (user?.role || 'student').toLowerCase();
 
   const getLinks = () => {
     switch (role) {
@@ -133,11 +133,11 @@ export const Sidebar = ({ isOpen, setIsOpen }) => {
         <div className="p-4 border-t border-slate-900 bg-slate-950/40">
           <div className="flex items-center gap-3 px-2 py-3 rounded-lg bg-slate-900/40 border border-slate-800/40 mb-3">
             <div className="flex items-center justify-center w-9 h-9 rounded-full bg-slate-800 text-indigo-400 font-bold border border-slate-700">
-              {user.name.charAt(0)}
+              {user?.name ? user.name.charAt(0) : (user?.email ? user.email.charAt(0).toUpperCase() : 'U')}
             </div>
             <div className="flex-1 min-w-0">
-              <h4 className="text-xs font-semibold text-white truncate">{user.name}</h4>
-              <p className="text-[10px] text-slate-500 truncate capitalize">{user.role} Portal</p>
+              <h4 className="text-xs font-semibold text-white truncate">{user?.name || user?.email || 'User'}</h4>
+              <p className="text-[10px] text-slate-500 truncate capitalize">{(user?.role || role)} Portal</p>
             </div>
           </div>
           

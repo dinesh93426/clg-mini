@@ -119,9 +119,9 @@ export const AdminStudents = () => {
                     <td className="px-6 py-3.5">
                       <div className="flex items-center gap-2.5">
                         <div className="w-7 h-7 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 font-bold">
-                          {s.name.charAt(0)}
+                          {s?.name ? s.name.charAt(0) : 'S'}
                         </div>
-                        <span className="font-semibold text-white">{s.name}</span>
+                        <span className="font-semibold text-white">{s?.name || 'Student'}</span>
                       </div>
                     </td>
                     <td className="px-6 py-3.5 text-slate-400">
