@@ -70,12 +70,22 @@ export const SentimentIntelligence = () => {
             <span>Top Sentiment Drivers (Positive)</span>
           </h4>
           <div className="space-y-2">
-            {data.topPositiveTopics.map(topic => (
-              <div key={topic} className="p-3 bg-slate-900/60 border border-slate-800 rounded-xl flex items-center justify-between text-slate-200">
-                <span>{topic}</span>
-                <span className="text-[10px] text-emerald-450 font-bold bg-emerald-500/10 px-2 py-0.5 rounded-full">High</span>
-              </div>
-            ))}
+            {(!data.topPositiveTopics || data.topPositiveTopics.length === 0) ? (
+              <p className="text-slate-500 py-2">No positive topics identified yet</p>
+            ) : (
+              data.topPositiveTopics.map((item, idx) => {
+                const topicName = typeof item === 'object' ? item.topic : item;
+                const count = typeof item === 'object' ? item.count : null;
+                return (
+                  <div key={idx} className="p-3 bg-slate-900/60 border border-slate-800 rounded-xl flex items-center justify-between text-slate-200">
+                    <span className="font-medium">{topicName}</span>
+                    <span className="text-[10px] text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded-full">
+                      {count !== null ? `${count} mentions` : 'High'}
+                    </span>
+                  </div>
+                );
+              })
+            )}
           </div>
         </div>
 
@@ -86,12 +96,22 @@ export const SentimentIntelligence = () => {
             <span>Key Pain Points (Negative)</span>
           </h4>
           <div className="space-y-2">
-            {data.topNegativeTopics.map(topic => (
-              <div key={topic} className="p-3 bg-slate-900/60 border border-slate-800 rounded-xl flex items-center justify-between text-slate-200">
-                <span>{topic}</span>
-                <span className="text-[10px] text-rose-400 font-bold bg-rose-500/10 px-2 py-0.5 rounded-full">Friction</span>
-              </div>
-            ))}
+            {(!data.topNegativeTopics || data.topNegativeTopics.length === 0) ? (
+              <p className="text-slate-500 py-2">No negative topics identified yet</p>
+            ) : (
+              data.topNegativeTopics.map((item, idx) => {
+                const topicName = typeof item === 'object' ? item.topic : item;
+                const count = typeof item === 'object' ? item.count : null;
+                return (
+                  <div key={idx} className="p-3 bg-slate-900/60 border border-slate-800 rounded-xl flex items-center justify-between text-slate-200">
+                    <span className="font-medium">{topicName}</span>
+                    <span className="text-[10px] text-rose-400 font-bold bg-rose-500/10 px-2 py-0.5 rounded-full">
+                      {count !== null ? `${count} mentions` : 'Friction'}
+                    </span>
+                  </div>
+                );
+              })
+            )}
           </div>
         </div>
       </div>

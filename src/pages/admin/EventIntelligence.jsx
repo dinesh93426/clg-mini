@@ -49,9 +49,9 @@ export const EventIntelligence = () => {
           <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest">Most Popular Campus Events</h3>
           
           <div className="space-y-3">
-            {data.mostPopularEvents.map(e => (
+            {(data.mostPopularEvents || []).map(e => (
               <div 
-                key={e.title}
+                key={e.id || e.title}
                 className="glass-card p-4 rounded-xl border border-slate-900 flex justify-between items-center text-xs"
               >
                 <div>
@@ -83,7 +83,7 @@ export const EventIntelligence = () => {
           <div className="glass-card p-5 rounded-2xl">
             <div className="h-64 text-slate-400 text-xs">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={data.registrationDistribution} layout="vertical" margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
+                <BarChart data={data.registrationDistribution || []} layout="vertical" margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
                   <XAxis type="number" stroke="#64748b" tickLine={false} />
                   <YAxis dataKey="name" type="category" stroke="#64748b" tickLine={false} />

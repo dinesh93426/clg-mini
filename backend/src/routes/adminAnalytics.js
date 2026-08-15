@@ -162,14 +162,43 @@ router.get('/events', authenticateToken, authorizeRoles('ADMIN'), async (req, re
       _count: { _all: true },
     });
 
+    // Most popular events
+    const popularEvents = await prisma.event.findMany({
+      take: 8,
+      include: {
+        _count: { select: { registrations: true } },
+        feedbacks: { select: { rating: true } },
+      },
+      orderBy: { registrations: { _count: 'desc' } },
+    });
+
+    const mostPopularEvents = popularEvents.map(e => {
+      const avg = e.feedbacks.length > 0
+        ? Math.round((e.feedbacks.reduce((a, b) => a + b.rating, 0) / e.feedbacks.length) * 10) / 10
+        : 4.5;
+      return {
+        id: e.id,
+        title: e.title,
+        category: e.category,
+        count: e._count.registrations,
+        rating: avg,
+      };
+    });
+
+    const categoryList = byCategory.map(c => ({
+      category: c.category,
+      name: c.category,
+      registrations: Number(c.totalRegistrations),
+      totalEvents: Number(c.totalEvents),
+      totalRegistrations: Number(c.totalRegistrations),
+      avgRating: Math.round(Number(c.avgRating) * 10) / 10,
+      completed: Number(c.completed),
+    }));
+
     res.json({
-      byCategory: byCategory.map(c => ({
-        category: c.category,
-        totalEvents: Number(c.totalEvents),
-        totalRegistrations: Number(c.totalRegistrations),
-        avgRating: Math.round(Number(c.avgRating) * 10) / 10,
-        completed: Number(c.completed),
-      })),
+      byCategory: categoryList,
+      registrationDistribution: categoryList,
+      mostPopularEvents,
       monthly: monthly.map(m => ({
         month: m.month,
         events: Number(m.events),
