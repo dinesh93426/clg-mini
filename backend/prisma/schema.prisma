@@ -1,0 +1,219 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  STUDENT
+  ORGANIZER
+  ADMIN
+}
+
+enum EventStatus {
+  DRAFT
+  PUBLISHED
+  CANCELLED
+  COMPLETED
+}
+
+enum RegistrationStatus {
+  REGISTERED
+  CANCELLED
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role     @default(STUDENT)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  studentProfile    StudentProfile?
+  organizerProfile  OrganizerProfile?
+  events            Event[]
+  registrations     Registration[]
+  attendances       Attendance[]
+  feedbacks         Feedback[]
+  interactions      EventInteraction[]
+  recommendations   Recommendation[]
+  chatHistories     ChatHistory[]
+  aiGenerations     AIEventGeneration[]
+  studentBehaviors  StudentBehavior[]
+}
+
+model StudentProfile {
+  id              String  @id @default(uuid())
+  userId          String  @unique
+  user            User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  department      String
+  year            Int
+  interests       String[]
+  skills          String[]
+  clusterId       Int?
+  clusterLabel    String?
+  engagementScore Float?
+  attendanceRate  Float?
+}
+
+model OrganizerProfile {
+  id               String  @id @default(uuid())
+  userId           String  @unique
+  user             User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  department       String
+  organizationName String?
+}
+
+model Event {
+  id             String      @id @default(uuid())
+  title          String
+  description    String
+  category       String
+  organizerId    String
+  organizer      User        @relation(fields: [organizerId], references: [id])
+  venue          String
+  eventDate      DateTime
+  startTime      String
+  endTime        String
+  capacity       Int
+  targetAudience String
+  status         EventStatus @default(DRAFT)
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  registrations Registration[]
+  attendances   Attendance[]
+  feedbacks     Feedback[]
+  interactions  EventInteraction[]
+  predictions   EventPrediction[]
+}
+
+model Registration {
+  id           String             @id @default(uuid())
+  studentId    String
+  student      User               @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  eventId      String
+  event        Event              @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  status       RegistrationStatus @default(REGISTERED)
+  registeredAt DateTime           @default(now())
+
+  @@unique([studentId, eventId])
+}
+
+model Attendance {
+  id        String           @id @default(uuid())
+  studentId String
+  student   User             @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  eventId   String
+  event     Event            @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  status    AttendanceStatus @default(PRESENT)
+  markedAt  DateTime         @default(now())
+
+  @@unique([studentId, eventId])
+}
+
+model Feedback {
+  id             String   @id @default(uuid())
+  studentId      String
+  student        User     @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  eventId        String
+  event          Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  rating         Int
+  comment        String?
+  sentiment      String?
+  sentimentScore Float?
+  topics         String[]
+  createdAt      DateTime @default(now())
+
+  @@unique([studentId, eventId])
+}
+
+model EventInteraction {
+  id              String   @id @default(uuid())
+  studentId       String
+  student         User     @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  eventId         String
+  event           Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  interactionType String   // VIEW, REGISTER, CANCEL, LIKE, SHARE
+  createdAt       DateTime @default(now())
+}
+
+model Recommendation {
+  id        String   @id @default(uuid())
+  studentId String
+  student   User     @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  eventId   String
+  score     Float
+  reason    String
+  algorithm String
+  createdAt DateTime @default(now())
+}
+
+model ChatHistory {
+  id        String   @id @default(uuid())
+  studentId String
+  student   User     @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  question  String
+  answer    String
+  sources   Json
+  createdAt DateTime @default(now())
+}
+
+model AIEventGeneration {
+  id            String   @id @default(uuid())
+  organizerId   String
+  organizer     User     @relation(fields: [organizerId], references: [id], onDelete: Cascade)
+  prompt        String
+  generatedData Json
+  createdAt     DateTime @default(now())
+}
+
+model EventPrediction {
+  id                     String   @id @default(uuid())
+  eventId                String
+  event                  Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  predictedRegistrations Int
+  confidence             Float
+  createdAt              DateTime @default(now())
+}
+
+model StudentBehavior {
+  id              String   @id @default(uuid())
+  studentId       String
+  student         User     @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  features        Json
+  clusterId       Int
+  clusterLabel    String
+  engagementScore Float
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model AIInsight {
+  id          String   @id @default(uuid())
+  type        String   // TREND, WARNING, OPPORTUNITY, PREDICTION, RECOMMENDATION
+  title       String
+  description String
+  severity    String   // INFO, WARNING, CRITICAL
+  metadata    Json?
+  createdAt   DateTime @default(now())
+}
+
+model KnowledgeDocument {
+  id         String   @id @default(uuid())
+  document   String
+  embedding  Float[]
+  metadata   Json?
+  sourceType String
+  sourceId   String
+  createdAt  DateTime @default(now())
+}
