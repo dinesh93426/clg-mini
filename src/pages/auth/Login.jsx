@@ -10,6 +10,7 @@ export const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [portalRole, setPortalRole] = useState('student'); // student | organizer | admin
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -24,7 +25,7 @@ export const Login = () => {
     setError('');
 
     try {
-      const data = await login(email, password);
+      const data = await login(email, password, portalRole);
       navigate(`/${data.user.role.toLowerCase()}/dashboard`);
     } catch (err) {
       setError(err.response?.data?.message || 'Invalid email or password.');
@@ -72,6 +73,28 @@ export const Login = () => {
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="glass-panel py-8 px-6 sm:px-10 rounded-2xl shadow-xl border border-slate-800">
+          
+          {/* Portal Selection Tabs */}
+          <div className="flex border-b border-slate-900 mb-6 text-xs font-bold shrink-0">
+            {[
+              { id: 'student', label: 'Student' },
+              { id: 'organizer', label: 'Organizer' },
+              { id: 'admin', label: 'Admin' }
+            ].map(tab => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setPortalRole(tab.id)}
+                className={`flex-1 px-4 py-2 border-b-2 transition-all cursor-pointer
+                  ${portalRole === tab.id 
+                    ? 'border-indigo-500 text-indigo-400 font-semibold bg-indigo-500/5' 
+                    : 'border-transparent text-slate-500 hover:text-slate-300'}`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
           {error && (
             <div className="mb-4 p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center gap-2">
               <AlertCircle size={14} className="shrink-0" />

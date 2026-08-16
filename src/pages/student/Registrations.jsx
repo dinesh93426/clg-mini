@@ -3,7 +3,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { eventService } from '../../services/eventService';
 import { 
   Calendar, MapPin, CheckCircle, Clock, XCircle, AlertTriangle, 
-  Star, MessageSquareCode, ShieldCheck, X, ThumbsUp, Sparkles
+  Star, MessageSquareCode, ShieldCheck, X, ThumbsUp, Sparkles, QrCode
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -21,6 +21,10 @@ export const Registrations = () => {
   const [comment, setComment] = useState('');
   const [feedbackSubmitting, setFeedbackSubmitting] = useState(false);
   const [feedbackResult, setFeedbackResult] = useState(null); // { sentiment, message }
+
+  // QR Modal states
+  const [showQRModal, setShowQRModal] = useState(false);
+  const [selectedQRReg, setSelectedQRReg] = useState(null);
 
   const loadRegistrations = async () => {
     setLoading(true);
@@ -56,6 +60,11 @@ export const Registrations = () => {
     setComment('');
     setFeedbackResult(null);
     setShowFeedbackModal(true);
+  };
+
+  const handleOpenQR = (reg) => {
+    setSelectedQRReg(reg);
+    setShowQRModal(true);
   };
 
   const handleFeedbackSubmit = async (e) => {
@@ -109,6 +118,38 @@ export const Registrations = () => {
   return (
     <div className="space-y-6">
       
+      {/* QR Pass Modal Overlay */}
+      {showQRModal && selectedQRReg && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="bg-slate-900 border border-slate-800 p-8 rounded-3xl w-full max-w-sm space-y-6 shadow-2xl relative text-center">
+            <button 
+              onClick={() => setShowQRModal(false)}
+              className="absolute top-4 right-4 text-slate-500 hover:text-white bg-slate-800 p-1 rounded-full"
+            >
+              <X size={16} />
+            </button>
+
+            <div>
+              <h4 className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest mb-2">Event Pass</h4>
+              <h3 className="text-lg font-bold text-white leading-tight">{selectedQRReg.event.title}</h3>
+              <p className="text-xs text-slate-400 mt-1">{selectedQRReg.event.date} at {selectedQRReg.event.venue}</p>
+            </div>
+
+            <div className="bg-white p-4 rounded-2xl mx-auto w-fit shadow-[0_0_30px_rgba(79,70,229,0.15)] border-4 border-indigo-50">
+              <img 
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${selectedQRReg.event.id}:${user?.id}`} 
+                alt="Event QR Code" 
+                className="w-48 h-48"
+              />
+            </div>
+
+            <p className="text-[10px] text-slate-500 max-w-[200px] mx-auto leading-relaxed">
+              Present this QR code to the event organizers at the venue entrance to check-in.
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Feedback Modal Overlay */}
       {showFeedbackModal && selectedReg && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
@@ -282,6 +323,13 @@ export const Registrations = () => {
               <div className="flex items-center gap-4 w-full md:w-auto justify-end">
                 {activeTab === 'upcoming' && (
                   <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => handleOpenQR(reg)}
+                      className="px-3.5 py-2 rounded-xl text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-500 shadow-[0_0_15px_rgba(79,70,229,0.3)] transition-all flex items-center gap-1.5 cursor-pointer"
+                    >
+                      <QrCode size={14} />
+                      View Pass
+                    </button>
                     <Link
                       to={`/student/events/${reg.event.id}`}
                       className="px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:text-white bg-slate-900 border border-slate-800 hover:bg-slate-800 transition-colors"

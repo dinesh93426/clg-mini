@@ -2,7 +2,7 @@ import apiClient, { DEMO_MODE, simulateNetworkDelay } from './api';
 import { MOCK_USERS } from './mockData';
 
 export const authService = {
-  login: async (email, password) => {
+  login: async (email, password, role = 'student') => {
     await simulateNetworkDelay(600);
     
     if (DEMO_MODE) {
@@ -23,7 +23,7 @@ export const authService = {
       return { user, token };
     }
     
-    const response = await apiClient.post('/auth/login', { email, password });
+    const response = await apiClient.post(`/auth/${role}/login`, { email, password });
     const { user, token } = response.data;
     localStorage.setItem('token', token);
     localStorage.setItem('user', JSON.stringify(user));
@@ -58,7 +58,8 @@ export const authService = {
       return { user: newUser, token };
     }
     
-    const response = await apiClient.post('/auth/register', userData);
+    const rolePath = userData.role || 'student';
+    const response = await apiClient.post(`/auth/${rolePath}/register`, userData);
     const { user, token } = response.data;
     localStorage.setItem('token', token);
     localStorage.setItem('user', JSON.stringify(user));

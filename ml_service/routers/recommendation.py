@@ -144,7 +144,13 @@ def get_recommendations(student_id: str, top_k: int = 10):
     student_map = {s["student_id"]: s for s in students}
     student = student_map.get(student_id)
     if not student:
-        raise HTTPException(status_code=404, detail="Student not found")
+        # Cold start fallback for new/sandbox students
+        student = {
+            "student_id": student_id,
+            "interests": ["Technology", "Workshop", "Hackathon", "Seminar"],
+            "skills": ["AI", "Python", "Web Development"],
+            "cluster_id": None,
+        }
 
     # Events the student is already registered for (exclude)
     registered_event_ids = {

@@ -94,24 +94,28 @@ router.get('/:studentId/recommendations', authenticateToken, async (req, res) =>
     // Fallback: return stored recommendations from DB
     const stored = await prisma.recommendation.findMany({
       where: { studentId },
-      include: {
-        event: {
-          include: {
-            organizer: { select: { name: true } },
-            _count: { select: { registrations: true } }
-          }
-        }
-      },
       orderBy: { score: 'desc' },
       take: 10,
     });
 
     if (stored.length > 0) {
+      const eventIds = stored.map(r => r.eventId);
+      const events = await prisma.event.findMany({
+        where: { id: { in: eventIds } },
+        include: {
+          organizer: { select: { name: true } },
+          _count: { select: { registrations: true } }
+        }
+      });
+      const evMap = Object.fromEntries(events.map(e => [e.id, e]));
+
       return res.json(stored.map(r => {
-        r.event.currentRegistrations = r.event._count.registrations;
-        r.event.organizerName = r.event.organizer?.name || '';
-        return normaliseEvent(r.event, r.score, r.reason, r.algorithm);
-      }));
+        const ev = evMap[r.eventId];
+        if (!ev) return null;
+        ev.currentRegistrations = ev._count.registrations;
+        ev.organizerName = ev.organizer?.name || '';
+        return normaliseEvent(ev, r.score, r.reason, r.algorithm);
+      }).filter(Boolean));
     }
 
     // Final fallback: return popular published events

@@ -12,7 +12,7 @@ export const Register = () => {
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('student');
   const [department, setDepartment] = useState('Computer Science & Engineering');
-  const [year, setYear] = useState('1st Year');
+  const [year, setYear] = useState('1');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -35,7 +35,7 @@ export const Register = () => {
         password,
         role,
         department,
-        year: role === 'student' ? year : undefined
+        year: role === 'student' ? parseInt(year, 10) : undefined
       });
       setSuccess(true);
       setTimeout(() => {
@@ -189,10 +189,10 @@ export const Register = () => {
                     onChange={(e) => setYear(e.target.value)}
                     className="block w-full pl-10 pr-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   >
-                    <option value="1st Year">1st Year (Freshman)</option>
-                    <option value="2nd Year">2nd Year (Sophomore)</option>
-                    <option value="3rd Year">3rd Year (Junior)</option>
-                    <option value="4th Year">4th Year (Senior)</option>
+                    <option value="1">1st Year (Freshman)</option>
+                    <option value="2">2nd Year (Sophomore)</option>
+                    <option value="3">3rd Year (Junior)</option>
+                    <option value="4">4th Year (Senior)</option>
                   </select>
                 </div>
               </div>

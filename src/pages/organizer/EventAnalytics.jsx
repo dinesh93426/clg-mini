@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { eventService } from '../../services/eventService';
 import { analyticsService } from '../../services/analyticsService';
-import { ArrowLeft, Users, Calendar, MapPin, Award, Star, CheckCircle, TrendingUp, AlertTriangle } from 'lucide-react';
+import { ArrowLeft, Users, Calendar, MapPin, Award, Star, CheckCircle, TrendingUp, AlertTriangle, QrCode } from 'lucide-react';
 import { 
   ResponsiveContainer, AreaChart, Area, XAxis, YAxis, 
   CartesianGrid, Tooltip, BarChart, Bar, Legend, PieChart, Pie, Cell 
@@ -104,18 +104,37 @@ export const EventAnalytics = () => {
         <span>Back to Events list</span>
       </button>
 
-      <div>
-        <span className="text-[10px] text-indigo-400 font-bold uppercase tracking-wider">Metrics Deep Dive</span>
-        <h1 className="font-display font-bold text-2xl text-white truncate max-w-lg mt-0.5">{event.title}</h1>
-        <div className="flex flex-wrap items-center gap-4 text-xs text-slate-500 mt-2">
-          <div className="flex items-center gap-1">
-            <Calendar size={12} />
-            <span>{event.date}</span>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <span className="text-[10px] text-indigo-400 font-bold uppercase tracking-wider">Metrics Deep Dive</span>
+          <h1 className="font-display font-bold text-2xl text-white truncate max-w-lg mt-0.5">{event.title}</h1>
+          <div className="flex flex-wrap items-center gap-4 text-xs text-slate-500 mt-2">
+            <div className="flex items-center gap-1">
+              <Calendar size={12} />
+              <span>{event.date}</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <MapPin size={12} />
+              <span>{event.venue}</span>
+            </div>
           </div>
-          <div className="flex items-center gap-1">
-            <MapPin size={12} />
-            <span>{event.venue}</span>
-          </div>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <Link
+            to={`/organizer/events/${id}/scanner`}
+            className="flex items-center gap-2 px-4 py-2 bg-slate-900 hover:bg-slate-850 border border-slate-800 text-slate-300 hover:text-white text-xs font-bold rounded-xl transition-all cursor-pointer"
+          >
+            <QrCode size={14} />
+            <span>Scan Attendance</span>
+          </Link>
+          <Link
+            to={`/organizer/events/${id}/certificates`}
+            className="flex items-center gap-2 px-4 py-2 bg-purple-650 hover:bg-purple-600 border border-purple-500/20 text-white text-xs font-bold rounded-xl shadow-[0_0_15px_rgba(168,85,247,0.15)] transition-all cursor-pointer"
+          >
+            <Award size={14} />
+            <span>Certificates Hub</span>
+          </Link>
         </div>
       </div>
 

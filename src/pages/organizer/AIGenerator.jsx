@@ -22,6 +22,7 @@ export const AIGenerator = () => {
   const [agenda, setAgenda] = useState('');
   const [requirements, setRequirements] = useState('');
   const [duration, setDuration] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
 
   const handleGenerate = async (e) => {
     e.preventDefault();
@@ -43,6 +44,7 @@ export const AIGenerator = () => {
       setAgenda(data.agenda);
       setRequirements(data.requirements);
       setDuration(data.suggestedDuration);
+      setImageUrl(data.imageUrl || 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&q=80');
     } catch (err) {
       setError('AI service failed to generate event structure.');
     } finally {
@@ -62,6 +64,7 @@ export const AIGenerator = () => {
         time: '14:00 - 17:00',
         venue: 'Innovation Seminar Room',
         totalSeats: 100,
+        image: imageUrl,
         tags: [category, 'AI Generated']
       });
 
@@ -186,6 +189,16 @@ export const AIGenerator = () => {
                   </button>
                 </div>
               </div>
+
+              {/* AI Generated Image Preview */}
+              {imageUrl && (
+                <div className="w-full h-48 rounded-xl overflow-hidden border border-slate-800 relative group">
+                  <img src={imageUrl} alt="AI Generated Event Cover" className="w-full h-full object-cover" />
+                  <div className="absolute top-2 left-2 bg-purple-600/90 text-white text-[9px] font-bold uppercase tracking-widest px-2 py-1 rounded shadow-lg backdrop-blur-sm flex items-center gap-1">
+                    <Sparkles size={10} /> AI Generated Cover
+                  </div>
+                </div>
+              )}
 
               {/* Editable Fields Form */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

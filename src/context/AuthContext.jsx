@@ -14,10 +14,10 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
-  const login = async (email, password) => {
+  const login = async (email, password, role = 'student') => {
     setLoading(true);
     try {
-      const data = await authService.login(email, password);
+      const data = await authService.login(email, password, role);
       setUser(data.user);
       return data;
     } finally {

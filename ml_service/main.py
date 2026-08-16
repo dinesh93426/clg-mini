@@ -23,14 +23,13 @@ logger = logging.getLogger("ml_service.startup")
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
 
 
-async def _auto_train():
+def _auto_train():
     """
     Auto-train all models that require pre-training on startup.
-    Runs in the background after the server is ready — errors are
-    logged but never crash the service.
+    Runs in a background thread — errors are logged but never crash or block the service.
     """
-    # Small delay so uvicorn finishes binding before we hit the DB
-    await asyncio.sleep(3)
+    import time
+    time.sleep(1)
 
     # ── 1. K-Means student behavior clustering ──────────────────────────────
     logger.info("[startup] Training student behavior model (K-Means)...")
@@ -146,16 +145,11 @@ async def _auto_train():
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Run startup tasks in background, yield control to FastAPI, then clean up."""
-    task = asyncio.create_task(_auto_train())
+    """Run startup tasks in background thread, yield control to FastAPI."""
+    import threading
+    t = threading.Thread(target=_auto_train, daemon=True)
+    t.start()
     yield
-    # Graceful cancel if still running on shutdown
-    if not task.done():
-        task.cancel()
-        try:
-            await task
-        except asyncio.CancelledError:
-            pass
 
 
 app = FastAPI(

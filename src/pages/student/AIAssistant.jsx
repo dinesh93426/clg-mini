@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { aiService } from '../../services/aiService';
 import { MOCK_CHAT_HISTORY, MOCK_EVENTS } from '../../services/mockData';

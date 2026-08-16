@@ -75,11 +75,13 @@ export const aiService = {
       let agenda = "09:00 - Introduction & LLM Foundations\n10:30 - Tea Break\n10:45 - Hands-on: Building prompts & API calls\n13:00 - Lunch Break\n14:00 - Team Coding Sprint: AI Prototypes\n16:30 - Showcases & Closing Notes";
       let requirements = "Basic programming knowledge in Python or JavaScript. Bring your laptop with Node.js and Python 3.9+ installed.";
       let suggestedDuration = "1 Day (8 Hours)";
+      let imageUrl = "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80&w=800";
 
       if (pr.includes("generative ai") || pr.includes("generative")) {
         title = "Generative AI Hack-Sprint for CSE";
         category = "AI";
         description = "Collaborative sprint focused on building user experiences powered by generative models like GPT-4, Gemini, and Stable Diffusion. Build, deploy, and showcase.";
+        imageUrl = "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=800";
       } else if (pr.includes("react") || pr.includes("frontend") || pr.includes("next")) {
         title = "Modern Frontend Bootcamp with Next.js";
         category = "Technology";
@@ -87,6 +89,7 @@ export const aiService = {
         targetAudience = "All students interested in web development and full-stack engineering.";
         requirements = "Familiarity with basic HTML, CSS, and JavaScript. Active GitHub account.";
         suggestedDuration = "2 Days (12 Hours total)";
+        imageUrl = "https://images.unsplash.com/photo-1633356122544-f134324a6cee?auto=format&fit=crop&q=80&w=800";
       } else if (pr.includes("business") || pr.includes("entrepreneur") || pr.includes("pitch")) {
         title = "Business Design Sprint: Zero to MVP";
         category = "Business";
@@ -94,6 +97,7 @@ export const aiService = {
         targetAudience = "Open to all disciplines: Engineering, MBA, and Design students.";
         objectives = "1. Validate a startup idea.\n2. Create a functional pitch deck.\n3. Present to campus advisors.";
         suggestedDuration = "4 Hours";
+        imageUrl = "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&q=80&w=800";
       }
 
       return {
@@ -105,6 +109,7 @@ export const aiService = {
         agenda,
         requirements,
         suggestedDuration,
+        imageUrl,
         tags: [category, "AI Generated", "Bootcamp"]
       };
     }

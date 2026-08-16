@@ -6,12 +6,6 @@ datasource db {
   provider = "postgresql"
 }
 
-enum Role {
-  STUDENT
-  ORGANIZER
-  ADMIN
-}
-
 enum EventStatus {
   DRAFT
   PUBLISHED
@@ -29,32 +23,11 @@ enum AttendanceStatus {
   ABSENT
 }
 
-model User {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  password  String
-  role      Role     @default(STUDENT)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  studentProfile    StudentProfile?
-  organizerProfile  OrganizerProfile?
-  events            Event[]
-  registrations     Registration[]
-  attendances       Attendance[]
-  feedbacks         Feedback[]
-  interactions      EventInteraction[]
-  recommendations   Recommendation[]
-  chatHistories     ChatHistory[]
-  aiGenerations     AIEventGeneration[]
-  studentBehaviors  StudentBehavior[]
-}
-
-model StudentProfile {
-  id              String  @id @default(uuid())
-  userId          String  @unique
-  user            User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+model Student {
+  id              String   @id @default(uuid())
+  name            String
+  email           String   @unique
+  password        String
   department      String
   year            Int
   interests       String[]
@@ -63,14 +36,39 @@ model StudentProfile {
   clusterLabel    String?
   engagementScore Float?
   attendanceRate  Float?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  registrations     Registration[]
+  attendances       Attendance[]
+  feedbacks         Feedback[]
+  interactions      EventInteraction[]
+  recommendations   Recommendation[]
+  chatHistories     ChatHistory[]
+  studentBehaviors  StudentBehavior[]
 }
 
-model OrganizerProfile {
-  id               String  @id @default(uuid())
-  userId           String  @unique
-  user             User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+model Organizer {
+  id               String   @id @default(uuid())
+  name             String
+  email            String   @unique
+  password         String
   department       String
   organizationName String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  events           Event[]
+  aiGenerations    AIEventGeneration[]
+}
+
+model Admin {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Event {
@@ -79,7 +77,7 @@ model Event {
   description    String
   category       String
   organizerId    String
-  organizer      User        @relation(fields: [organizerId], references: [id])
+  organizer      Organizer   @relation(fields: [organizerId], references: [id])
   venue          String
   eventDate      DateTime
   startTime      String
@@ -100,7 +98,7 @@ model Event {
 model Registration {
   id           String             @id @default(uuid())
   studentId    String
-  student      User               @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  student      Student            @relation(fields: [studentId], references: [id], onDelete: Cascade)
   eventId      String
   event        Event              @relation(fields: [eventId], references: [id], onDelete: Cascade)
   status       RegistrationStatus @default(REGISTERED)
@@ -112,7 +110,7 @@ model Registration {
 model Attendance {
   id        String           @id @default(uuid())
   studentId String
-  student   User             @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  student   Student          @relation(fields: [studentId], references: [id], onDelete: Cascade)
   eventId   String
   event     Event            @relation(fields: [eventId], references: [id], onDelete: Cascade)
   status    AttendanceStatus @default(PRESENT)
@@ -124,7 +122,7 @@ model Attendance {
 model Feedback {
   id             String   @id @default(uuid())
   studentId      String
-  student        User     @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  student        Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
   eventId        String
   event          Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
   rating         Int
@@ -140,7 +138,7 @@ model Feedback {
 model EventInteraction {
   id              String   @id @default(uuid())
   studentId       String
-  student         User     @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  student         Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
   eventId         String
   event           Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
   interactionType String   // VIEW, REGISTER, CANCEL, LIKE, SHARE
@@ -150,7 +148,7 @@ model EventInteraction {
 model Recommendation {
   id        String   @id @default(uuid())
   studentId String
-  student   User     @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
   eventId   String
   score     Float
   reason    String
@@ -161,7 +159,7 @@ model Recommendation {
 model ChatHistory {
   id        String   @id @default(uuid())
   studentId String
-  student   User     @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
   question  String
   answer    String
   sources   Json
@@ -169,12 +167,12 @@ model ChatHistory {
 }
 
 model AIEventGeneration {
-  id            String   @id @default(uuid())
+  id            String    @id @default(uuid())
   organizerId   String
-  organizer     User     @relation(fields: [organizerId], references: [id], onDelete: Cascade)
+  organizer     Organizer @relation(fields: [organizerId], references: [id], onDelete: Cascade)
   prompt        String
   generatedData Json
-  createdAt     DateTime @default(now())
+  createdAt     DateTime  @default(now())
 }
 
 model EventPrediction {
@@ -189,7 +187,7 @@ model EventPrediction {
 model StudentBehavior {
   id              String   @id @default(uuid())
   studentId       String
-  student         User     @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  student         Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
   features        Json
   clusterId       Int
   clusterLabel    String

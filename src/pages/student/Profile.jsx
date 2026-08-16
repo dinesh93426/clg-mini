@@ -10,11 +10,38 @@ export const Profile = () => {
   const [interests, setInterests] = useState(user?.interests || []);
   const [newInterest, setNewInterest] = useState('');
   const [success, setSuccess] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editForm, setEditForm] = useState({
+    name: user?.name || '',
+    department: user?.department || '',
+    year: user?.year || '1'
+  });
 
-  const handleAddSkill = (e) => {
-    e.preventDefault();
-    if (newSkill.trim() && !skills.includes(newSkill.trim())) {
-      const updated = [...skills, newSkill.trim()];
+  const DEPARTMENT_RECOMMENDATIONS = {
+    'Computer Science & Engineering': {
+      skills: ['React', 'Node.js', 'Python', 'Machine Learning', 'AWS', 'Docker'],
+      interests: ['AI Hackathons', 'Open Source', 'Web3', 'Competitive Programming']
+    },
+    'Electronics & Communication': {
+      skills: ['Verilog', 'IoT', 'Embedded C', 'MATLAB'],
+      interests: ['Robotics', 'Signal Processing', 'Circuit Design']
+    },
+    'Mechanical Engineering': {
+      skills: ['AutoCAD', 'SolidWorks', 'Thermodynamics', 'Robotics'],
+      interests: ['Automotive', 'Aerospace', 'Manufacturing']
+    },
+    'Business Administration': {
+      skills: ['Excel', 'Marketing', 'Data Analysis', 'Project Management'],
+      interests: ['Startup Pitch', 'Finance', 'Consulting']
+    }
+  };
+
+  const currentRecs = DEPARTMENT_RECOMMENDATIONS[user?.department] || { skills: ['Leadership', 'Communication'], interests: ['Workshops', 'Seminars'] };
+
+  const handleAddSkill = (e, skillToAdd = newSkill) => {
+    if (e) e.preventDefault();
+    if (skillToAdd.trim() && !skills.includes(skillToAdd.trim())) {
+      const updated = [...skills, skillToAdd.trim()];
       setSkills(updated);
       updateProfile({ skills: updated });
       setNewSkill('');
@@ -22,15 +49,21 @@ export const Profile = () => {
     }
   };
 
-  const handleAddInterest = (e) => {
-    e.preventDefault();
-    if (newInterest.trim() && !interests.includes(newInterest.trim())) {
-      const updated = [...interests, newInterest.trim()];
+  const handleAddInterest = (e, interestToAdd = newInterest) => {
+    if (e) e.preventDefault();
+    if (interestToAdd.trim() && !interests.includes(interestToAdd.trim())) {
+      const updated = [...interests, interestToAdd.trim()];
       setInterests(updated);
       updateProfile({ interests: updated });
       setNewInterest('');
       triggerSuccess();
     }
+  };
+
+  const handleSaveProfile = async () => {
+    await updateProfile(editForm);
+    setIsEditing(false);
+    triggerSuccess();
   };
 
   const triggerSuccess = () => {
@@ -54,30 +87,60 @@ export const Profile = () => {
           
           {/* Personal Info Card */}
           <div className="glass-card p-6 rounded-2xl space-y-4">
-            <h3 className="text-sm font-bold text-white border-b border-slate-900 pb-3">Personal Information</h3>
+            <div className="flex justify-between items-center border-b border-slate-900 pb-3">
+              <h3 className="text-sm font-bold text-white">Personal Information</h3>
+              <button 
+                onClick={() => isEditing ? handleSaveProfile() : setIsEditing(true)}
+                className="text-xs font-bold text-indigo-400 hover:text-indigo-300 px-3 py-1 rounded-lg bg-indigo-500/10 border border-indigo-500/20 transition-all cursor-pointer"
+              >
+                {isEditing ? 'Save Changes' : 'Edit Profile'}
+              </button>
+            </div>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 text-xs">
               <div className="space-y-1">
                 <span className="text-slate-500 font-bold uppercase tracking-wider text-[9px] block">Full Name</span>
                 <div className="flex items-center gap-2 text-slate-200 py-1">
-                  <User size={14} className="text-slate-500" />
-                  <span>{user?.name}</span>
+                  <User size={14} className="text-slate-500 shrink-0" />
+                  {isEditing ? (
+                    <input 
+                      type="text" 
+                      value={editForm.name} 
+                      onChange={e => setEditForm({...editForm, name: e.target.value})}
+                      className="bg-slate-900 border border-slate-700 rounded px-2 py-1 w-full focus:outline-none focus:border-indigo-500"
+                    />
+                  ) : (
+                    <span>{user?.name}</span>
+                  )}
                 </div>
               </div>
 
               <div className="space-y-1">
                 <span className="text-slate-500 font-bold uppercase tracking-wider text-[9px] block">Email Address</span>
                 <div className="flex items-center gap-2 text-slate-200 py-1">
-                  <Mail size={14} className="text-slate-500" />
-                  <span>{user?.email}</span>
+                  <Mail size={14} className="text-slate-500 shrink-0" />
+                  <span className="opacity-70">{user?.email} (Cannot edit)</span>
                 </div>
               </div>
 
               <div className="space-y-1">
                 <span className="text-slate-500 font-bold uppercase tracking-wider text-[9px] block">Academic Department</span>
                 <div className="flex items-center gap-2 text-slate-200 py-1">
-                  <Building2 size={14} className="text-slate-500" />
-                  <span>{user?.department}</span>
+                  <Building2 size={14} className="text-slate-500 shrink-0" />
+                  {isEditing ? (
+                    <select 
+                      value={editForm.department} 
+                      onChange={e => setEditForm({...editForm, department: e.target.value})}
+                      className="bg-slate-900 border border-slate-700 rounded px-2 py-1 w-full focus:outline-none focus:border-indigo-500"
+                    >
+                      <option value="Computer Science & Engineering">CSE</option>
+                      <option value="Electronics & Communication">ECE</option>
+                      <option value="Mechanical Engineering">ME</option>
+                      <option value="Business Administration">MBA</option>
+                    </select>
+                  ) : (
+                    <span>{user?.department}</span>
+                  )}
                 </div>
               </div>
 
@@ -85,8 +148,21 @@ export const Profile = () => {
                 <div className="space-y-1">
                   <span className="text-slate-500 font-bold uppercase tracking-wider text-[9px] block">Enrollment Year</span>
                   <div className="flex items-center gap-2 text-slate-200 py-1">
-                    <GraduationCap size={14} className="text-slate-500" />
-                    <span>{user?.year}</span>
+                    <GraduationCap size={14} className="text-slate-500 shrink-0" />
+                    {isEditing ? (
+                      <select 
+                        value={editForm.year} 
+                        onChange={e => setEditForm({...editForm, year: e.target.value})}
+                        className="bg-slate-900 border border-slate-700 rounded px-2 py-1 w-full focus:outline-none focus:border-indigo-500"
+                      >
+                        <option value="1">1st Year</option>
+                        <option value="2">2nd Year</option>
+                        <option value="3">3rd Year</option>
+                        <option value="4">4th Year</option>
+                      </select>
+                    ) : (
+                      <span>{user?.year}</span>
+                    )}
                   </div>
                 </div>
               )}
@@ -109,6 +185,21 @@ export const Profile = () => {
                     {interest}
                   </span>
                 ))}
+              </div>
+
+              <div className="space-y-2 pt-2 border-t border-slate-900">
+                <span className="text-[9px] text-slate-500 font-bold uppercase tracking-wider block">Recommended for {user?.department}</span>
+                <div className="flex flex-wrap gap-1.5">
+                  {currentRecs.interests.filter(i => !interests.includes(i)).map(rec => (
+                    <button 
+                      key={rec}
+                      onClick={() => handleAddInterest(null, rec)}
+                      className="text-[9px] px-2 py-0.5 rounded border border-slate-800 text-slate-400 hover:text-white hover:border-slate-600 transition-colors cursor-pointer flex items-center gap-1"
+                    >
+                      <Plus size={10} /> {rec}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               <form onSubmit={handleAddInterest} className="flex gap-2">
@@ -138,6 +229,21 @@ export const Profile = () => {
                     {skill}
                   </span>
                 ))}
+              </div>
+
+              <div className="space-y-2 pt-2 border-t border-slate-900">
+                <span className="text-[9px] text-slate-500 font-bold uppercase tracking-wider block">Recommended for {user?.department}</span>
+                <div className="flex flex-wrap gap-1.5">
+                  {currentRecs.skills.filter(s => !skills.includes(s)).map(rec => (
+                    <button 
+                      key={rec}
+                      onClick={() => handleAddSkill(null, rec)}
+                      className="text-[9px] px-2 py-0.5 rounded border border-slate-800 text-slate-400 hover:text-white hover:border-slate-600 transition-colors cursor-pointer flex items-center gap-1"
+                    >
+                      <Plus size={10} /> {rec}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               <form onSubmit={handleAddSkill} className="flex gap-2">

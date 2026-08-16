@@ -36,6 +36,8 @@ import { EventAnalytics } from './pages/organizer/EventAnalytics';
 import { AIGenerator } from './pages/organizer/AIGenerator';
 import { FeedbackIntelligence } from './pages/organizer/Feedback';
 import { OrganizerProfile } from './pages/organizer/Profile';
+import { Certificates } from './pages/organizer/Certificates';
+import { Scanner } from './pages/organizer/Scanner';
 
 // Admin pages
 import { AdminDashboard } from './pages/admin/Dashboard';
@@ -221,6 +223,8 @@ const AppContent = () => {
           <Route path="/organizer/events" element={<OrganizerEvents />} />
           <Route path="/organizer/events/create" element={<EventCreate />} />
           <Route path="/organizer/events/:id/analytics" element={<EventAnalytics />} />
+          <Route path="/organizer/events/:id/certificates" element={<Certificates />} />
+          <Route path="/organizer/events/:id/scanner" element={<Scanner />} />
           <Route path="/organizer/ai-generator" element={<AIGenerator />} />
           <Route path="/organizer/feedback" element={<FeedbackIntelligence />} />
           <Route path="/organizer/profile" element={<OrganizerProfile />} />
