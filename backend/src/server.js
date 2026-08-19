@@ -36,6 +36,21 @@ app.use('/api/admin',           adminAnalyticsRoutes);   // /api/admin/organizer
 // Organizer analytics
 app.use('/api/organizer/analytics', organizerRoutes);
 
+app.get('/', (req, res) => {
+  res.json({
+    status: 'online',
+    service: 'EventIntel AI Backend API',
+    version: '1.0.0',
+    endpoints: {
+      health: '/health',
+      auth: '/api/auth',
+      events: '/api/events',
+      ai: '/api/ai',
+      analytics: '/api/admin/analytics'
+    }
+  });
+});
+
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', service: 'college-events-api' });
 });
