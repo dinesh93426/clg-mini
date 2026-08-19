@@ -1,653 +1,1005 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
+import { eventService } from '../services/eventService';
+import { recommendationService } from '../services/recommendationService';
+import { aiService } from '../services/aiService';
+import { EventCard } from '../components/events/EventCard';
 import { 
-  BrainCircuit, Sparkles, BarChart3, Users, Compass, 
-  CalendarRange, CheckCircle2, ArrowRight, ShieldAlert, Cpu,
-  TrendingUp, MessageSquare, ShieldCheck, Zap, Activity, Clock,
-  ArrowUpRight, ChevronRight, Play, Quote, Check, Info, AlertTriangle,
-  Lightbulb, Database, Network, Eye, RefreshCw, Layers, Star, Image, HelpCircle
+  Search, Calendar, MapPin, Users, Sparkles, CheckCircle2, 
+  ArrowRight, BrainCircuit, Filter, Layers, Compass, 
+  Tag, Send, Bot, User, GraduationCap, LogOut, ChevronRight,
+  Clock, Star, Award, Activity, Check, Bookmark, AlertCircle,
+  HelpCircle, RefreshCw
 } from 'lucide-react';
-import {
-  ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip,
-  BarChart, Bar, Cell, PieChart, Pie
-} from 'recharts';
 
-// Custom CountUp Component using requestAnimationFrame for smooth numeric counting
-const CountUp = ({ end, duration = 1.5, suffix = "" }) => {
-  const [count, setCount] = useState(0);
-  const elementRef = useRef(null);
-  const [isVisible, setIsVisible] = useState(false);
+const CATEGORIES = [
+  'All',
+  'Technical',
+  'Workshop',
+  'Hackathon',
+  'Seminar',
+  'Cultural',
+  'Sports',
+  'Career',
+  'Entrepreneurship',
+  'Club Activities'
+];
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      { threshold: 0.1 }
-    );
-    
-    if (elementRef.current) {
-      observer.observe(elementRef.current);
-    }
-    
-    return () => {
-      if (elementRef.current) {
-        observer.unobserve(elementRef.current);
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!isVisible) return;
-    
-    let startTime = null;
-    const animate = (timestamp) => {
-      if (!startTime) startTime = timestamp;
-      const progress = Math.min((timestamp - startTime) / (duration * 1000), 1);
-      setCount(Math.floor(progress * end));
-      if (progress < 1) {
-        requestAnimationFrame(animate);
-      }
-    };
-    requestAnimationFrame(animate);
-  }, [end, duration, isVisible]);
-  
-  return (
-    <span ref={elementRef}>
-      {count.toLocaleString()}{suffix}
-    </span>
-  );
-};
+const DEPARTMENTS = [
+  'All Departments',
+  'Computer Science',
+  'Information Technology',
+  'Electronics & Comm.',
+  'Electrical & Electronics',
+  'Mechanical Eng.',
+  'Civil Eng.',
+  'AI & Data Science',
+  'AI & Machine Learning'
+];
 
 export const LandingPage = () => {
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const [scrolled, setScrolled] = useState(false);
-  const [activeRoleTab, setActiveRoleTab] = useState('organizer');
 
-  useEffect(() => {
-    document.title = "EventIntel AI | Enterprise Campus Event Intelligence Platform";
-  }, []);
+  // Data states
+  const [allEvents, setAllEvents] = useState([]);
+  const [recommendations, setRecommendations] = useState([]);
+  const [myRegistrations, setMyRegistrations] = useState([]);
+  const [loadingEvents, setLoadingEvents] = useState(true);
+  const [loadingRecs, setLoadingRecs] = useState(false);
+  const [registeringId, setRegisteringId] = useState(null);
+  const [toastMessage, setToastMessage] = useState(null);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  // Search & Filter state
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedDepartment, setSelectedDepartment] = useState('All Departments');
 
-  const handleStart = () => {
-    navigate('/login');
-  };
-
-  const handleRegister = () => {
-    navigate('/register');
-  };
-
-  // Light theme mock chart data
-  const heroEngagementData = [
-    { week: 'W1', score: 62 },
-    { week: 'W2', score: 68 },
-    { week: 'W3', score: 74 },
-    { week: 'W4', score: 87 },
-  ];
-
-  const engagementTrend = [
-    { name: 'Mon', registrations: 45, attendance: 42 },
-    { name: 'Tue', registrations: 68, attendance: 65 },
-    { name: 'Wed', registrations: 71, attendance: 70 },
-    { name: 'Thu', registrations: 85, attendance: 82 },
-    { name: 'Fri', registrations: 95, attendance: 92 },
-    { name: 'Sat', registrations: 60, attendance: 58 },
-    { name: 'Sun', registrations: 90, attendance: 88 },
-  ];
-
-  const categoryBreakdown = [
-    { name: 'Workshop', value: 90 },
-    { name: 'Hackathon', value: 60 },
-    { name: 'Seminar', value: 45 },
-    { name: 'Technical', value: 30 }
-  ];
-
-  const aiModules = [
+  // Interactive AI Assistant State
+  const [chatMessages, setChatMessages] = useState([
     {
-      id: "01",
-      title: "Student Behavior Intelligence",
-      algorithm: "K-Means Clustering (k=3)",
-      description: "Discovers student engagement archetypes (Highly Active, Moderately Active, Low Engagement) to drive personalized retention.",
-      icon: Users
-    },
-    {
-      id: "02",
-      title: "Feedback Sentiment Engine",
-      algorithm: "Fine-Tuned RoBERTa Transformer",
-      description: "Classifies qualitative event comments into Positive, Neutral, or Negative sentiment with 100% evaluated benchmark accuracy.",
-      icon: MessageSquare
-    },
-    {
-      id: "03",
-      title: "Event Demand Prediction",
-      algorithm: "Ridge Regression + Random Forest",
-      description: "Forecasts expected registration volume before event launch to prevent venue capacity bottlenecks.",
-      icon: TrendingUp
-    },
-    {
-      id: "04",
-      title: "Personalized Recommendation",
-      algorithm: "Hybrid TF-IDF + Cosine Similarity",
-      description: "Matches upcoming seminars and workshops to individual student profiles with 100% precision@5 metrics.",
-      icon: Sparkles
-    },
-    {
-      id: "05",
-      title: "RAG AI Event Assistant",
-      algorithm: "Retrieval-Augmented Generation",
-      description: "Campus-grounded AI conversational assistant that strictly answers verified event questions without hallucinations.",
-      icon: BrainCircuit
-    },
-    {
-      id: "06",
-      title: "AI Event Poster Generator",
-      algorithm: "Visual Prompt Synthesis",
-      description: "Generates high-resolution academic posters with layout composition, badges, and typography.",
-      icon: Image
-    },
-    {
-      id: "07",
-      title: "AI Event Analytics & Insights",
-      algorithm: "Statistical Telemetry Aggregator",
-      description: "Computes institutional attendance conversion, category leaderboards, and departmental engagement scores.",
-      icon: BarChart3
-    },
-    {
-      id: "08",
-      title: "Early Warning System",
-      algorithm: "Rule-Based Risk Engine",
-      description: "Scans active events in real-time to flag capacity overloads, low registration paces, and negative feedback spikes.",
-      icon: ShieldAlert
-    },
-    {
-      id: "09",
-      title: "Automated Certificate Engine",
-      algorithm: "Cryptographic Attendance Verification",
-      description: "Generates verifiable digital credentials exclusively for students with recorded event attendance.",
-      icon: ShieldCheck
-    },
-    {
-      id: "10",
-      title: "Campus Command OS",
-      algorithm: "Role-Based Access Control",
-      description: "Centralized dual-role dashboards tailored for Event Organizers and University Administrators.",
-      icon: Layers
+      role: 'assistant',
+      text: 'Hi there! I am your Campus Event Assistant. Ask me about upcoming workshops, hackathons, guest lectures, or seating availability across all departments!'
     }
-  ];
+  ]);
+  const [chatInput, setChatInput] = useState('');
+  const [chatLoading, setChatLoading] = useState(false);
+
+  const isStudent = user && user.role && user.role.toLowerCase() === 'student';
+
+  // 1. Fetch public events on load
+  useEffect(() => {
+    document.title = isStudent 
+      ? `Student Portal | EventIntel AI` 
+      : "Campus Events Portal | Discover & Experience Campus Life";
+
+    const fetchEvents = async () => {
+      setLoadingEvents(true);
+      try {
+        const events = await eventService.getEvents();
+        setAllEvents(events || []);
+      } catch (err) {
+        console.error("Failed to load events:", err);
+      } finally {
+        setLoadingEvents(false);
+      }
+    };
+
+    fetchEvents();
+  }, [isStudent]);
+
+  // 2. If authenticated student, fetch personalized data (recommendations & registrations)
+  useEffect(() => {
+    if (!isStudent || !user?.id) return;
+
+    const fetchPersonalizedData = async () => {
+      setLoadingRecs(true);
+      try {
+        const [recs, regs] = await Promise.allSettled([
+          recommendationService.getRecommendationsForStudent(user.id),
+          eventService.getRegistrations(user.id)
+        ]);
+
+        if (recs.status === 'fulfilled' && recs.value) {
+          setRecommendations(recs.value);
+        }
+        if (regs.status === 'fulfilled' && regs.value) {
+          setMyRegistrations(regs.value);
+        }
+      } catch (err) {
+        console.warn("Could not load full student personalization:", err);
+      } finally {
+        setLoadingRecs(false);
+      }
+    };
+
+    fetchPersonalizedData();
+  }, [isStudent, user?.id]);
+
+  // Toast notification helper
+  const showToast = (msg) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 4000);
+  };
+
+  // Event Registration handler
+  const handleRegisterEvent = async (event) => {
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+
+    if (user.role.toLowerCase() !== 'student') {
+      showToast('Only students can register for events.');
+      return;
+    }
+
+    setRegisteringId(event.id);
+    try {
+      await eventService.registerForEvent(event.id, user.id);
+      showToast(`Successfully registered for ${event.title}!`);
+      
+      // Refresh registrations and events list
+      const [updatedRegs, updatedEvents] = await Promise.all([
+        eventService.getRegistrations(user.id),
+        eventService.getEvents()
+      ]);
+      setMyRegistrations(updatedRegs || []);
+      setAllEvents(updatedEvents || []);
+    } catch (err) {
+      showToast(err.message || 'Registration failed. Please try again.');
+    } finally {
+      setRegisteringId(null);
+    }
+  };
+
+  // Chat message submit
+  const handleSendChatMessage = async (e) => {
+    e?.preventDefault();
+    const query = chatInput.trim();
+    if (!query || chatLoading) return;
+
+    const newMessages = [...chatMessages, { role: 'user', text: query }];
+    setChatMessages(newMessages);
+    setChatInput('');
+    setChatLoading(true);
+
+    try {
+      const studentProfile = isStudent ? {
+        department: user.department,
+        year: user.year,
+        interests: user.interests || []
+      } : null;
+
+      const response = await aiService.sendMessageToAssistant(newMessages, studentProfile);
+      setChatMessages([
+        ...newMessages,
+        {
+          role: 'assistant',
+          text: response.text || response.answer || "Here is what I found about campus events.",
+          sources: response.sources || []
+        }
+      ]);
+    } catch (err) {
+      setChatMessages([
+        ...newMessages,
+        {
+          role: 'assistant',
+          text: "I'm having a little trouble querying the event knowledge base right now. Please try again in a moment."
+        }
+      ]);
+    } finally {
+      setChatLoading(false);
+    }
+  };
+
+  // Filtered Events logic
+  const filteredEvents = useMemo(() => {
+    return allEvents.filter(event => {
+      // Category filter
+      if (selectedCategory !== 'All') {
+        const catMatch = (event.category || '').toLowerCase() === selectedCategory.toLowerCase();
+        if (!catMatch) return false;
+      }
+
+      // Department filter
+      if (selectedDepartment !== 'All Departments') {
+        const dept = (event.department || event.organizer || '').toLowerCase();
+        const target = selectedDepartment.toLowerCase();
+        if (!dept.includes(target) && !target.includes(dept)) return false;
+      }
+
+      // Search query
+      if (searchQuery.trim()) {
+        const q = searchQuery.toLowerCase();
+        const inTitle = (event.title || '').toLowerCase().includes(q);
+        const inDesc = (event.description || '').toLowerCase().includes(q);
+        const inCat = (event.category || '').toLowerCase().includes(q);
+        const inDept = (event.department || event.organizer || '').toLowerCase().includes(q);
+        const inVenue = (event.venue || '').toLowerCase().includes(q);
+        if (!inTitle && !inDesc && !inCat && !inDept && !inVenue) return false;
+      }
+
+      return true;
+    });
+  }, [allEvents, selectedCategory, selectedDepartment, searchQuery]);
+
+  // Featured Events (top 3)
+  const featuredEvents = useMemo(() => {
+    return allEvents.slice(0, 3);
+  }, [allEvents]);
+
+  // Registered event ID set for O(1) checks
+  const registeredEventIds = useMemo(() => {
+    return new Set(myRegistrations.map(r => r.eventId || r.event?.id));
+  }, [myRegistrations]);
+
+  // Events matching student's explicit interests
+  const interestEvents = useMemo(() => {
+    if (!isStudent || !user?.interests || user.interests.length === 0) {
+      return allEvents.slice(0, 4);
+    }
+    const studentInterests = user.interests.map(i => i.toLowerCase());
+    return allEvents.filter(e => {
+      const cat = (e.category || '').toLowerCase();
+      const title = (e.title || '').toLowerCase();
+      const desc = (e.description || '').toLowerCase();
+      return studentInterests.some(i => cat.includes(i) || title.includes(i) || desc.includes(i));
+    }).slice(0, 4);
+  }, [allEvents, isStudent, user?.interests]);
 
   return (
-    <div className="bg-[#F8FAFC] text-[#172033] min-h-screen selection:bg-[#EEF2FF] selection:text-[#4F46E5] relative font-sans antialiased">
-      {/* Top Navigation Bar */}
-      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-150 ${
-        scrolled ? 'bg-[#FFFFFF] border-b border-[#E2E8F0] shadow-xs' : 'bg-[#FFFFFF]/90 backdrop-blur-md border-b border-[#E2E8F0]'
-      }`}>
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-[#4F46E5] text-white shadow-xs">
-              <BrainCircuit size={17} />
+    <div className="min-h-screen bg-[#F8FAFC] text-[#172033] flex flex-col font-sans selection:bg-[#EEF2FF] selection:text-[#4F46E5]">
+      
+      {/* Toast Notification */}
+      {toastMessage && (
+        <div className="fixed bottom-6 right-6 z-50 bg-[#172033] text-white px-4 py-3 rounded-xl shadow-lg border border-[#334155] text-xs flex items-center gap-2.5 animate-in fade-in slide-in-from-bottom-2">
+          <CheckCircle2 size={16} className="text-[#10B981] shrink-0" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
+
+      {/* ── HEADER / NAVIGATION ────────────────────────────────────────── */}
+      <header className="sticky top-0 z-40 bg-[#FFFFFF]/95 backdrop-blur-md border-b border-[#E2E8F0]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+          
+          {/* Logo & Platform Name */}
+          <Link to="/" className="flex items-center gap-2.5 group">
+            <div className="w-9 h-9 rounded-xl bg-[#4F46E5] text-white flex items-center justify-center shadow-xs group-hover:bg-[#4338CA] transition-colors">
+              <BrainCircuit size={20} />
             </div>
             <div>
-              <span className="font-semibold text-base tracking-tight text-[#172033]">
-                EventIntel <span className="text-[#4F46E5] font-bold">AI</span>
+              <span className="text-base font-bold tracking-tight text-[#172033]">
+                EventIntel <span className="text-[#4F46E5]">AI</span>
+              </span>
+              <span className="hidden sm:inline-block ml-2 text-[11px] font-medium px-2 py-0.5 rounded-md bg-[#EEF2FF] text-[#4F46E5] border border-[#C7D2FE]">
+                Campus Portal
               </span>
             </div>
-          </div>
+          </Link>
 
+          {/* Navigation Links */}
           <nav className="hidden md:flex items-center gap-6 text-xs font-medium text-[#64748B]">
-            <a href="#modules" className="hover:text-[#172033] transition-colors">AI Modules</a>
-            <a href="#dashboard" className="hover:text-[#172033] transition-colors">Dashboard</a>
-            <a href="#roles" className="hover:text-[#172033] transition-colors">Role Portals</a>
-            <a href="#architecture" className="hover:text-[#172033] transition-colors">Architecture</a>
+            <a href="#events-section" className="hover:text-[#172033] transition-colors">
+              Discover Events
+            </a>
+            <a href="#categories-section" className="hover:text-[#172033] transition-colors">
+              Categories
+            </a>
+            {isStudent && (
+              <>
+                <a href="#recommended-section" className="hover:text-[#4F46E5] transition-colors flex items-center gap-1 text-[#4F46E5] font-semibold">
+                  <Sparkles size={13} /> Recommended
+                </a>
+                <a href="#my-events-section" className="hover:text-[#172033] transition-colors">
+                  My Registrations
+                </a>
+              </>
+            )}
+            <a href="#assistant-section" className="hover:text-[#172033] transition-colors flex items-center gap-1">
+              <Bot size={14} className="text-[#4F46E5]" /> AI Assistant
+            </a>
           </nav>
 
+          {/* Right Action Area */}
           <div className="flex items-center gap-3">
-            <button
-              onClick={handleStart}
-              className="text-xs font-medium text-[#172033] hover:text-[#4F46E5] px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
-            >
-              Sign In
-            </button>
-            <button
-              onClick={handleRegister}
-              className="text-xs font-semibold text-white bg-[#4F46E5] hover:bg-[#4338CA] px-3.5 py-1.5 rounded-lg shadow-xs transition-colors cursor-pointer"
-            >
-              Get Started
-            </button>
+            {user ? (
+              <div className="flex items-center gap-2.5">
+                <Link
+                  to={`/${user.role.toLowerCase()}/dashboard`}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#4F46E5] text-white hover:bg-[#4338CA] transition-colors shadow-xs"
+                >
+                  <GraduationCap size={15} />
+                  <span>Go to {user.role === 'STUDENT' ? 'Dashboard' : `${user.role} Portal`}</span>
+                </Link>
+                <button
+                  onClick={logout}
+                  title="Sign Out"
+                  className="p-1.5 rounded-lg border border-[#E2E8F0] text-[#64748B] hover:text-[#DC2626] hover:bg-[#FEE2E2]/30 transition-colors"
+                >
+                  <LogOut size={16} />
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Link
+                  to="/login"
+                  className="px-3.5 py-1.5 text-xs font-semibold text-[#172033] hover:text-[#4F46E5] transition-colors"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  to="/register"
+                  className="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-[#4F46E5] text-white hover:bg-[#4338CA] shadow-xs transition-colors"
+                >
+                  Register Profile
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="pt-32 pb-20 px-6 max-w-7xl mx-auto border-b border-[#E2E8F0]">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          {/* Left Column: Hero Copy */}
-          <div className="lg:col-span-6 space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#EEF2FF] border border-[#C7D2FE] text-[#4F46E5] text-xs font-semibold">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#4F46E5]"></span>
-              <span>AI-POWERED CAMPUS INTELLIGENCE</span>
-            </div>
+      {/* ── MAIN CONTENT AREA ─────────────────────────────────────────── */}
+      <main className="flex-1">
 
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#172033] leading-[1.15]">
-              Turn Campus Events Into <br />
-              <span className="text-[#4F46E5]">Intelligent Decisions.</span>
-            </h1>
-
-            <p className="text-sm md:text-base text-[#64748B] leading-relaxed max-w-xl">
-              EventIntel AI is an enterprise-grade university event management and intelligence platform. Combining machine learning demand forecasting, NLP feedback sentiment, and student clustering to elevate institutional operations.
-            </p>
-
-            <div className="flex flex-wrap items-center gap-3 pt-2">
-              <button
-                onClick={handleStart}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#4F46E5] hover:bg-[#4338CA] text-white text-xs font-semibold shadow-xs transition-colors cursor-pointer"
-              >
-                <span>Explore EventIntel</span>
-                <ArrowRight size={14} />
-              </button>
-
-              <button
-                onClick={handleRegister}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#FFFFFF] border border-[#E2E8F0] hover:bg-[#F8FAFC] text-[#172033] text-xs font-semibold transition-colors cursor-pointer"
-              >
-                <span>Create Account</span>
-              </button>
-            </div>
-
-            {/* Micro Institutional Metric Pills */}
-            <div className="grid grid-cols-3 gap-4 pt-6 border-t border-[#E2E8F0]">
-              <div>
-                <div className="text-lg font-bold text-[#172033]">
-                  <CountUp end={225} suffix="+" />
-                </div>
-                <div className="text-xs text-[#64748B]">Verified Students</div>
-              </div>
-              <div>
-                <div className="text-lg font-bold text-[#16A34A]">
-                  <CountUp end={100} suffix="%" />
-                </div>
-                <div className="text-xs text-[#64748B]">Attendance Turnout</div>
-              </div>
-              <div>
-                <div className="text-lg font-bold text-[#4F46E5]">
-                  <CountUp end={10} suffix=" Modules" />
-                </div>
-                <div className="text-xs text-[#64748B]">Active AI Systems</div>
-              </div>
-            </div>
-          </div>
-
-          {/* Right Column: Clean Light Dashboard Preview */}
-          <div className="lg:col-span-6">
-            <div className="bg-[#FFFFFF] border border-[#E2E8F0] rounded-2xl p-6 shadow-sm space-y-5">
-              {/* Dashboard Preview Header */}
-              <div className="flex items-center justify-between border-b border-[#E2E8F0] pb-3">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-2.5 h-2.5 rounded-full bg-[#16A34A]"></div>
-                  <span className="text-xs font-bold text-[#172033]">Institution Telemetry Overview</span>
-                </div>
-                <span className="text-[11px] font-semibold text-[#4F46E5] bg-[#EEF2FF] px-2 py-0.5 rounded border border-[#C7D2FE]">
-                  Active Academic Term
-                </span>
-              </div>
-
-              {/* 3 Metric Cards */}
-              <div className="grid grid-cols-3 gap-3">
-                <div className="p-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl">
-                  <span className="text-[10px] text-[#64748B] font-medium block">Total Turnout</span>
-                  <div className="text-lg font-bold text-[#172033] mt-0.5">225 / 225</div>
-                  <span className="text-[10px] text-[#16A34A] font-semibold">100% Conversion</span>
-                </div>
-
-                <div className="p-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl">
-                  <span className="text-[10px] text-[#64748B] font-medium block">Demand Index</span>
-                  <div className="text-lg font-bold text-[#4F46E5] mt-0.5">92.4%</div>
-                  <span className="text-[10px] text-[#4F46E5] font-semibold">5 High Demand</span>
-                </div>
-
-                <div className="p-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl">
-                  <span className="text-[10px] text-[#64748B] font-medium block">Satisfaction</span>
-                  <div className="text-lg font-bold text-[#D97706] mt-0.5">5.0 ★</div>
-                  <span className="text-[10px] text-[#16A34A] font-semibold">100% Positive</span>
-                </div>
-              </div>
-
-              {/* Mini Area Chart */}
-              <div>
-                <div className="flex items-center justify-between text-xs mb-2">
-                  <span className="font-semibold text-[#172033]">Registration & Attendance Volume</span>
-                  <span className="text-[11px] text-[#64748B]">Weekly Telemetry</span>
-                </div>
-                <div className="h-36 w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={engagementTrend} margin={{ top: 5, right: 5, left: -25, bottom: 0 }}>
-                      <defs>
-                        <linearGradient id="heroReg" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#4F46E5" stopOpacity={0.15} />
-                          <stop offset="95%" stopColor="#4F46E5" stopOpacity={0.0} />
-                        </linearGradient>
-                      </defs>
-                      <XAxis dataKey="name" stroke="#94A3B8" fontSize={10} tickLine={false} />
-                      <YAxis stroke="#94A3B8" fontSize={10} tickLine={false} />
-                      <Tooltip contentStyle={{ backgroundColor: '#FFFFFF', borderColor: '#E2E8F0', borderRadius: '8px', fontSize: '11px' }} />
-                      <Area type="monotone" dataKey="registrations" stroke="#4F46E5" strokeWidth={1.5} fill="url(#heroReg)" />
-                    </AreaChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
-
-              {/* AI Insight Snippet */}
-              <div className="p-3 bg-[#F8FAFC] border-l-2 border-[#4F46E5] rounded-r-xl text-xs space-y-1">
-                <div className="flex items-center justify-between">
-                  <span className="font-semibold text-[#172033] flex items-center gap-1">
-                    <Sparkles size={12} className="text-[#4F46E5]" /> AI Recommendation
-                  </span>
-                  <span className="text-[10px] text-[#16A34A] font-bold">CONFIDENCE: HIGH</span>
-                </div>
-                <p className="text-[11px] text-[#64748B]">
-                  Gen AI Workshop projected to exceed capacity (90 predicted vs 100 max). Consider expanding venue allocation.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 10 AI Modules Section */}
-      <section id="modules" className="py-20 px-6 max-w-7xl mx-auto border-b border-[#E2E8F0]">
-        <div className="text-center max-w-2xl mx-auto mb-14 space-y-2">
-          <span className="text-xs font-bold uppercase tracking-wider text-[#4F46E5]">Enterprise Machine Learning</span>
-          <h2 className="text-2xl sm:text-3xl font-bold text-[#172033]">
-            10 Intelligent Systems. One Unified Platform.
-          </h2>
-          <p className="text-xs sm:text-sm text-[#64748B]">
-            Every AI module is designed for institutional rigor, reproducibility, and zero hallucinated metrics.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {aiModules.map((mod) => {
-            const Icon = mod.icon;
-            return (
-              <div key={mod.id} className="bg-[#FFFFFF] border border-[#E2E8F0] rounded-xl p-5 shadow-xs hover:shadow-md hover:border-[#CBD5E1] transition-all space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="w-8 h-8 rounded-lg bg-[#EEF2FF] text-[#4F46E5] flex items-center justify-center">
-                    <Icon size={16} />
-                  </div>
-                  <span className="text-[11px] font-mono text-[#94A3B8] font-semibold">{mod.id}</span>
-                </div>
-
+        {/* ═══════════════════════════════════════════════════════════════ */}
+        {/* SCENARIO A: AUTHENTICATED STUDENT PERSONALIZED HERO            */}
+        {/* ═══════════════════════════════════════════════════════════════ */}
+        {isStudent ? (
+          <section className="bg-gradient-to-b from-[#FFFFFF] to-[#F8FAFC] border-b border-[#E2E8F0] py-10 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-7xl mx-auto">
+              
+              {/* Personalized Welcome Banner */}
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-8 border-b border-[#E2E8F0]">
                 <div>
-                  <h3 className="text-sm font-bold text-[#172033]">{mod.title}</h3>
-                  <span className="text-[10px] font-medium text-[#4F46E5] block mt-0.5">{mod.algorithm}</span>
+                  <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-[#EEF2FF] text-[#4F46E5] text-xs font-medium border border-[#C7D2FE] mb-2.5">
+                    <Sparkles size={13} />
+                    <span>Personalized Student Event Portal</span>
+                  </div>
+                  <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#172033]">
+                    Welcome back, {user.name || 'Student'} 👋
+                  </h1>
+                  <p className="mt-1 text-xs sm:text-sm text-[#64748B]">
+                    Here are campus events and workshops selected for you in <span className="font-semibold text-[#172033]">{user.department || 'Computer Science'}</span> ({user.year || '3rd Year'}).
+                  </p>
                 </div>
 
-                <p className="text-xs text-[#64748B] leading-relaxed">
-                  {mod.description}
+                <div className="flex items-center gap-3">
+                  <Link
+                    to="/student/dashboard"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-[#FFFFFF] border border-[#CBD5E1] text-[#172033] hover:border-[#4F46E5] hover:text-[#4F46E5] shadow-xs transition-all"
+                  >
+                    <span>Open Student Dashboard</span>
+                    <ArrowRight size={14} />
+                  </Link>
+                  <a
+                    href="#assistant-section"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-[#4F46E5] text-white hover:bg-[#4338CA] shadow-xs transition-colors"
+                  >
+                    <Bot size={15} />
+                    <span>Ask EventIntel AI</span>
+                  </a>
+                </div>
+              </div>
+
+              {/* Personalized KPI Quick Stats */}
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+                <div className="bg-[#FFFFFF] border border-[#E2E8F0] p-4 rounded-xl shadow-2xs">
+                  <div className="flex items-center justify-between text-[#64748B] text-xs font-medium mb-1">
+                    <span>Events Registered</span>
+                    <CheckCircle2 size={16} className="text-[#10B981]" />
+                  </div>
+                  <div className="text-2xl font-bold text-[#172033]">
+                    {myRegistrations.length}
+                  </div>
+                  <div className="text-[11px] text-[#64748B] mt-0.5">Active registrations</div>
+                </div>
+
+                <div className="bg-[#FFFFFF] border border-[#E2E8F0] p-4 rounded-xl shadow-2xs">
+                  <div className="flex items-center justify-between text-[#64748B] text-xs font-medium mb-1">
+                    <span>Upcoming Events</span>
+                    <Calendar size={16} className="text-[#4F46E5]" />
+                  </div>
+                  <div className="text-2xl font-bold text-[#172033]">
+                    {allEvents.length}
+                  </div>
+                  <div className="text-[11px] text-[#64748B] mt-0.5">Across 8 departments</div>
+                </div>
+
+                <div className="bg-[#FFFFFF] border border-[#E2E8F0] p-4 rounded-xl shadow-2xs">
+                  <div className="flex items-center justify-between text-[#64748B] text-xs font-medium mb-1">
+                    <span>Recommended For You</span>
+                    <Sparkles size={16} className="text-[#8B5CF6]" />
+                  </div>
+                  <div className="text-2xl font-bold text-[#172033]">
+                    {recommendations.length > 0 ? recommendations.length : 4}
+                  </div>
+                  <div className="text-[11px] text-[#64748B] mt-0.5">AI profile matching</div>
+                </div>
+
+                <div className="bg-[#FFFFFF] border border-[#E2E8F0] p-4 rounded-xl shadow-2xs">
+                  <div className="flex items-center justify-between text-[#64748B] text-xs font-medium mb-1">
+                    <span>Student Profile</span>
+                    <Activity size={16} className="text-[#F59E0B]" />
+                  </div>
+                  <div className="text-sm font-bold text-[#172033] truncate">
+                    {user.department || 'Active Student'}
+                  </div>
+                  <div className="text-[11px] text-[#64748B] mt-0.5">
+                    {user.interests && user.interests.length > 0 ? `${user.interests.length} topics saved` : 'General persona'}
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </section>
+        ) : (
+          /* ═══════════════════════════════════════════════════════════════ */
+          /* SCENARIO B: PUBLIC HERO (ANONYMOUS CAMPUS EXPLORATION)        */
+          /* ═══════════════════════════════════════════════════════════════ */
+          <section className="relative overflow-hidden bg-gradient-to-b from-[#FFFFFF] via-[#F8FAFC] to-[#FFFFFF] border-b border-[#E2E8F0] py-16 sm:py-20 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+              
+              {/* Left Column: Hero Content */}
+              <div className="lg:col-span-7 space-y-6">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#EEF2FF] border border-[#C7D2FE] text-[#4F46E5] text-xs font-semibold">
+                  <GraduationCap size={15} />
+                  <span>College Campus Event Portal</span>
+                </div>
+
+                <h1 className="text-3xl sm:text-5xl font-extrabold text-[#172033] tracking-tight leading-[1.15]">
+                  Discover What's Happening on Campus.
+                </h1>
+
+                <p className="text-sm sm:text-base text-[#64748B] leading-relaxed max-w-2xl">
+                  Discover workshops, hackathons, seminars, cultural programs, sports, career events, and activities happening across your campus.
+                </p>
+
+                {/* Search Quick Bar in Hero */}
+                <div className="bg-[#FFFFFF] border border-[#CBD5E1] p-2 rounded-2xl shadow-sm flex flex-col sm:flex-row items-center gap-2 max-w-xl">
+                  <div className="flex items-center gap-2 flex-1 w-full pl-3 text-[#94A3B8]">
+                    <Search size={18} />
+                    <input
+                      type="text"
+                      placeholder="Search events, workshops, hackathons, seminars..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full text-xs text-[#172033] placeholder-[#94A3B8] focus:outline-none bg-transparent py-1.5"
+                    />
+                  </div>
+                  <a
+                    href="#events-section"
+                    className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-[#4F46E5] text-white text-xs font-semibold hover:bg-[#4338CA] transition-colors shrink-0 text-center shadow-xs"
+                  >
+                    Explore Events
+                  </a>
+                </div>
+
+                {/* Hero CTAs */}
+                <div className="flex flex-wrap items-center gap-4 pt-2">
+                  <a
+                    href="#events-section"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#172033] text-white text-xs font-semibold hover:bg-[#334155] transition-colors shadow-xs"
+                  >
+                    <span>Browse All Events</span>
+                    <ArrowRight size={14} />
+                  </a>
+
+                  <Link
+                    to="/login"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#FFFFFF] border border-[#CBD5E1] text-[#172033] text-xs font-semibold hover:border-[#4F46E5] hover:text-[#4F46E5] transition-colors shadow-2xs"
+                  >
+                    <User size={14} />
+                    <span>Sign In to Personalize</span>
+                  </Link>
+                </div>
+
+                {/* Public Trust Points */}
+                <div className="flex items-center gap-6 pt-4 text-xs text-[#64748B]">
+                  <div className="flex items-center gap-1.5">
+                    <CheckCircle2 size={15} className="text-[#10B981]" />
+                    <span>Official University Clubs</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <CheckCircle2 size={15} className="text-[#10B981]" />
+                    <span>Instant Registration</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <CheckCircle2 size={15} className="text-[#10B981]" />
+                    <span>Seat Tracking</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column: Featured Campus Events Preview */}
+              <div className="lg:col-span-5 space-y-3">
+                <div className="flex items-center justify-between text-xs text-[#64748B] px-1 font-semibold">
+                  <span className="uppercase tracking-wider text-[11px] text-[#4F46E5] flex items-center gap-1.5">
+                    <Sparkles size={13} /> Featured Events
+                  </span>
+                  <span>{allEvents.length} Active Events</span>
+                </div>
+
+                {loadingEvents ? (
+                  <div className="space-y-3">
+                    {[1, 2].map(i => (
+                      <div key={i} className="h-32 bg-[#E2E8F0]/60 rounded-xl animate-pulse"></div>
+                    ))}
+                  </div>
+                ) : (
+                  featuredEvents.slice(0, 2).map((event) => (
+                    <div 
+                      key={event.id}
+                      className="bg-[#FFFFFF] border border-[#E2E8F0] rounded-xl p-4 shadow-2xs hover:shadow-xs transition-shadow flex items-start gap-4"
+                    >
+                      <div className="w-20 h-20 rounded-lg overflow-hidden shrink-0 bg-[#EEF2FF]">
+                        <img 
+                          src={event.image || "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80&w=400"}
+                          alt={event.title}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div className="flex-1 min-w-0 space-y-1">
+                        <span className="text-[10px] px-2 py-0.5 rounded font-semibold bg-[#EEF2FF] text-[#4F46E5] uppercase">
+                          {event.category}
+                        </span>
+                        <h4 className="text-xs font-bold text-[#172033] truncate">
+                          {event.title}
+                        </h4>
+                        <div className="flex items-center gap-3 text-[11px] text-[#64748B]">
+                          <span className="flex items-center gap-1">
+                            <Calendar size={12} /> {event.date}
+                          </span>
+                          <span className="truncate flex items-center gap-1">
+                            <MapPin size={12} /> {event.venue}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+
+            </div>
+          </section>
+        )}
+
+        {/* ═══════════════════════════════════════════════════════════════ */}
+        {/* SECTION: RECOMMENDED FOR YOU (AUTHENTICATED STUDENT ONLY)      */}
+        {/* ═══════════════════════════════════════════════════════════════ */}
+        {isStudent && (
+          <section id="recommended-section" className="py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#4F46E5] uppercase tracking-wider mb-1">
+                  <Sparkles size={14} /> AI Recommendation Engine
+                </div>
+                <h2 className="text-xl sm:text-2xl font-bold text-[#172033]">
+                  Recommended For You
+                </h2>
+                <p className="text-xs text-[#64748B] mt-0.5">
+                  Ranked by your department focus, registered topics, and campus participation patterns.
                 </p>
               </div>
-            );
-          })}
-        </div>
-      </section>
 
-      {/* Role Portals Section */}
-      <section id="roles" className="py-20 px-6 max-w-7xl mx-auto border-b border-[#E2E8F0]">
-        <div className="text-center max-w-2xl mx-auto mb-10 space-y-2">
-          <span className="text-xs font-bold uppercase tracking-wider text-[#4F46E5]">Access Control & Roles</span>
-          <h2 className="text-2xl sm:text-3xl font-bold text-[#172033]">
-            Tailored Experiences for Every Stakeholder
-          </h2>
-          <p className="text-xs sm:text-sm text-[#64748B]">
-            Role-based authorization enforces privacy while delivering targeted intelligence to students, organizers, and administration.
-          </p>
-        </div>
-
-        {/* Tab Controls */}
-        <div className="flex justify-center mb-8">
-          <div className="inline-flex bg-[#FFFFFF] p-1 rounded-xl border border-[#E2E8F0] shadow-xs">
-            {[
-              { id: 'student', label: 'Student Portal' },
-              { id: 'organizer', label: 'Event Organizer' },
-              { id: 'admin', label: 'Dean / Administrator' }
-            ].map(tab => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveRoleTab(tab.id)}
-                className={`px-4 py-2 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
-                  activeRoleTab === tab.id 
-                    ? 'bg-[#EEF2FF] text-[#4F46E5]' 
-                    : 'text-[#64748B] hover:text-[#172033]'
-                }`}
+              <Link 
+                to="/student/recommendations"
+                className="hidden sm:inline-flex items-center gap-1 text-xs font-semibold text-[#4F46E5] hover:text-[#4338CA]"
               >
-                {tab.label}
+                <span>View all matches</span>
+                <ChevronRight size={14} />
+              </Link>
+            </div>
+
+            {loadingRecs ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                {[1, 2, 3, 4].map(i => (
+                  <div key={i} className="h-64 bg-[#E2E8F0]/60 rounded-xl animate-pulse"></div>
+                ))}
+              </div>
+            ) : recommendations.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                {recommendations.slice(0, 4).map(event => (
+                  <div key={event.id} className="flex flex-col">
+                    <EventCard 
+                      event={event}
+                      onRegister={() => handleRegisterEvent(event)}
+                      registered={registeredEventIds.has(event.id)}
+                      registering={registeringId === event.id}
+                    />
+                    {/* Why this event explanation badge */}
+                    {event.recommendationReason && (
+                      <div className="mt-2 p-2 rounded-lg bg-[#EEF2FF] border border-[#C7D2FE]/60 text-[11px] text-[#4F46E5] flex items-start gap-1.5">
+                        <Sparkles size={13} className="shrink-0 mt-0.5" />
+                        <span className="line-clamp-2 leading-tight">
+                          {event.recommendationReason}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="p-8 text-center bg-[#FFFFFF] border border-[#E2E8F0] rounded-xl">
+                <BrainCircuit size={28} className="mx-auto text-[#94A3B8] mb-2" />
+                <p className="text-xs font-semibold text-[#172033]">We're learning your interests</p>
+                <p className="text-xs text-[#64748B] mt-1 max-w-md mx-auto">
+                  Explore and register for some events below to unlock personalized recommendations tailored to your studies!
+                </p>
+              </div>
+            )}
+          </section>
+        )}
+
+        {/* ═══════════════════════════════════════════════════════════════ */}
+        {/* SECTION: MY UPCOMING EVENTS (AUTHENTICATED STUDENT ONLY)       */}
+        {/* ═══════════════════════════════════════════════════════════════ */}
+        {isStudent && myRegistrations.length > 0 && (
+          <section id="my-events-section" className="py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+            <div className="flex items-center justify-between mb-5">
+              <div>
+                <h2 className="text-xl font-bold text-[#172033] flex items-center gap-2">
+                  <Bookmark size={20} className="text-[#4F46E5]" />
+                  My Registered Events
+                </h2>
+                <p className="text-xs text-[#64748B] mt-0.5">
+                  Events you have joined on campus.
+                </p>
+              </div>
+              <Link 
+                to="/student/my-events"
+                className="text-xs font-semibold text-[#4F46E5] hover:text-[#4338CA] flex items-center gap-1"
+              >
+                <span>Manage registrations ({myRegistrations.length})</span>
+                <ChevronRight size={14} />
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {myRegistrations.slice(0, 3).map((reg) => {
+                const ev = reg.event || allEvents.find(e => e.id === reg.eventId) || {};
+                return (
+                  <div 
+                    key={reg.id || reg.eventId}
+                    className="bg-[#FFFFFF] border border-[#E2E8F0] rounded-xl p-4 flex items-center justify-between gap-3 shadow-2xs"
+                  >
+                    <div className="min-w-0 space-y-1">
+                      <span className="text-[10px] px-2 py-0.5 rounded font-semibold bg-[#DCFCE7] text-[#16A34A] border border-[#BBF7D0]">
+                        Registered ✓
+                      </span>
+                      <h4 className="text-xs font-bold text-[#172033] truncate">
+                        {ev.title || 'Campus Event'}
+                      </h4>
+                      <div className="text-[11px] text-[#64748B] flex items-center gap-3">
+                        <span className="flex items-center gap-1">
+                          <Calendar size={12} /> {ev.date || 'Upcoming'}
+                        </span>
+                        <span className="truncate flex items-center gap-1">
+                          <MapPin size={12} /> {ev.venue || 'Campus Venue'}
+                        </span>
+                      </div>
+                    </div>
+
+                    <Link
+                      to={`/events/${ev.id || reg.eventId}`}
+                      className="px-3 py-1.5 rounded-lg border border-[#E2E8F0] text-xs font-semibold text-[#172033] hover:border-[#4F46E5] hover:text-[#4F46E5] shrink-0 transition-colors"
+                    >
+                      View
+                    </Link>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+        )}
+
+        {/* ═══════════════════════════════════════════════════════════════ */}
+        {/* SECTION: BASED ON YOUR INTERESTS (AUTHENTICATED STUDENT ONLY)  */}
+        {/* ═══════════════════════════════════════════════════════════════ */}
+        {isStudent && (
+          <section className="py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+            <div className="flex items-center justify-between mb-5">
+              <div>
+                <h2 className="text-lg sm:text-xl font-bold text-[#172033]">
+                  Based on Your Interests
+                </h2>
+                <div className="flex flex-wrap items-center gap-1.5 mt-1">
+                  <span className="text-xs text-[#64748B]">Matching topics:</span>
+                  {(user.interests || ['Technology', 'Workshops', 'Coding']).map(tag => (
+                    <span key={tag} className="text-[11px] px-2 py-0.5 rounded-md bg-[#F1F5F9] text-[#475569] font-medium border border-[#E2E8F0]">
+                      #{tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              {interestEvents.map(event => (
+                <EventCard 
+                  key={event.id}
+                  event={event}
+                  onRegister={() => handleRegisterEvent(event)}
+                  registered={registeredEventIds.has(event.id)}
+                  registering={registeringId === event.id}
+                />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* ═══════════════════════════════════════════════════════════════ */}
+        {/* SECTION: PUBLIC EVENT DISCOVERY & SEARCH                       */}
+        {/* ═══════════════════════════════════════════════════════════════ */}
+        <section id="events-section" className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+          
+          {/* Section Header */}
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
+            <div>
+              <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#4F46E5] uppercase tracking-wider mb-1">
+                <Compass size={14} /> Campus Exploration
+              </div>
+              <h2 className="text-2xl font-bold text-[#172033]">
+                Upcoming Campus Events
+              </h2>
+              <p className="text-xs text-[#64748B] mt-0.5">
+                Explore all verified technical workshops, cultural fests, sports tournaments, and conferences.
+              </p>
+            </div>
+            
+            <div className="text-xs text-[#64748B] font-medium">
+              Showing <span className="font-bold text-[#172033]">{filteredEvents.length}</span> of {allEvents.length} events
+            </div>
+          </div>
+
+          {/* Search & Multi-Filter Controls */}
+          <div className="bg-[#FFFFFF] border border-[#E2E8F0] p-4 rounded-2xl shadow-2xs mb-8 space-y-4">
+            
+            {/* Top row: Search and Department dropdown */}
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
+              <div className="md:col-span-8 relative">
+                <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#94A3B8]" />
+                <input
+                  type="text"
+                  placeholder="Find your next campus event by title, venue, or keyword..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2 text-xs bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#4F46E5] focus:bg-[#FFFFFF] transition-all"
+                />
+              </div>
+
+              <div className="md:col-span-4">
+                <select
+                  value={selectedDepartment}
+                  onChange={(e) => setSelectedDepartment(e.target.value)}
+                  className="w-full py-2 px-3 text-xs bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl text-[#172033] focus:outline-none focus:border-[#4F46E5] transition-colors"
+                >
+                  {DEPARTMENTS.map(d => (
+                    <option key={d} value={d}>{d}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {/* Bottom row: Category Pills */}
+            <div id="categories-section" className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+              {CATEGORIES.map(cat => (
+                <button
+                  key={cat}
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold shrink-0 transition-colors cursor-pointer
+                    ${selectedCategory === cat 
+                      ? 'bg-[#4F46E5] text-white shadow-2xs' 
+                      : 'bg-[#F1F5F9] text-[#64748B] hover:text-[#172033] hover:bg-[#E2E8F0]'}`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Events Grid */}
+          {loadingEvents ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              {[1, 2, 3, 4, 5, 6, 7, 8].map(i => (
+                <div key={i} className="h-72 bg-[#E2E8F0]/60 rounded-xl animate-pulse"></div>
+              ))}
+            </div>
+          ) : filteredEvents.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              {filteredEvents.map(event => (
+                <EventCard
+                  key={event.id}
+                  event={event}
+                  onRegister={() => handleRegisterEvent(event)}
+                  registered={registeredEventIds.has(event.id)}
+                  registering={registeringId === event.id}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="py-16 text-center bg-[#FFFFFF] border border-[#E2E8F0] rounded-2xl p-8">
+              <Compass size={32} className="mx-auto text-[#94A3B8] mb-2" />
+              <h3 className="text-sm font-bold text-[#172033]">No matching events found</h3>
+              <p className="text-xs text-[#64748B] mt-1 max-w-sm mx-auto">
+                Try clearing your search query or selecting a different category from the filters above.
+              </p>
+              <button
+                onClick={() => {
+                  setSearchQuery('');
+                  setSelectedCategory('All');
+                  setSelectedDepartment('All Departments');
+                }}
+                className="mt-4 px-4 py-2 rounded-lg text-xs font-semibold bg-[#4F46E5] text-white hover:bg-[#4338CA] transition-colors"
+              >
+                Reset All Filters
               </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Tab Content Display */}
-        <div className="bg-[#FFFFFF] border border-[#E2E8F0] rounded-2xl p-6 sm:p-8 shadow-sm">
-          {activeRoleTab === 'student' && (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-              <div className="space-y-4">
-                <span className="px-2.5 py-0.5 rounded text-[10px] font-bold uppercase bg-[#EEF2FF] text-[#4F46E5] border border-[#C7D2FE]">
-                  Student Experience
-                </span>
-                <h3 className="text-xl font-bold text-[#172033]">Discovery, Recommendations & RAG AI Assistant</h3>
-                <p className="text-xs sm:text-sm text-[#64748B] leading-relaxed">
-                  Students browse university workshops, receive TF-IDF driven recommendations matching their interests, register with 1-click, and ask questions to the RAG AI Assistant with instant verified answers.
-                </p>
-                <div className="space-y-2 pt-2">
-                  <div className="flex items-center gap-2 text-xs text-[#172033]">
-                    <CheckCircle2 size={15} className="text-[#16A34A]" />
-                    <span>Personalized recommendations tailored to department and interests</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-xs text-[#172033]">
-                    <CheckCircle2 size={15} className="text-[#16A34A]" />
-                    <span>Conversational event assistant grounded strictly on campus database</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-xs text-[#172033]">
-                    <CheckCircle2 size={15} className="text-[#16A34A]" />
-                    <span>Digital certificates automatically generated upon QR attendance check-in</span>
-                  </div>
-                </div>
-              </div>
-              <div className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl p-5 space-y-3">
-                <div className="flex items-center justify-between text-xs font-semibold text-[#172033] border-b border-[#E2E8F0] pb-2">
-                  <span>Recommended for You</span>
-                  <span className="text-[#4F46E5]">96% Match</span>
-                </div>
-                <div className="space-y-2">
-                  <div className="p-3 bg-[#FFFFFF] border border-[#E2E8F0] rounded-lg">
-                    <h4 className="text-xs font-bold text-[#172033]">Generative AI & LLM Workshop</h4>
-                    <p className="text-[11px] text-[#64748B] mt-0.5">Aug 20 • Seminar Hall 1 • 2 hours</p>
-                  </div>
-                  <div className="p-3 bg-[#FFFFFF] border border-[#E2E8F0] rounded-lg">
-                    <h4 className="text-xs font-bold text-[#172033]">Full-Stack Web Dev Hackathon</h4>
-                    <p className="text-[11px] text-[#64748B] mt-0.5">Sep 15 • CSE Innovation Lab</p>
-                  </div>
-                </div>
-              </div>
             </div>
           )}
+        </section>
 
-          {activeRoleTab === 'organizer' && (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-              <div className="space-y-4">
-                <span className="px-2.5 py-0.5 rounded text-[10px] font-bold uppercase bg-[#EEF2FF] text-[#4F46E5] border border-[#C7D2FE]">
-                  Organizer Experience
-                </span>
-                <h3 className="text-xl font-bold text-[#172033]">Command Center, Demand Modeling & AI Posters</h3>
-                <p className="text-xs sm:text-sm text-[#64748B] leading-relaxed">
-                  Faculty and club organizers manage scheduled events, review attendance trends, predict student demand before venue confirmation, and generate academic posters via natural language prompts.
+        {/* ═══════════════════════════════════════════════════════════════ */}
+        {/* SECTION: AI EVENT ASSISTANT (RAG CHAT WIDGET)                 */}
+        {/* ═══════════════════════════════════════════════════════════════ */}
+        <section id="assistant-section" className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-[#E2E8F0]">
+          <div className="bg-[#FFFFFF] border border-[#E2E8F0] rounded-2xl p-6 sm:p-8 shadow-sm">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-[#E2E8F0]">
+              <div>
+                <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#4F46E5] uppercase tracking-wider mb-1">
+                  <Bot size={15} /> Campus Intelligence
+                </div>
+                <h3 className="text-xl font-bold text-[#172033]">
+                  Ask EventIntel AI Assistant
+                </h3>
+                <p className="text-xs text-[#64748B] mt-0.5">
+                  Instant conversational answers about schedules, prerequisites, venue locations, and workshops.
                 </p>
-                <div className="space-y-2 pt-2">
-                  <div className="flex items-center gap-2 text-xs text-[#172033]">
-                    <CheckCircle2 size={15} className="text-[#16A34A]" />
-                    <span>Predictive registration modeling to optimize seating allocations</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-xs text-[#172033]">
-                    <CheckCircle2 size={15} className="text-[#16A34A]" />
-                    <span>Real-time feedback sentiment analysis with topic categorization</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-xs text-[#172033]">
-                    <CheckCircle2 size={15} className="text-[#16A34A]" />
-                    <span>One-click AI event generator & poster designer with downloadable assets</span>
-                  </div>
-                </div>
               </div>
-              <div className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl p-5 space-y-3">
-                <div className="flex items-center justify-between text-xs font-semibold text-[#172033] border-b border-[#E2E8F0] pb-2">
-                  <span>Organizer Telemetry</span>
-                  <span className="text-[#16A34A]">All Healthy</span>
-                </div>
-                <div className="grid grid-cols-2 gap-2">
-                  <div className="p-2.5 bg-[#FFFFFF] border border-[#E2E8F0] rounded-lg">
-                    <span className="text-[10px] text-[#64748B]">My Events</span>
-                    <div className="text-sm font-bold text-[#172033]">15 Active</div>
-                  </div>
-                  <div className="p-2.5 bg-[#FFFFFF] border border-[#E2E8F0] rounded-lg">
-                    <span className="text-[10px] text-[#64748B]">Registrations</span>
-                    <div className="text-sm font-bold text-[#4F46E5]">225 Verified</div>
-                  </div>
-                </div>
+
+              {/* Sample Question Pills */}
+              <div className="flex flex-wrap gap-1.5">
+                {[
+                  "What technical workshops are happening?",
+                  "Which events have seats left?",
+                  "Tell me about the hackathons"
+                ].map(q => (
+                  <button
+                    key={q}
+                    type="button"
+                    onClick={() => {
+                      setChatInput(q);
+                    }}
+                    className="text-[11px] px-2.5 py-1 rounded-lg bg-[#F8FAFC] border border-[#E2E8F0] text-[#64748B] hover:text-[#4F46E5] hover:border-[#C7D2FE] transition-colors"
+                  >
+                    "{q}"
+                  </button>
+                ))}
               </div>
             </div>
-          )}
 
-          {activeRoleTab === 'admin' && (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-              <div className="space-y-4">
-                <span className="px-2.5 py-0.5 rounded text-[10px] font-bold uppercase bg-[#EEF2FF] text-[#4F46E5] border border-[#C7D2FE]">
-                  Administrative Governance
-                </span>
-                <h3 className="text-xl font-bold text-[#172033]">Institution Macro Analytics & Early Warnings</h3>
-                <p className="text-xs sm:text-sm text-[#64748B] leading-relaxed">
-                  Deans and campus administrators monitor institution-wide participation, departmental engagement benchmarks, K-Means student behavior clusters, and early warnings on low turnout risks.
-                </p>
-                <div className="space-y-2 pt-2">
-                  <div className="flex items-center gap-2 text-xs text-[#172033]">
-                    <CheckCircle2 size={15} className="text-[#16A34A]" />
-                    <span>Campus-wide student behavior segmentation (Highly Active vs Low Engagement)</span>
+            {/* Chat Conversation Thread */}
+            <div className="py-4 space-y-3 max-h-80 overflow-y-auto pr-2">
+              {chatMessages.map((msg, idx) => (
+                <div 
+                  key={idx}
+                  className={`flex items-start gap-2.5 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                >
+                  {msg.role === 'assistant' && (
+                    <div className="w-7 h-7 rounded-lg bg-[#EEF2FF] text-[#4F46E5] flex items-center justify-center shrink-0 border border-[#C7D2FE]">
+                      <Bot size={15} />
+                    </div>
+                  )}
+
+                  <div className={`max-w-xl p-3 rounded-2xl text-xs leading-relaxed ${
+                    msg.role === 'user' 
+                      ? 'bg-[#4F46E5] text-white rounded-tr-none' 
+                      : 'bg-[#F8FAFC] text-[#172033] border border-[#E2E8F0] rounded-tl-none'
+                  }`}>
+                    <p className="whitespace-pre-line">{msg.text}</p>
+
+                    {/* Cited Sources */}
+                    {msg.sources && msg.sources.length > 0 && (
+                      <div className="mt-2 pt-2 border-t border-[#E2E8F0] text-[10px] text-[#64748B]">
+                        <span className="font-semibold">Sources: </span>
+                        {msg.sources.map((s, sIdx) => (
+                          <span key={sIdx} className="font-medium text-[#4F46E5] mr-2">
+                            [{s.title || s.name || 'Event'}]
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                  <div className="flex items-center gap-2 text-xs text-[#172033]">
-                    <CheckCircle2 size={15} className="text-[#16A34A]" />
-                    <span>Automated early warning scanners for capacity and attendance conversion</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-xs text-[#172033]">
-                    <CheckCircle2 size={15} className="text-[#16A34A]" />
-                    <span>Actionable executive summaries and resource planning recommendations</span>
-                  </div>
+
+                  {msg.role === 'user' && (
+                    <div className="w-7 h-7 rounded-lg bg-[#172033] text-white flex items-center justify-center shrink-0">
+                      <User size={14} />
+                    </div>
+                  )}
                 </div>
-              </div>
-              <div className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl p-5 space-y-3">
-                <div className="flex items-center justify-between text-xs font-semibold text-[#172033] border-b border-[#E2E8F0] pb-2">
-                  <span>Student Behavior Clusters</span>
-                  <span className="text-[#4F46E5]">K-Means (k=3)</span>
+              ))}
+
+              {chatLoading && (
+                <div className="flex items-center gap-2 text-xs text-[#64748B] pl-9">
+                  <RefreshCw size={13} className="animate-spin text-[#4F46E5]" />
+                  <span>EventIntel AI is querying campus database...</span>
                 </div>
-                <div className="space-y-2 text-xs">
-                  <div className="p-2.5 bg-[#FFFFFF] border border-[#E2E8F0] rounded-lg flex justify-between items-center">
-                    <span className="font-semibold text-[#16A34A]">Highly Active</span>
-                    <span className="font-bold">45 Students</span>
-                  </div>
-                  <div className="p-2.5 bg-[#FFFFFF] border border-[#E2E8F0] rounded-lg flex justify-between items-center">
-                    <span className="font-semibold text-[#64748B]">Low Engagement</span>
-                    <span className="font-bold">25 Students</span>
-                  </div>
-                </div>
+              )}
+            </div>
+
+            {/* Chat Input Box */}
+            <form onSubmit={handleSendChatMessage} className="pt-3 border-t border-[#E2E8F0] flex items-center gap-2">
+              <input
+                type="text"
+                placeholder="Ask anything about campus events, schedules, or workshops..."
+                value={chatInput}
+                onChange={(e) => setChatInput(e.target.value)}
+                className="flex-1 px-3.5 py-2 text-xs bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#4F46E5] focus:bg-[#FFFFFF] transition-all"
+              />
+              <button
+                type="submit"
+                disabled={!chatInput.trim() || chatLoading}
+                className="px-4 py-2 rounded-xl bg-[#4F46E5] text-white text-xs font-semibold hover:bg-[#4338CA] disabled:opacity-50 transition-colors shrink-0 flex items-center gap-1.5 shadow-xs"
+              >
+                <span>Send</span>
+                <Send size={13} />
+              </button>
+            </form>
+          </div>
+        </section>
+
+        {/* ═══════════════════════════════════════════════════════════════ */}
+        {/* PUBLIC CTA BANNER (WHEN LOGGED OUT)                            */}
+        {/* ═══════════════════════════════════════════════════════════════ */}
+        {!user && (
+          <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+            <div className="bg-gradient-to-r from-[#172033] to-[#1E293B] text-white rounded-3xl p-8 sm:p-12 text-center relative overflow-hidden shadow-sm">
+              <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mb-3">
+                Experience Your Campus Community
+              </h2>
+              <p className="text-xs sm:text-sm text-[#94A3B8] max-w-xl mx-auto mb-6">
+                Sign in with your university credentials to get tailored recommendations, track attendance, and register for exclusive student workshops in one click.
+              </p>
+              <div className="flex flex-wrap justify-center gap-3">
+                <Link
+                  to="/login"
+                  className="px-6 py-2.5 rounded-xl bg-[#4F46E5] text-white text-xs font-semibold hover:bg-[#4338CA] transition-colors shadow-xs"
+                >
+                  Sign In with Student ID
+                </Link>
+                <Link
+                  to="/register"
+                  className="px-6 py-2.5 rounded-xl bg-[#FFFFFF] text-[#172033] text-xs font-semibold hover:bg-[#F8FAFC] transition-colors"
+                >
+                  Create Student Profile
+                </Link>
               </div>
             </div>
-          )}
-        </div>
-      </section>
+          </section>
+        )}
 
-      {/* Architecture & Tech Stack Section */}
-      <section id="architecture" className="py-20 px-6 max-w-7xl mx-auto border-b border-[#E2E8F0]">
-        <div className="text-center max-w-2xl mx-auto mb-14 space-y-2">
-          <span className="text-xs font-bold uppercase tracking-wider text-[#4F46E5]">Engineering Standards</span>
-          <h2 className="text-2xl sm:text-3xl font-bold text-[#172033]">
-            Enterprise-Grade Full-Stack Architecture
-          </h2>
-          <p className="text-xs sm:text-sm text-[#64748B]">
-            Built with strict separation of concerns, persistent PostgreSQL storage, and Python ML inference microservices.
-          </p>
-        </div>
+      </main>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="bg-[#FFFFFF] border border-[#E2E8F0] rounded-xl p-5 shadow-xs space-y-2">
-            <div className="text-xs font-bold text-[#4F46E5] uppercase">Frontend Layer</div>
-            <h4 className="text-sm font-semibold text-[#172033]">React + Vite + Recharts</h4>
-            <p className="text-xs text-[#64748B]">Modular SPA with lightweight responsive UI, client routing, and data visualization.</p>
-          </div>
-
-          <div className="bg-[#FFFFFF] border border-[#E2E8F0] rounded-xl p-5 shadow-xs space-y-2">
-            <div className="text-xs font-bold text-[#4F46E5] uppercase">Gateway API</div>
-            <h4 className="text-sm font-semibold text-[#172033]">Node.js + Express + Prisma</h4>
-            <p className="text-xs text-[#64748B]">Role-based JWT authentication, route proxying, and ORM database management.</p>
-          </div>
-
-          <div className="bg-[#FFFFFF] border border-[#E2E8F0] rounded-xl p-5 shadow-xs space-y-2">
-            <div className="text-xs font-bold text-[#4F46E5] uppercase">AI Microservice</div>
-            <h4 className="text-sm font-semibold text-[#172033]">Python + FastAPI + Scikit-Learn</h4>
-            <p className="text-xs text-[#64748B]">High-throughput inference for K-Means, Ridge regressions, and Transformers.</p>
-          </div>
-
-          <div className="bg-[#FFFFFF] border border-[#E2E8F0] rounded-xl p-5 shadow-xs space-y-2">
-            <div className="text-xs font-bold text-[#4F46E5] uppercase">Database Layer</div>
-            <h4 className="text-sm font-semibold text-[#172033]">PostgreSQL + pgvector</h4>
-            <p className="text-xs text-[#64748B]">ACID transaction guarantees with vector embeddings for cosine similarity search.</p>
-          </div>
-        </div>
-      </section>
-
-      {/* Call to Action Section */}
-      <section className="py-20 px-6 max-w-4xl mx-auto text-center space-y-6">
-        <h2 className="text-2xl sm:text-3xl font-bold text-[#172033]">
-          Ready to Modernize Your Campus Event Operations?
-        </h2>
-        <p className="text-xs sm:text-sm text-[#64748B] max-w-xl mx-auto">
-          Experience the power of machine learning, automated sentiment analysis, and intelligent demand prediction today.
-        </p>
-        <div className="flex justify-center gap-3">
-          <button
-            onClick={handleStart}
-            className="px-6 py-2.5 rounded-lg bg-[#4F46E5] hover:bg-[#4338CA] text-white text-xs font-semibold shadow-xs transition-colors cursor-pointer"
-          >
-            Launch EventIntel Portal
-          </button>
-          <button
-            onClick={handleRegister}
-            className="px-6 py-2.5 rounded-lg bg-[#FFFFFF] border border-[#E2E8F0] hover:bg-[#F8FAFC] text-[#172033] text-xs font-semibold transition-colors cursor-pointer"
-          >
-            Create Profile
-          </button>
-        </div>
-      </section>
-
-      {/* Institutional Footer */}
-      <footer className="border-t border-[#E2E8F0] bg-[#FFFFFF] py-8 px-6">
+      {/* ── FOOTER ────────────────────────────────────────────────────── */}
+      <footer className="bg-[#FFFFFF] border-t border-[#E2E8F0] py-8 px-4 sm:px-6 lg:px-8 mt-auto">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#64748B]">
           <div className="flex items-center gap-2">
-            <div className="w-5 h-5 rounded bg-[#4F46E5] text-white flex items-center justify-center text-[10px] font-bold">
+            <div className="w-6 h-6 rounded-md bg-[#4F46E5] text-white flex items-center justify-center text-[11px] font-bold">
               EI
             </div>
             <span className="font-semibold text-[#172033]">EventIntel AI</span>
-            <span>— Enterprise Campus Intelligence</span>
+            <span>— University Campus Intelligence & Event Management</span>
           </div>
-          <div>
-            © {new Date().getFullYear()} EventIntel Platform. All rights reserved.
+
+          <div className="flex items-center gap-6">
+            <Link to="/login" className="hover:text-[#172033] transition-colors">Portal Login</Link>
+            <Link to="/register" className="hover:text-[#172033] transition-colors">Register</Link>
+            <a href="#assistant-section" className="hover:text-[#172033] transition-colors">AI Assistant</a>
           </div>
         </div>
       </footer>
+
     </div>
   );
 };
