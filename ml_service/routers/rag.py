@@ -7,10 +7,10 @@ from typing import Optional, List, Dict, Any
 from fastapi import APIRouter, HTTPException, Query, Path
 from pydantic import BaseModel, Field
 
+import os
 import sys
-from pathlib import Path
 
-_SERVICE_ROOT = str(Path(__file__).resolve().parent.parent)
+_SERVICE_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if _SERVICE_ROOT not in sys.path:
     sys.path.insert(0, _SERVICE_ROOT)
 
