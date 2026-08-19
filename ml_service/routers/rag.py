@@ -7,12 +7,15 @@ from typing import Optional, List, Dict, Any
 from fastapi import APIRouter, HTTPException, Query, Path
 from pydantic import BaseModel, Field
 
-try:
-    from rag.rag_service import answer_question
-    from rag.index_events import index_all_events, index_single_event
-except (ImportError, ModuleNotFoundError):
-    from ml_service.rag.rag_service import answer_question
-    from ml_service.rag.index_events import index_all_events, index_single_event
+import sys
+from pathlib import Path
+
+_SERVICE_ROOT = str(Path(__file__).resolve().parent.parent)
+if _SERVICE_ROOT not in sys.path:
+    sys.path.insert(0, _SERVICE_ROOT)
+
+from rag.rag_service import answer_question
+from rag.index_events import index_all_events, index_single_event
 
 router = APIRouter(tags=["RAG AI Assistant"])
 
