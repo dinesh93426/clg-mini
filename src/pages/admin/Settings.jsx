@@ -27,7 +27,7 @@ export const Settings = () => {
         <div className="flex items-center justify-between pb-5 border-b border-[#E2E8F0]">
           <div className="space-y-1 pr-6">
             <h4 className="font-semibold text-xs text-[#172033] flex items-center gap-1.5">
-              <Sparkles size={14} className="text-[#4F46E5]" />
+              <Sparkles size={14} className="text-[#FF5A1F]" />
               <span>Sandbox Demo Mode</span>
             </h4>
             <p className="text-[11px] text-[#64748B] leading-relaxed">
@@ -40,7 +40,7 @@ export const Settings = () => {
             className="text-[#64748B] hover:text-[#172033] transition-colors cursor-pointer"
           >
             {demoMode ? (
-              <ToggleRight size={36} className="text-[#4F46E5]" />
+              <ToggleRight size={36} className="text-[#FF5A1F]" />
             ) : (
               <ToggleLeft size={36} className="text-[#94A3B8]" />
             )}

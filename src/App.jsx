@@ -136,7 +136,7 @@ const CommandPalette = () => {
                       className="w-full text-left px-3 py-2 rounded-lg hover:bg-[#F8FAFC] text-[#172033] flex justify-between items-center cursor-pointer transition-colors"
                     >
                       <span className="truncate pr-4 text-xs font-semibold">{e.title}</span>
-                      <span className="text-[9px] px-2 py-0.5 rounded bg-[#EEECFF] text-[#4F46E5] font-bold">{e.category}</span>
+                      <span className="text-[9px] px-2 py-0.5 rounded bg-[#EEECFF] text-[#FF5A1F] font-bold">{e.category}</span>
                     </button>
                   ))}
                 </div>

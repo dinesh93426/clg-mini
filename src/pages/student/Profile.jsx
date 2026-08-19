@@ -100,7 +100,7 @@ export const Profile = () => {
               <h3 className="text-sm font-bold text-[#172033]">Personal Information</h3>
               <button 
                 onClick={() => isEditing ? handleSaveProfile() : setIsEditing(true)}
-                className="text-xs font-semibold text-[#4F46E5] hover:text-[#4338CA] px-3 py-1 rounded-lg bg-[#EEEFFA] border border-[#C7D2FE] transition-colors cursor-pointer"
+                className="text-xs font-semibold text-[#FF5A1F] hover:text-[#E94712] px-3 py-1 rounded-lg bg-[#FFF1EB] border border-[#FFD2C2] transition-colors cursor-pointer"
               >
                 {isEditing ? 'Save Changes' : 'Edit Profile'}
               </button>
@@ -116,7 +116,7 @@ export const Profile = () => {
                       type="text" 
                       value={editForm.name} 
                       onChange={e => setEditForm({...editForm, name: e.target.value})}
-                      className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg px-2.5 py-1 w-full text-xs text-[#172033] focus:outline-none focus:border-[#4F46E5]"
+                      className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg px-2.5 py-1 w-full text-xs text-[#172033] focus:outline-none focus:border-[#FF5A1F]"
                     />
                   ) : (
                     <span className="font-semibold">{user?.name}</span>
@@ -140,7 +140,7 @@ export const Profile = () => {
                     <select 
                       value={editForm.department} 
                       onChange={e => setEditForm({...editForm, department: e.target.value})}
-                      className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg px-2.5 py-1 w-full text-xs text-[#172033] focus:outline-none focus:border-[#4F46E5]"
+                      className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg px-2.5 py-1 w-full text-xs text-[#172033] focus:outline-none focus:border-[#FF5A1F]"
                     >
                       <option value="Computer Science & Engineering">Computer Science & Engineering</option>
                       <option value="Electronics & Communication">Electronics & Communication</option>
@@ -162,7 +162,7 @@ export const Profile = () => {
                       <select 
                         value={editForm.year} 
                         onChange={e => setEditForm({...editForm, year: e.target.value})}
-                        className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg px-2.5 py-1 w-full text-xs text-[#172033] focus:outline-none focus:border-[#4F46E5]"
+                        className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg px-2.5 py-1 w-full text-xs text-[#172033] focus:outline-none focus:border-[#FF5A1F]"
                       >
                         <option value="1">1st Year</option>
                         <option value="2">2nd Year</option>
@@ -217,9 +217,9 @@ export const Profile = () => {
                   placeholder="Add interest tag..."
                   value={newInterest}
                   onChange={(e) => setNewInterest(e.target.value)}
-                  className="flex-1 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg px-3 py-1.5 text-xs text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#4F46E5]"
+                  className="flex-1 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg px-3 py-1.5 text-xs text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#FF5A1F]"
                 />
-                <button type="submit" className="p-1.5 rounded-lg bg-[#4F46E5] text-white hover:bg-[#4338CA] transition-colors cursor-pointer">
+                <button type="submit" className="p-1.5 rounded-lg bg-[#FF5A1F] text-white hover:bg-[#E94712] transition-colors cursor-pointer">
                   <Plus size={14} />
                 </button>
               </form>
@@ -228,13 +228,13 @@ export const Profile = () => {
             {/* Skills card */}
             <div className="bg-[#FFFFFF] p-5 rounded-2xl border border-[#E2E8F0] shadow-xs space-y-3.5">
               <h3 className="text-xs font-bold text-[#172033] flex items-center gap-1.5 uppercase tracking-wider">
-                <Tag size={14} className="text-[#4F46E5]" />
+                <Tag size={14} className="text-[#FF5A1F]" />
                 <span>Skills</span>
               </h3>
 
               <div className="flex flex-wrap gap-1.5 min-h-[40px] content-start">
                 {skills.map(skill => (
-                  <span key={skill} className="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-[#EEEFFA] border border-[#C7D2FE] text-[#4F46E5]">
+                  <span key={skill} className="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-[#FFF1EB] border border-[#FFD2C2] text-[#FF5A1F]">
                     {skill}
                   </span>
                 ))}
@@ -261,9 +261,9 @@ export const Profile = () => {
                   placeholder="Add skill tag..."
                   value={newSkill}
                   onChange={(e) => setNewSkill(e.target.value)}
-                  className="flex-1 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg px-3 py-1.5 text-xs text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#4F46E5]"
+                  className="flex-1 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg px-3 py-1.5 text-xs text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#FF5A1F]"
                 />
-                <button type="submit" className="p-1.5 rounded-lg bg-[#4F46E5] text-white hover:bg-[#4338CA] transition-colors cursor-pointer">
+                <button type="submit" className="p-1.5 rounded-lg bg-[#FF5A1F] text-white hover:bg-[#E94712] transition-colors cursor-pointer">
                   <Plus size={14} />
                 </button>
               </form>
@@ -274,7 +274,7 @@ export const Profile = () => {
         {/* Right Column: AI Behavior intelligence */}
         <div className="space-y-6">
           <div className="p-5 rounded-2xl border border-[#E2E8F0] bg-[#FFFFFF] space-y-3.5 shadow-xs">
-            <div className="flex items-center gap-2 text-[#4F46E5] text-xs font-bold uppercase tracking-wider">
+            <div className="flex items-center gap-2 text-[#FF5A1F] text-xs font-bold uppercase tracking-wider">
               <BrainCircuit size={15} />
               <span>AI Behavioral Profile</span>
             </div>
@@ -286,7 +286,7 @@ export const Profile = () => {
               </div>
               <div className="py-2 flex justify-between">
                 <span className="text-[#64748B]">Technical Focus:</span>
-                <span className="font-semibold text-[#4F46E5]">{user?.aiProfile?.technicalInterest || 'High'}</span>
+                <span className="font-semibold text-[#FF5A1F]">{user?.aiProfile?.technicalInterest || 'High'}</span>
               </div>
               <div className="py-2 flex justify-between">
                 <span className="text-[#64748B]">Attendance Index:</span>
@@ -302,7 +302,7 @@ export const Profile = () => {
               <span className="text-[10px] text-[#94A3B8] font-bold uppercase tracking-wider block mb-1.5">Calculated Core Focus</span>
               <div className="flex flex-wrap gap-1">
                 {(user?.aiProfile?.preferredCategories || ['AI', 'Technology', 'Workshops']).map(item => (
-                  <span key={item} className="text-[10px] px-2.5 py-0.5 font-semibold rounded-full bg-[#EEEFFA] text-[#4F46E5] border border-[#C7D2FE]">
+                  <span key={item} className="text-[10px] px-2.5 py-0.5 font-semibold rounded-full bg-[#FFF1EB] text-[#FF5A1F] border border-[#FFD2C2]">
                     {item}
                   </span>
                 ))}

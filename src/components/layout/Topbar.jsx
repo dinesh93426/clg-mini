@@ -38,13 +38,13 @@ export const Topbar = ({ onMenuClick }) => {
   const getNotifIcon = (type) => {
     switch (type) {
       case 'capacity':
-        return <AlertTriangle size={15} className="text-[#D97706]" />;
+        return <AlertTriangle size={15} className="text-[#F59E0B]" />;
       case 'recommendation':
-        return <Sparkles size={15} className="text-[#4F46E5]" />;
+        return <Sparkles size={15} className="text-[#FF5A1F]" />;
       case 'feedback':
         return <ShieldCheck size={15} className="text-[#16A34A]" />;
       default:
-        return <Calendar size={15} className="text-[#4F46E5]" />;
+        return <Calendar size={15} className="text-[#FF5A1F]" />;
     }
   };
 
@@ -54,7 +54,7 @@ export const Topbar = ({ onMenuClick }) => {
       <div className="flex items-center gap-4">
         <button 
           onClick={onMenuClick}
-          className="p-2 rounded-lg text-[#64748B] hover:text-[#172033] hover:bg-[#F8FAFC] md:hidden transition-colors cursor-pointer"
+          className="p-2 rounded-lg text-[#64748B] hover:text-[#FF5A1F] hover:bg-[#FFF7F3] md:hidden transition-colors cursor-pointer"
           aria-label="Toggle menu"
         >
           <Menu size={18} />
@@ -63,7 +63,7 @@ export const Topbar = ({ onMenuClick }) => {
         {/* Global Search Bar Trigger */}
         <button
           onClick={() => setShowSearchModal(true)}
-          className="hidden sm:flex items-center gap-2.5 w-64 md:w-80 px-3 py-2 rounded-lg text-left text-[13px] text-[#94A3B8] bg-[#F8FAFC] hover:bg-[#F1F5F9] border border-[#E2E8F0] focus:border-[#4F46E5] transition-colors cursor-pointer"
+          className="hidden sm:flex items-center gap-2.5 w-64 md:w-80 px-3 py-2 rounded-lg text-left text-[13px] text-[#94A3B8] bg-[#F8FAFC] hover:bg-[#F1F5F9] border border-[#E2E8F0] focus:border-[#FF5A1F] transition-colors cursor-pointer"
         >
           <Search size={14} className="text-[#94A3B8]" />
           <span className="truncate">Search events, campus telemetry...</span>
@@ -85,11 +85,11 @@ export const Topbar = ({ onMenuClick }) => {
         <div className="relative" ref={roleRef}>
           <button
             onClick={() => setShowRoleSwitcher(!showRoleSwitcher)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-[#172033] bg-[#FFFFFF] border border-[#E2E8F0] hover:bg-[#F8FAFC] transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-[#172033] bg-[#FFFFFF] border border-[#E2E8F0] hover:border-[#FFB49A] hover:bg-[#FFF7F3] transition-colors cursor-pointer"
           >
-            <RefreshCw size={12} className="text-[#4F46E5]" />
+            <RefreshCw size={12} className="text-[#FF5A1F]" />
             <span className="hidden md:inline text-[#64748B]">Portal:</span>
-            <span className="capitalize text-[#4F46E5]">{user?.role}</span>
+            <span className="capitalize text-[#FF5A1F]">{user?.role}</span>
           </button>
           
           {showRoleSwitcher && (
@@ -100,19 +100,19 @@ export const Topbar = ({ onMenuClick }) => {
               <div className="py-1 space-y-0.5">
                 <button
                   onClick={() => handleRoleChange('student')}
-                  className={`flex w-full items-center px-3 py-1.5 text-xs rounded-lg font-medium transition-colors ${user?.role === 'student' ? 'bg-[#EEF2FF] text-[#4F46E5]' : 'text-[#64748B] hover:text-[#172033] hover:bg-[#F8FAFC]'}`}
+                  className={`flex w-full items-center px-3 py-1.5 text-xs rounded-lg font-medium transition-colors ${user?.role === 'student' ? 'bg-[#FFF1EB] text-[#FF5A1F]' : 'text-[#64748B] hover:text-[#FF5A1F] hover:bg-[#FFF7F3]'}`}
                 >
                   Student Portal
                 </button>
                 <button
                   onClick={() => handleRoleChange('organizer')}
-                  className={`flex w-full items-center px-3 py-1.5 text-xs rounded-lg font-medium transition-colors ${user?.role === 'organizer' ? 'bg-[#EEF2FF] text-[#4F46E5]' : 'text-[#64748B] hover:text-[#172033] hover:bg-[#F8FAFC]'}`}
+                  className={`flex w-full items-center px-3 py-1.5 text-xs rounded-lg font-medium transition-colors ${user?.role === 'organizer' ? 'bg-[#FFF1EB] text-[#FF5A1F]' : 'text-[#64748B] hover:text-[#FF5A1F] hover:bg-[#FFF7F3]'}`}
                 >
                   Organizer Portal
                 </button>
                 <button
                   onClick={() => handleRoleChange('admin')}
-                  className={`flex w-full items-center px-3 py-1.5 text-xs rounded-lg font-medium transition-colors ${user?.role === 'admin' ? 'bg-[#EEF2FF] text-[#4F46E5]' : 'text-[#64748B] hover:text-[#172033] hover:bg-[#F8FAFC]'}`}
+                  className={`flex w-full items-center px-3 py-1.5 text-xs rounded-lg font-medium transition-colors ${user?.role === 'admin' ? 'bg-[#FFF1EB] text-[#FF5A1F]' : 'text-[#64748B] hover:text-[#FF5A1F] hover:bg-[#FFF7F3]'}`}
                 >
                   Admin Portal
                 </button>
@@ -125,12 +125,12 @@ export const Topbar = ({ onMenuClick }) => {
         <div className="relative" ref={notifRef}>
           <button
             onClick={() => setShowNotifDropdown(!showNotifDropdown)}
-            className="p-2 rounded-lg text-[#64748B] hover:text-[#172033] hover:bg-[#F8FAFC] transition-colors relative cursor-pointer"
+            className="p-2 rounded-lg text-[#64748B] hover:text-[#FF5A1F] hover:bg-[#FFF7F3] transition-colors relative cursor-pointer"
             aria-label="View notifications"
           >
             <Bell size={17} />
             {unreadCount > 0 && (
-              <span className="absolute top-1.5 right-1.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-[#4F46E5] text-[9px] font-bold text-white">
+              <span className="absolute top-1.5 right-1.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-[#FF5A1F] text-[9px] font-bold text-white shadow-xs">
                 {unreadCount}
               </span>
             )}
@@ -143,7 +143,7 @@ export const Topbar = ({ onMenuClick }) => {
                 {unreadCount > 0 && (
                   <button 
                     onClick={markAllRead}
-                    className="text-[11px] text-[#4F46E5] hover:text-[#4338CA] font-semibold cursor-pointer"
+                    className="text-[11px] text-[#FF5A1F] hover:text-[#E94712] font-semibold cursor-pointer"
                   >
                     Mark all read
                   </button>
@@ -158,7 +158,7 @@ export const Topbar = ({ onMenuClick }) => {
                   notifications.map((notif) => (
                     <div 
                       key={notif.id}
-                      className={`p-2.5 relative group transition-colors hover:bg-[#F8FAFC] rounded-lg ${!notif.read ? 'bg-[#EEF2FF]/40' : ''}`}
+                      className={`p-2.5 relative group transition-colors hover:bg-[#FFF7F3] rounded-lg ${!notif.read ? 'bg-[#FFF1EB]/50' : ''}`}
                     >
                       <div className="flex gap-2.5">
                         <div className="mt-0.5 shrink-0">
@@ -186,7 +186,7 @@ export const Topbar = ({ onMenuClick }) => {
         </div>
 
         {/* User Profile Avatar */}
-        <div className="flex items-center justify-center w-7 h-7 rounded-full bg-[#4F46E5] text-white font-semibold text-xs select-none">
+        <div className="flex items-center justify-center w-7 h-7 rounded-full bg-[#FF5A1F] text-white font-semibold text-xs select-none shadow-xs">
           {user?.name ? user.name.charAt(0).toUpperCase() : (user?.email ? user.email.charAt(0).toUpperCase() : 'U')}
         </div>
       </div>

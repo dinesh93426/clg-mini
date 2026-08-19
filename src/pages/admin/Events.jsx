@@ -44,7 +44,7 @@ export const AdminEvents = () => {
           placeholder="Search event title or organizer..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-9 pr-3 py-2 bg-[#FFFFFF] border border-[#E2E8F0] rounded-lg text-xs text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#4F46E5] transition-colors"
+          className="w-full pl-9 pr-3 py-2 bg-[#FFFFFF] border border-[#E2E8F0] rounded-lg text-xs text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#FF5A1F] transition-colors"
         />
       </div>
 
@@ -79,7 +79,7 @@ export const AdminEvents = () => {
                     <tr key={e.id} className="hover:bg-[#F8FAFC] text-[#172033] transition-colors">
                       <td className="px-5 py-3.5 font-semibold text-xs text-[#172033]">{e.title}</td>
                       <td className="px-5 py-3.5">
-                        <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#EEECFF] text-[#4F46E5] border border-[#C7D2FE]">
+                        <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#EEECFF] text-[#FF5A1F] border border-[#FFD2C2]">
                           {e.category}
                         </span>
                       </td>
@@ -88,7 +88,7 @@ export const AdminEvents = () => {
                       <td className="px-5 py-3.5">
                         <div className="flex items-center gap-2">
                           <div className="w-16 h-1.5 bg-[#F1F5F9] rounded-full overflow-hidden shrink-0">
-                            <div className="h-full bg-[#4F46E5] rounded-full" style={{ width: `${Math.min(100, percent)}%` }}></div>
+                            <div className="h-full bg-[#FF5A1F] rounded-full" style={{ width: `${Math.min(100, percent)}%` }}></div>
                           </div>
                           <span className="text-[10px] text-[#64748B] font-semibold">{percent}%</span>
                         </div>

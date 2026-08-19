@@ -11,7 +11,7 @@ export const OrganizerLayout = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-[#F8FAFC]">
-        <div className="w-8 h-8 rounded-full border-2 border-[#4F46E5] border-t-transparent animate-spin"></div>
+        <div className="w-8 h-8 rounded-full border-2 border-[#FF5A1F] border-t-transparent animate-spin"></div>
       </div>
     );
   }

@@ -122,7 +122,7 @@ export const Registrations = () => {
             </button>
 
             <div>
-              <span className="text-[10px] font-bold text-[#4F46E5] uppercase tracking-wider px-2.5 py-0.5 rounded bg-[#EEF2FF] border border-[#C7D2FE] inline-block mb-1.5">Digital Event Pass</span>
+              <span className="text-[10px] font-bold text-[#FF5A1F] uppercase tracking-wider px-2.5 py-0.5 rounded bg-[#FFF1EB] border border-[#FFD2C2] inline-block mb-1.5">Digital Event Pass</span>
               <h3 className="text-sm font-bold text-[#172033] leading-snug">{selectedQRReg.event?.title}</h3>
               <p className="text-xs text-[#64748B] mt-0.5">{selectedQRReg.event?.date} • {selectedQRReg.event?.venue}</p>
             </div>
@@ -154,11 +154,11 @@ export const Registrations = () => {
             </button>
 
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-[#EEF2FF] text-[#4F46E5] flex items-center justify-center shrink-0">
+              <div className="w-8 h-8 rounded-lg bg-[#FFF1EB] text-[#FF5A1F] flex items-center justify-center shrink-0">
                 <MessageSquareCode size={16} />
               </div>
               <div className="min-w-0 pr-4">
-                <span className="text-[10px] font-bold text-[#4F46E5] uppercase tracking-wider block">Submit Feedback</span>
+                <span className="text-[10px] font-bold text-[#FF5A1F] uppercase tracking-wider block">Submit Feedback</span>
                 <h3 className="text-xs font-bold text-[#172033] truncate">{selectedReg.event?.title}</h3>
               </div>
             </div>
@@ -172,7 +172,7 @@ export const Registrations = () => {
                 
                 {/* AI analyzed sentiment display */}
                 <div className="p-3 bg-[#FFFFFF] border border-[#E2E8F0] rounded-lg text-left space-y-1">
-                  <span className="text-[10px] text-[#4F46E5] font-bold uppercase tracking-wider block">
+                  <span className="text-[10px] text-[#FF5A1F] font-bold uppercase tracking-wider block">
                     AI Sentiment Analysis
                   </span>
                   <p className="text-[11px] text-[#64748B]">
@@ -189,7 +189,7 @@ export const Registrations = () => {
 
                 <button
                   onClick={() => setShowFeedbackModal(false)}
-                  className="w-full py-2 bg-[#4F46E5] hover:bg-[#4338CA] text-white rounded-lg text-xs font-semibold shadow-xs transition-colors cursor-pointer"
+                  className="w-full py-2 bg-[#FF5A1F] hover:bg-[#E94712] text-white rounded-lg text-xs font-semibold shadow-xs transition-colors cursor-pointer"
                 >
                   Done
                 </button>
@@ -224,14 +224,14 @@ export const Registrations = () => {
                     placeholder="Tell us about your event experience and key takeaways..."
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
-                    className="block w-full px-3 py-2 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg text-xs text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#4F46E5] transition-colors"
+                    className="block w-full px-3 py-2 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg text-xs text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#FF5A1F] transition-colors"
                   />
                 </div>
 
                 <button
                   type="submit"
                   disabled={feedbackSubmitting || !comment.trim()}
-                  className="w-full py-2 bg-[#4F46E5] hover:bg-[#4338CA] disabled:opacity-50 text-white rounded-lg text-xs font-semibold shadow-xs transition-colors cursor-pointer"
+                  className="w-full py-2 bg-[#FF5A1F] hover:bg-[#E94712] disabled:opacity-50 text-white rounded-lg text-xs font-semibold shadow-xs transition-colors cursor-pointer"
                 >
                   {feedbackSubmitting ? 'Analyzing sentiment...' : 'Submit Feedback'}
                 </button>
@@ -259,7 +259,7 @@ export const Registrations = () => {
             onClick={() => setActiveTab(tab.id)}
             className={`px-4 py-2 border-b-2 transition-colors cursor-pointer -mb-px
               ${activeTab === tab.id 
-                ? 'border-[#4F46E5] text-[#4F46E5]' 
+                ? 'border-[#FF5A1F] text-[#FF5A1F]' 
                 : 'border-transparent text-[#64748B] hover:text-[#172033]'}`}
           >
             {tab.label}
@@ -277,7 +277,7 @@ export const Registrations = () => {
           </p>
           <Link
             to="/student/events"
-            className="inline-flex items-center gap-1 px-3.5 py-1.5 rounded-lg bg-[#4F46E5] hover:bg-[#4338CA] text-white text-xs font-semibold shadow-xs transition-colors"
+            className="inline-flex items-center gap-1 px-3.5 py-1.5 rounded-lg bg-[#FF5A1F] hover:bg-[#E94712] text-white text-xs font-semibold shadow-xs transition-colors"
           >
             Explore Events
           </Link>
@@ -293,7 +293,7 @@ export const Registrations = () => {
                 <img src={reg.event?.image} alt={reg.event?.title} className="w-16 h-16 object-cover rounded-lg bg-[#F8FAFC] shrink-0 border border-[#E2E8F0]" />
                 <div className="min-w-0">
                   <div className="flex items-center gap-2">
-                    <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#EEF2FF] text-[#4F46E5]">
+                    <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#FFF1EB] text-[#FF5A1F]">
                       {reg.event?.category}
                     </span>
                     {reg.attendance && (
@@ -323,7 +323,7 @@ export const Registrations = () => {
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => handleOpenQR(reg)}
-                      className="px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-[#4F46E5] hover:bg-[#4338CA] shadow-xs transition-colors flex items-center gap-1.5 cursor-pointer"
+                      className="px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-[#FF5A1F] hover:bg-[#E94712] shadow-xs transition-colors flex items-center gap-1.5 cursor-pointer"
                     >
                       <QrCode size={13} />
                       <span>View Pass</span>
@@ -361,7 +361,7 @@ export const Registrations = () => {
                     ) : (
                       <button
                         onClick={() => handleOpenFeedback(reg)}
-                        className="px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-[#4F46E5] hover:bg-[#4338CA] transition-colors flex items-center gap-1 shadow-xs cursor-pointer"
+                        className="px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-[#FF5A1F] hover:bg-[#E94712] transition-colors flex items-center gap-1 shadow-xs cursor-pointer"
                       >
                         <Star size={12} fill="currentColor" />
                         <span>Give Feedback</span>

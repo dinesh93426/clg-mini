@@ -108,7 +108,7 @@ export const Events = () => {
             </div>
             <button
               onClick={() => setAlertInfo(null)}
-              className="w-full py-2 bg-[#4F46E5] hover:bg-[#4338CA] text-white rounded-lg text-xs font-semibold shadow-xs transition-colors cursor-pointer"
+              className="w-full py-2 bg-[#FF5A1F] hover:bg-[#E94712] text-white rounded-lg text-xs font-semibold shadow-xs transition-colors cursor-pointer"
             >
               Confirm
             </button>
@@ -131,7 +131,7 @@ export const Events = () => {
             placeholder="Search events by title, description, or organizer..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 bg-[#FFFFFF] border border-[#E2E8F0] rounded-lg text-xs text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#4F46E5] transition-colors"
+            className="w-full pl-9 pr-3 py-2 bg-[#FFFFFF] border border-[#E2E8F0] rounded-lg text-xs text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#FF5A1F] transition-colors"
           />
         </div>
         
@@ -140,14 +140,14 @@ export const Events = () => {
           <div className="flex bg-[#FFFFFF] border border-[#E2E8F0] rounded-lg p-1 shrink-0">
             <button
               onClick={() => setViewMode('grid')}
-              className={`p-1.5 rounded transition-colors cursor-pointer ${viewMode === 'grid' ? 'bg-[#EEF2FF] text-[#4F46E5]' : 'text-[#64748B] hover:text-[#172033]'}`}
+              className={`p-1.5 rounded transition-colors cursor-pointer ${viewMode === 'grid' ? 'bg-[#FFF1EB] text-[#FF5A1F]' : 'text-[#64748B] hover:text-[#172033]'}`}
               title="Grid View"
             >
               <LayoutGrid size={14} />
             </button>
             <button
               onClick={() => setViewMode('list')}
-              className={`p-1.5 rounded transition-colors cursor-pointer ${viewMode === 'list' ? 'bg-[#EEF2FF] text-[#4F46E5]' : 'text-[#64748B] hover:text-[#172033]'}`}
+              className={`p-1.5 rounded transition-colors cursor-pointer ${viewMode === 'list' ? 'bg-[#FFF1EB] text-[#FF5A1F]' : 'text-[#64748B] hover:text-[#172033]'}`}
               title="List View"
             >
               <List size={14} />
@@ -172,7 +172,7 @@ export const Events = () => {
             onClick={() => setSelectedCategory(cat)}
             className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap border transition-colors cursor-pointer
               ${selectedCategory === cat 
-                ? 'bg-[#EEF2FF] border-[#C7D2FE] text-[#4F46E5] font-semibold' 
+                ? 'bg-[#FFF1EB] border-[#FFD2C2] text-[#FF5A1F] font-semibold' 
                 : 'bg-[#FFFFFF] border-[#E2E8F0] text-[#64748B] hover:text-[#172033] hover:bg-[#F8FAFC]'}`}
           >
             {cat}
@@ -185,7 +185,7 @@ export const Events = () => {
         <div className="p-4 rounded-xl bg-[#FFFFFF] border border-[#E2E8F0] grid grid-cols-2 md:grid-cols-4 gap-3 text-xs shadow-xs">
           <div>
             <label className="text-[#64748B] font-bold block mb-1 uppercase tracking-wider text-[10px]">Department</label>
-            <select className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-1.5 w-full text-[#172033] focus:outline-none focus:border-[#4F46E5]">
+            <select className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-1.5 w-full text-[#172033] focus:outline-none focus:border-[#FF5A1F]">
               <option>All Departments</option>
               <option>Computer Science</option>
               <option>Electronics</option>
@@ -194,7 +194,7 @@ export const Events = () => {
           </div>
           <div>
             <label className="text-[#64748B] font-bold block mb-1 uppercase tracking-wider text-[10px]">Seat Availability</label>
-            <select className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-1.5 w-full text-[#172033] focus:outline-none focus:border-[#4F46E5]">
+            <select className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-1.5 w-full text-[#172033] focus:outline-none focus:border-[#FF5A1F]">
               <option>All Events</option>
               <option>Seats Available</option>
               <option>Sold Out</option>
@@ -202,7 +202,7 @@ export const Events = () => {
           </div>
           <div>
             <label className="text-[#64748B] font-bold block mb-1 uppercase tracking-wider text-[10px]">Schedule</label>
-            <select className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-1.5 w-full text-[#172033] focus:outline-none focus:border-[#4F46E5]">
+            <select className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-1.5 w-full text-[#172033] focus:outline-none focus:border-[#FF5A1F]">
               <option>Anytime</option>
               <option>This Week</option>
               <option>Next Week</option>
@@ -211,7 +211,7 @@ export const Events = () => {
           </div>
           <div>
             <label className="text-[#64748B] font-bold block mb-1 uppercase tracking-wider text-[10px]">Event Type</label>
-            <select className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-1.5 w-full text-[#172033] focus:outline-none focus:border-[#4F46E5]">
+            <select className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-1.5 w-full text-[#172033] focus:outline-none focus:border-[#FF5A1F]">
               <option>All Formats</option>
               <option>Workshop / Lab</option>
               <option>Hackathon</option>
@@ -235,7 +235,7 @@ export const Events = () => {
           <p className="text-xs text-[#64748B] max-w-sm mx-auto">Try adjusting your search terms or clearing selected category filters.</p>
           <button
             onClick={() => { setSearch(''); setSelectedCategory('All'); }}
-            className="px-3.5 py-1.5 bg-[#4F46E5] hover:bg-[#4338CA] text-white rounded-lg text-xs font-semibold shadow-xs transition-colors cursor-pointer"
+            className="px-3.5 py-1.5 bg-[#FF5A1F] hover:bg-[#E94712] text-white rounded-lg text-xs font-semibold shadow-xs transition-colors cursor-pointer"
           >
             Reset Filters
           </button>
@@ -270,17 +270,17 @@ export const Events = () => {
                   <img src={event.image} alt={event.title} className="w-16 h-16 object-cover rounded-lg bg-[#F8FAFC] shrink-0 border border-[#E2E8F0]" />
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#EEF2FF] text-[#4F46E5]">
+                      <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#FFF1EB] text-[#FF5A1F]">
                         {event.category}
                       </span>
                       {event.aiRecommended && (
-                        <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#EEF2FF] text-[#4F46E5] border border-[#C7D2FE] flex items-center gap-1">
+                        <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#FFF1EB] text-[#FF5A1F] border border-[#FFD2C2] flex items-center gap-1">
                           <Sparkles size={10} /> {event.aiMatchPercentage}% Match
                         </span>
                       )}
                     </div>
                     <Link to={`/student/events/${event.id}`}>
-                      <h3 className="text-xs font-semibold text-[#172033] hover:text-[#4F46E5] transition-colors mt-1 truncate">{event.title}</h3>
+                      <h3 className="text-xs font-semibold text-[#172033] hover:text-[#FF5A1F] transition-colors mt-1 truncate">{event.title}</h3>
                     </Link>
                     <p className="text-[11px] text-[#64748B] mt-0.5 line-clamp-1">{event.description}</p>
                   </div>
@@ -316,7 +316,7 @@ export const Events = () => {
                         className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold text-white transition-colors cursor-pointer
                           ${isSoldOut 
                             ? 'bg-[#F8FAFC] text-[#94A3B8] border border-[#E2E8F0] cursor-not-allowed' 
-                            : 'bg-[#4F46E5] hover:bg-[#4338CA]'}`}
+                            : 'bg-[#FF5A1F] hover:bg-[#E94712]'}`}
                       >
                         {registeringId === event.id ? 'Registering...' : 'Register'}
                       </button>

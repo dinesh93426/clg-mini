@@ -115,7 +115,7 @@ export const FeedbackIntelligence = () => {
 
                   <div className="flex items-center gap-3">
                     <div className="w-24 h-1.5 bg-[#F1F5F9] rounded-full overflow-hidden hidden sm:block">
-                      <div className="h-full bg-[#4F46E5] rounded-full" style={{ width: `${topic.score}%` }}></div>
+                      <div className="h-full bg-[#FF5A1F] rounded-full" style={{ width: `${topic.score}%` }}></div>
                     </div>
                     
                     <span className={`inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full border ${
@@ -134,8 +134,8 @@ export const FeedbackIntelligence = () => {
 
         {/* Right column: AI Summary report (span 5) */}
         <div className="lg:col-span-5">
-          <div className="p-5 rounded-2xl border border-[#C7D2FE] bg-[#FFFFFF] shadow-xs space-y-4">
-            <div className="flex items-center gap-2 text-[#4F46E5] text-xs font-bold uppercase tracking-wider">
+          <div className="p-5 rounded-2xl border border-[#FFD2C2] bg-[#FFFFFF] shadow-xs space-y-4">
+            <div className="flex items-center gap-2 text-[#FF5A1F] text-xs font-bold uppercase tracking-wider">
               <Sparkles size={15} />
               <span>AI Sentiment Summary</span>
             </div>
@@ -168,7 +168,7 @@ export const FeedbackIntelligence = () => {
 
               {/* Improvements */}
               <div className="space-y-1.5 pt-1 border-t border-[#E2E8F0]">
-                <span className="text-[10px] text-[#4F46E5] font-bold uppercase tracking-wider block">Recommended Adjustments</span>
+                <span className="text-[10px] text-[#FF5A1F] font-bold uppercase tracking-wider block">Recommended Adjustments</span>
                 <ul className="space-y-1 list-disc pl-4 text-[#172033]">
                   {aiEventSummary.improvements.map((imp, i) => (
                     <li key={i} className="leading-relaxed">{imp}</li>

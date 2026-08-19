@@ -62,7 +62,7 @@ export const Scanner = () => {
   if (loading) {
     return (
       <div className="flex justify-center py-20">
-        <span className="h-8 w-8 animate-spin rounded-full border-2 border-[#4F46E5] border-t-transparent" />
+        <span className="h-8 w-8 animate-spin rounded-full border-2 border-[#FF5A1F] border-t-transparent" />
       </div>
     );
   }
@@ -82,7 +82,7 @@ export const Scanner = () => {
 
         <div className="border-b border-[#E2E8F0] pb-4">
           <h1 className="text-2xl font-bold tracking-tight text-[#172033] flex items-center gap-2">
-            <QrCode size={22} className="text-[#4F46E5]" />
+            <QrCode size={22} className="text-[#FF5A1F]" />
             Check-in Scanner
           </h1>
           <p className="text-xs text-[#64748B] mt-0.5">
@@ -97,12 +97,12 @@ export const Scanner = () => {
         <div className="bg-[#FFFFFF] rounded-2xl border border-[#E2E8F0] overflow-hidden relative flex flex-col items-center justify-center p-8 min-h-[320px] shadow-xs">
           {!scanResult ? (
             <div className="flex flex-col items-center">
-              <div className="w-52 h-52 border-2 border-dashed border-[#4F46E5]/40 rounded-2xl relative flex items-center justify-center bg-[#F8FAFC]">
-                <ScanLine size={40} className="text-[#4F46E5]/30" />
-                <div className="absolute top-0 left-0 w-6 h-6 border-t-3 border-l-3 border-[#4F46E5] rounded-tl-lg"></div>
-                <div className="absolute top-0 right-0 w-6 h-6 border-t-3 border-r-3 border-[#4F46E5] rounded-tr-lg"></div>
-                <div className="absolute bottom-0 left-0 w-6 h-6 border-b-3 border-l-3 border-[#4F46E5] rounded-bl-lg"></div>
-                <div className="absolute bottom-0 right-0 w-6 h-6 border-b-3 border-r-3 border-[#4F46E5] rounded-br-lg"></div>
+              <div className="w-52 h-52 border-2 border-dashed border-[#FF5A1F]/40 rounded-2xl relative flex items-center justify-center bg-[#F8FAFC]">
+                <ScanLine size={40} className="text-[#FF5A1F]/30" />
+                <div className="absolute top-0 left-0 w-6 h-6 border-t-3 border-l-3 border-[#FF5A1F] rounded-tl-lg"></div>
+                <div className="absolute top-0 right-0 w-6 h-6 border-t-3 border-r-3 border-[#FF5A1F] rounded-tr-lg"></div>
+                <div className="absolute bottom-0 left-0 w-6 h-6 border-b-3 border-l-3 border-[#FF5A1F] rounded-bl-lg"></div>
+                <div className="absolute bottom-0 right-0 w-6 h-6 border-b-3 border-r-3 border-[#FF5A1F] rounded-br-lg"></div>
               </div>
               <p className="mt-4 text-xs font-semibold text-[#64748B]">Waiting for QR Code scan...</p>
             </div>
@@ -128,7 +128,7 @@ export const Scanner = () => {
           <div className="bg-[#FFFFFF] p-6 rounded-2xl border border-[#E2E8F0] shadow-xs flex flex-col justify-between h-full space-y-4">
             <div>
               <h3 className="text-sm font-bold text-[#172033] mb-1 flex items-center gap-1.5">
-                <UserCheck size={16} className="text-[#4F46E5]" />
+                <UserCheck size={16} className="text-[#FF5A1F]" />
                 Manual Entry & Simulation
               </h3>
               <p className="text-xs text-[#64748B] leading-relaxed">
@@ -148,11 +148,11 @@ export const Scanner = () => {
                     placeholder="e.g. stu-10452"
                     value={studentIdInput}
                     onChange={(e) => setStudentIdInput(e.target.value)}
-                    className="flex-1 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg px-3 py-2 text-xs text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#4F46E5] transition-colors"
+                    className="flex-1 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg px-3 py-2 text-xs text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#FF5A1F] transition-colors"
                   />
                   <button
                     type="submit"
-                    className="px-4 py-2 bg-[#4F46E5] hover:bg-[#4338CA] text-white rounded-lg text-xs font-semibold transition-colors shadow-xs cursor-pointer"
+                    className="px-4 py-2 bg-[#FF5A1F] hover:bg-[#E94712] text-white rounded-lg text-xs font-semibold transition-colors shadow-xs cursor-pointer"
                   >
                     Check In
                   </button>
@@ -163,7 +163,7 @@ export const Scanner = () => {
             <div className="pt-4 border-t border-[#E2E8F0]">
               <button
                 onClick={handleMockRandomScan}
-                className="w-full py-2.5 bg-[#F8FAFC] hover:bg-[#EEF2FF] border border-[#E2E8F0] text-[#4F46E5] rounded-lg text-xs font-semibold transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+                className="w-full py-2.5 bg-[#F8FAFC] hover:bg-[#FFF1EB] border border-[#E2E8F0] text-[#FF5A1F] rounded-lg text-xs font-semibold transition-colors cursor-pointer flex items-center justify-center gap-1.5"
               >
                 <ScanLine size={13} />
                 <span>Simulate Next Student QR</span>

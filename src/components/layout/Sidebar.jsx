@@ -74,12 +74,12 @@ export const Sidebar = ({ isOpen, setIsOpen }) => {
       `}>
         {/* Brand Header */}
         <div className="flex items-center gap-3 px-5 h-16 border-b border-[#E2E8F0]">
-          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-[#4F46E5] text-white shrink-0 shadow-xs">
+          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-[#FF5A1F] text-white shrink-0 shadow-xs">
             <BrainCircuit size={17} />
           </div>
           <div className="min-w-0">
             <h1 className="font-semibold text-sm tracking-tight text-[#172033] leading-none">
-              EventIntel <span className="text-[#4F46E5] font-bold">AI</span>
+              EventIntel <span className="text-[#FF5A1F] font-bold">AI</span>
             </h1>
             <p className="text-[10px] text-[#94A3B8] font-medium tracking-wide uppercase mt-1">
               University Portal
@@ -102,8 +102,8 @@ export const Sidebar = ({ isOpen, setIsOpen }) => {
                 className={({ isActive }) => `
                   flex items-center justify-between px-3 py-2 rounded-lg text-[13px] font-medium transition-colors duration-150 group cursor-pointer
                   ${isActive 
-                    ? 'bg-[#EEF2FF] text-[#4F46E5] font-semibold' 
-                    : 'text-[#64748B] hover:text-[#172033] hover:bg-[#F8FAFC]'}
+                    ? 'bg-[#FFF1EB] text-[#FF5A1F] font-semibold' 
+                    : 'text-[#64748B] hover:text-[#FF5A1F] hover:bg-[#FFF7F3]'}
                 `}
               >
                 {({ isActive }) => (
@@ -111,13 +111,13 @@ export const Sidebar = ({ isOpen, setIsOpen }) => {
                     <div className="flex items-center gap-2.5 min-w-0">
                       <Icon 
                         size={16} 
-                        className={`transition-colors shrink-0 ${isActive ? 'text-[#4F46E5]' : 'text-[#64748B] group-hover:text-[#172033]'}`} 
+                        className={`transition-colors shrink-0 ${isActive ? 'text-[#FF5A1F]' : 'text-[#64748B] group-hover:text-[#FF5A1F]'}`} 
                       />
                       <span className="truncate">{link.name}</span>
                     </div>
                     
                     {link.badge && (
-                      <span className="text-[9px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wider bg-[#EEF2FF] text-[#4F46E5] border border-[#C7D2FE]">
+                      <span className="text-[9px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wider bg-[#FFF1EB] text-[#E94712] border border-[#FFD2C2]">
                         {link.badge}
                       </span>
                     )}
@@ -131,7 +131,7 @@ export const Sidebar = ({ isOpen, setIsOpen }) => {
         {/* User Profile & Sign Out Footer */}
         <div className="p-3 border-t border-[#E2E8F0] bg-[#FFFFFF]">
           <div className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg bg-[#F8FAFC] border border-[#E2E8F0] mb-2">
-            <div className="flex items-center justify-center w-7 h-7 rounded-full bg-[#4F46E5] text-white text-[11px] font-semibold shrink-0">
+            <div className="flex items-center justify-center w-7 h-7 rounded-full bg-[#FF5A1F] text-white text-[11px] font-semibold shrink-0">
               {user?.name ? user.name.charAt(0).toUpperCase() : (user?.email ? user.email.charAt(0).toUpperCase() : 'U')}
             </div>
             <div className="flex-1 min-w-0">

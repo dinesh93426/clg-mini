@@ -77,7 +77,7 @@ export const EventAnalytics = () => {
         <AlertTriangle size={32} className="mx-auto text-[#D97706]" />
         <h3 className="font-bold text-[#172033] text-base">Analytics Unavailable</h3>
         <p className="text-xs text-[#64748B]">{error || 'Event analytics not found.'}</p>
-        <button onClick={() => navigate('/organizer/events')} className="px-3.5 py-1.5 bg-[#4F46E5] rounded-lg text-xs font-semibold text-white">
+        <button onClick={() => navigate('/organizer/events')} className="px-3.5 py-1.5 bg-[#FF5A1F] rounded-lg text-xs font-semibold text-white">
           Back to list
         </button>
       </div>
@@ -101,7 +101,7 @@ export const EventAnalytics = () => {
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E2E8F0] pb-5">
         <div>
-          <span className="text-[10px] text-[#4F46E5] font-bold uppercase tracking-wider">Metrics Deep Dive</span>
+          <span className="text-[10px] text-[#FF5A1F] font-bold uppercase tracking-wider">Metrics Deep Dive</span>
           <h1 className="text-2xl font-bold tracking-tight text-[#172033] truncate max-w-lg mt-0.5">{event.title}</h1>
           <div className="flex flex-wrap items-center gap-4 text-xs text-[#64748B] mt-1">
             <div className="flex items-center gap-1">
@@ -125,7 +125,7 @@ export const EventAnalytics = () => {
           </Link>
           <Link
             to={`/organizer/events/${id}/certificates`}
-            className="flex items-center gap-1.5 px-3.5 py-2 bg-[#4F46E5] hover:bg-[#4338CA] text-white text-xs font-semibold rounded-lg shadow-xs transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 px-3.5 py-2 bg-[#FF5A1F] hover:bg-[#E94712] text-white text-xs font-semibold rounded-lg shadow-xs transition-colors cursor-pointer"
           >
             <Award size={13} />
             <span>Certificates Hub</span>
@@ -136,8 +136,8 @@ export const EventAnalytics = () => {
       {/* KPI Stats Grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
-          { label: 'Registrations', val: event.registrationCount, desc: 'Target allocation', icon: Users, color: 'text-[#4F46E5] bg-[#EEF2FF]' },
-          { label: 'Capacity Utilized', val: `${percentSeats}%`, desc: 'Room seating ratio', icon: TrendingUp, color: 'text-[#4F46E5] bg-[#EEF2FF]' },
+          { label: 'Registrations', val: event.registrationCount, desc: 'Target allocation', icon: Users, color: 'text-[#FF5A1F] bg-[#FFF1EB]' },
+          { label: 'Capacity Utilized', val: `${percentSeats}%`, desc: 'Room seating ratio', icon: TrendingUp, color: 'text-[#FF5A1F] bg-[#FFF1EB]' },
           { label: 'Checked In Ratio', val: `${Math.round(percentSeats * 0.85)}%`, desc: 'Scanned at doorway', icon: CheckCircle, color: 'text-[#16A34A] bg-[#DCFCE7]' },
           { label: 'Average Rating', val: `${avgRating} / 5`, desc: 'Student satisfaction', icon: Star, color: 'text-[#D97706] bg-[#FEF3C7]' }
         ].map(stat => {
@@ -170,15 +170,15 @@ export const EventAnalytics = () => {
               <AreaChart data={regData} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorTrend" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#4F46E5" stopOpacity={0.2}/>
-                    <stop offset="95%" stopColor="#4F46E5" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="#FF5A1F" stopOpacity={0.2}/>
+                    <stop offset="95%" stopColor="#FF5A1F" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" />
                 <XAxis dataKey="date" stroke="#94A3B8" tickLine={false} tick={{ fontSize: 11 }} />
                 <YAxis stroke="#94A3B8" tickLine={false} tick={{ fontSize: 11 }} />
                 <Tooltip contentStyle={{ backgroundColor: '#FFFFFF', borderColor: '#E2E8F0', borderRadius: '8px', fontSize: '11px', boxShadow: '0 2px 8px rgba(15,23,42,0.08)' }} />
-                <Area type="monotone" dataKey="count" stroke="#4F46E5" strokeWidth={2} fillOpacity={1} fill="url(#colorTrend)" name="Registrations" />
+                <Area type="monotone" dataKey="count" stroke="#FF5A1F" strokeWidth={2} fillOpacity={1} fill="url(#colorTrend)" name="Registrations" />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -195,7 +195,7 @@ export const EventAnalytics = () => {
                 <YAxis stroke="#94A3B8" tickLine={false} domain={[0, 100]} tick={{ fontSize: 11 }} />
                 <Tooltip contentStyle={{ backgroundColor: '#FFFFFF', borderColor: '#E2E8F0', borderRadius: '8px', fontSize: '11px', boxShadow: '0 2px 8px rgba(15,23,42,0.08)' }} />
                 <Legend iconSize={10} verticalAlign="top" height={36} wrapperStyle={{ fontSize: '11px' }} />
-                <Bar dataKey="Score" fill="#4F46E5" radius={[4, 4, 0, 0]} name="Aspect Score %" />
+                <Bar dataKey="Score" fill="#FF5A1F" radius={[4, 4, 0, 0]} name="Aspect Score %" />
                 <Bar dataKey="Target" fill="#E2E8F0" radius={[4, 4, 0, 0]} name="Campus Target (80%)" />
               </BarChart>
             </ResponsiveContainer>
@@ -245,8 +245,8 @@ export const EventAnalytics = () => {
         </div>
 
         {/* AI improvement summary list */}
-        <div className="p-5 rounded-2xl border border-[#C7D2FE] bg-[#FFFFFF] space-y-2.5 shadow-xs">
-          <span className="text-[10px] text-[#4F46E5] font-bold uppercase tracking-wider block">AI Sentiment Suggestions</span>
+        <div className="p-5 rounded-2xl border border-[#FFD2C2] bg-[#FFFFFF] space-y-2.5 shadow-xs">
+          <span className="text-[10px] text-[#FF5A1F] font-bold uppercase tracking-wider block">AI Sentiment Suggestions</span>
           <div className="space-y-2 text-xs text-[#172033] leading-relaxed">
             <p>1. <strong>Prerequisite setup check</strong>: Some participants noted initial workspace bottlenecks. Recommend circulating pre-event Docker instructions 24 hours earlier next time.</p>
             <p>2. <strong>Wi-Fi Optimization</strong>: High localized demand triggered lag. Pre-allocate dedicated campus Wi-Fi access tokens for attendees.</p>

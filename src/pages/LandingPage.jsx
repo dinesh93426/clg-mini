@@ -269,7 +269,7 @@ export const LandingPage = () => {
   }, [user?.interests]);
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-[#172033] flex flex-col font-sans selection:bg-[#EEF2FF] selection:text-[#4F46E5]">
+    <div className="min-h-screen bg-[#F8FAFC] text-[#172033] flex flex-col font-sans selection:bg-[#FFF1EB] selection:text-[#FF5A1F]">
       
       {/* Toast Notification */}
       {toastMessage && (
@@ -285,14 +285,14 @@ export const LandingPage = () => {
           
           {/* Logo & Platform Name */}
           <Link to="/" className="flex items-center gap-2.5 group">
-            <div className="w-9 h-9 rounded-xl bg-[#4F46E5] text-white flex items-center justify-center shadow-xs group-hover:bg-[#4338CA] transition-colors">
+            <div className="w-9 h-9 rounded-xl bg-[#FF5A1F] text-white flex items-center justify-center shadow-xs group-hover:bg-[#E94712] transition-colors">
               <BrainCircuit size={20} />
             </div>
             <div>
               <span className="text-base font-bold tracking-tight text-[#172033]">
-                EventIntel <span className="text-[#4F46E5]">AI</span>
+                EventIntel <span className="text-[#FF5A1F]">AI</span>
               </span>
-              <span className="hidden sm:inline-block ml-2 text-[11px] font-medium px-2 py-0.5 rounded-md bg-[#EEF2FF] text-[#4F46E5] border border-[#C7D2FE]">
+              <span className="hidden sm:inline-block ml-2 text-[11px] font-semibold px-2.5 py-0.5 rounded-md bg-[#FFF1EB] text-[#FF5A1F] border border-[#FFD2C2]">
                 Campus Portal
               </span>
             </div>
@@ -300,24 +300,24 @@ export const LandingPage = () => {
 
           {/* Navigation Links */}
           <nav className="hidden md:flex items-center gap-6 text-xs font-medium text-[#64748B]">
-            <a href="#events-section" className="hover:text-[#172033] transition-colors">
+            <a href="#events-section" className="hover:text-[#FF5A1F] transition-colors">
               Discover Events
             </a>
-            <a href="#categories-section" className="hover:text-[#172033] transition-colors">
+            <a href="#categories-section" className="hover:text-[#FF5A1F] transition-colors">
               Categories
             </a>
             {isStudent && (
               <>
-                <a href="#recommended-section" className="hover:text-[#4F46E5] transition-colors flex items-center gap-1 text-[#4F46E5] font-semibold">
-                  <Sparkles size={13} /> Recommended
+                <a href="#recommended-section" className="hover:text-[#FF5A1F] transition-colors flex items-center gap-1 text-[#FF5A1F] font-semibold">
+                  <Sparkles size={13} className="text-[#FF5A1F]" /> Recommended
                 </a>
-                <a href="#my-events-section" className="hover:text-[#172033] transition-colors">
+                <a href="#my-events-section" className="hover:text-[#FF5A1F] transition-colors">
                   My Registrations
                 </a>
               </>
             )}
-            <a href="#assistant-section" className="hover:text-[#172033] transition-colors flex items-center gap-1">
-              <Bot size={14} className="text-[#4F46E5]" /> AI Assistant
+            <a href="#assistant-section" className="hover:text-[#FF5A1F] transition-colors flex items-center gap-1">
+              <Bot size={14} className="text-[#FF5A1F]" /> AI Assistant
             </a>
           </nav>
 
@@ -327,7 +327,7 @@ export const LandingPage = () => {
               <div className="flex items-center gap-2.5">
                 <Link
                   to={`/${user.role.toLowerCase()}/dashboard`}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#4F46E5] text-white hover:bg-[#4338CA] transition-colors shadow-xs"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-[#FF5A1F] text-white hover:bg-[#E94712] hover:shadow-[0_8px_20px_rgba(255,90,31,0.20)] transition-all shadow-xs"
                 >
                   <GraduationCap size={15} />
                   <span>Go to {user.role === 'STUDENT' ? 'Dashboard' : `${user.role} Portal`}</span>
@@ -335,7 +335,7 @@ export const LandingPage = () => {
                 <button
                   onClick={logout}
                   title="Sign Out"
-                  className="p-1.5 rounded-lg border border-[#E2E8F0] text-[#64748B] hover:text-[#DC2626] hover:bg-[#FEE2E2]/30 transition-colors"
+                  className="p-1.5 rounded-lg border border-[#E2E8F0] text-[#64748B] hover:text-[#DC2626] hover:bg-[#FEE2E2]/40 transition-colors cursor-pointer"
                 >
                   <LogOut size={16} />
                 </button>
@@ -344,13 +344,13 @@ export const LandingPage = () => {
               <div className="flex items-center gap-2">
                 <Link
                   to="/login"
-                  className="px-3.5 py-1.5 text-xs font-semibold text-[#172033] hover:text-[#4F46E5] transition-colors"
+                  className="px-3.5 py-1.5 text-xs font-semibold text-[#172033] hover:text-[#FF5A1F] transition-colors"
                 >
                   Sign In
                 </Link>
                 <Link
                   to="/register"
-                  className="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-[#4F46E5] text-white hover:bg-[#4338CA] shadow-xs transition-colors"
+                  className="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-[#FF5A1F] text-white hover:bg-[#E94712] hover:shadow-[0_8px_20px_rgba(255,90,31,0.20)] shadow-xs transition-all"
                 >
                   Register Profile
                 </Link>
@@ -373,8 +373,8 @@ export const LandingPage = () => {
               {/* Personalized Welcome Banner */}
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-8 border-b border-[#E2E8F0]">
                 <div>
-                  <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-[#EEF2FF] text-[#4F46E5] text-xs font-medium border border-[#C7D2FE] mb-2.5">
-                    <Sparkles size={13} />
+                  <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-[#FFF1EB] text-[#FF5A1F] text-xs font-semibold border border-[#FFD2C2] mb-2.5">
+                    <Sparkles size={13} className="text-[#FF5A1F]" />
                     <span>Personalized Student Event Portal</span>
                   </div>
                   <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#172033]">
@@ -388,14 +388,14 @@ export const LandingPage = () => {
                 <div className="flex items-center gap-3">
                   <Link
                     to="/student/dashboard"
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-[#FFFFFF] border border-[#CBD5E1] text-[#172033] hover:border-[#4F46E5] hover:text-[#4F46E5] shadow-xs transition-all"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-[#FFFFFF] border border-[#CBD5E1] text-[#172033] hover:border-[#FF5A1F] hover:text-[#FF5A1F] hover:bg-[#FFF7F3] shadow-xs transition-all"
                   >
                     <span>Open Student Dashboard</span>
                     <ArrowRight size={14} />
                   </Link>
                   <a
                     href="#assistant-section"
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-[#4F46E5] text-white hover:bg-[#4338CA] shadow-xs transition-colors"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-[#FF5A1F] text-white hover:bg-[#E94712] hover:shadow-[0_8px_20px_rgba(255,90,31,0.20)] shadow-xs transition-all"
                   >
                     <Bot size={15} />
                     <span>Ask EventIntel AI</span>
@@ -405,10 +405,10 @@ export const LandingPage = () => {
 
               {/* Personalized KPI Quick Stats */}
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
-                <div className="bg-[#FFFFFF] border border-[#E2E8F0] p-4 rounded-xl shadow-2xs">
+                <div className="bg-[#FFFFFF] border border-[#E2E8F0] p-4 rounded-xl shadow-xs hover:border-[#FFB49A] transition-colors">
                   <div className="flex items-center justify-between text-[#64748B] text-xs font-medium mb-1">
                     <span>Events Registered</span>
-                    <CheckCircle2 size={16} className="text-[#10B981]" />
+                    <CheckCircle2 size={16} className="text-[#16A34A]" />
                   </div>
                   <div className="text-2xl font-bold text-[#172033]">
                     {myRegistrations.length}
@@ -416,10 +416,10 @@ export const LandingPage = () => {
                   <div className="text-[11px] text-[#64748B] mt-0.5">Active registrations</div>
                 </div>
 
-                <div className="bg-[#FFFFFF] border border-[#E2E8F0] p-4 rounded-xl shadow-2xs">
+                <div className="bg-[#FFFFFF] border border-[#E2E8F0] p-4 rounded-xl shadow-xs hover:border-[#FFB49A] transition-colors">
                   <div className="flex items-center justify-between text-[#64748B] text-xs font-medium mb-1">
                     <span>Upcoming Events</span>
-                    <Calendar size={16} className="text-[#4F46E5]" />
+                    <Calendar size={16} className="text-[#FF5A1F]" />
                   </div>
                   <div className="text-2xl font-bold text-[#172033]">
                     {allEvents.length}
@@ -427,10 +427,10 @@ export const LandingPage = () => {
                   <div className="text-[11px] text-[#64748B] mt-0.5">Across 8 departments</div>
                 </div>
 
-                <div className="bg-[#FFFFFF] border border-[#E2E8F0] p-4 rounded-xl shadow-2xs">
+                <div className="bg-[#FFFFFF] border border-[#E2E8F0] p-4 rounded-xl shadow-xs hover:border-[#FFB49A] transition-colors">
                   <div className="flex items-center justify-between text-[#64748B] text-xs font-medium mb-1">
                     <span>Recommended For You</span>
-                    <Sparkles size={16} className="text-[#8B5CF6]" />
+                    <Sparkles size={16} className="text-[#FF5A1F]" />
                   </div>
                   <div className="text-2xl font-bold text-[#172033]">
                     {recommendations.length > 0 ? recommendations.length : 4}
@@ -438,7 +438,7 @@ export const LandingPage = () => {
                   <div className="text-[11px] text-[#64748B] mt-0.5">AI profile matching</div>
                 </div>
 
-                <div className="bg-[#FFFFFF] border border-[#E2E8F0] p-4 rounded-xl shadow-2xs">
+                <div className="bg-[#FFFFFF] border border-[#E2E8F0] p-4 rounded-xl shadow-xs hover:border-[#FFB49A] transition-colors">
                   <div className="flex items-center justify-between text-[#64748B] text-xs font-medium mb-1">
                     <span>Student Profile</span>
                     <Activity size={16} className="text-[#F59E0B]" />
@@ -463,13 +463,13 @@ export const LandingPage = () => {
               
               {/* Left Column: Hero Content */}
               <div className="lg:col-span-7 space-y-6">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#EEF2FF] border border-[#C7D2FE] text-[#4F46E5] text-xs font-semibold">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FFF1EB] border border-[#FFD2C2] text-[#FF5A1F] text-xs font-semibold">
                   <GraduationCap size={15} />
                   <span>College Campus Event Portal</span>
                 </div>
 
                 <h1 className="text-3xl sm:text-5xl font-extrabold text-[#172033] tracking-tight leading-[1.15]">
-                  Discover What's Happening on Campus.
+                  Discover What's Happening on <span className="text-[#FF5A1F]">Campus.</span>
                 </h1>
 
                 <p className="text-sm sm:text-base text-[#64748B] leading-relaxed max-w-2xl">
@@ -477,8 +477,8 @@ export const LandingPage = () => {
                 </p>
 
                 {/* Search Quick Bar in Hero */}
-                <div className="bg-[#FFFFFF] border border-[#CBD5E1] p-2 rounded-2xl shadow-sm flex flex-col sm:flex-row items-center gap-2 max-w-xl">
-                  <div className="flex items-center gap-2 flex-1 w-full pl-3 text-[#94A3B8]">
+                <div className="bg-[#FFFFFF] border border-[#CBD5E1] p-2 rounded-2xl shadow-sm flex flex-col sm:flex-row items-center gap-2 max-w-xl focus-within:border-[#FF5A1F] focus-within:ring-3 focus-within:ring-[#FF5A1F]/10 transition-all">
+                  <div className="flex items-center gap-2 flex-1 w-full pl-3 text-[#FF5A1F]">
                     <Search size={18} />
                     <input
                       type="text"
@@ -490,7 +490,7 @@ export const LandingPage = () => {
                   </div>
                   <a
                     href="#events-section"
-                    className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-[#4F46E5] text-white text-xs font-semibold hover:bg-[#4338CA] transition-colors shrink-0 text-center shadow-xs"
+                    className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-[#FF5A1F] text-white text-xs font-semibold hover:bg-[#E94712] hover:shadow-[0_8px_20px_rgba(255,90,31,0.20)] transition-all shrink-0 text-center shadow-xs"
                   >
                     Explore Events
                   </a>
@@ -500,7 +500,7 @@ export const LandingPage = () => {
                 <div className="flex flex-wrap items-center gap-4 pt-2">
                   <a
                     href="#events-section"
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#172033] text-white text-xs font-semibold hover:bg-[#334155] transition-colors shadow-xs"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#FF5A1F] text-white text-xs font-semibold hover:bg-[#E94712] hover:shadow-[0_8px_20px_rgba(255,90,31,0.20)] transition-all shadow-xs"
                   >
                     <span>Browse All Events</span>
                     <ArrowRight size={14} />
@@ -508,7 +508,7 @@ export const LandingPage = () => {
 
                   <Link
                     to="/login"
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#FFFFFF] border border-[#CBD5E1] text-[#172033] text-xs font-semibold hover:border-[#4F46E5] hover:text-[#4F46E5] transition-colors shadow-2xs"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#FFFFFF] border border-[#CBD5E1] text-[#172033] text-xs font-semibold hover:border-[#FF5A1F] hover:text-[#FF5A1F] hover:bg-[#FFF7F3] transition-all shadow-2xs"
                   >
                     <User size={14} />
                     <span>Sign In to Personalize</span>
@@ -518,15 +518,15 @@ export const LandingPage = () => {
                 {/* Public Trust Points */}
                 <div className="flex items-center gap-6 pt-4 text-xs text-[#64748B]">
                   <div className="flex items-center gap-1.5">
-                    <CheckCircle2 size={15} className="text-[#10B981]" />
+                    <CheckCircle2 size={15} className="text-[#16A34A]" />
                     <span>Official University Clubs</span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <CheckCircle2 size={15} className="text-[#10B981]" />
+                    <CheckCircle2 size={15} className="text-[#16A34A]" />
                     <span>Instant Registration</span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <CheckCircle2 size={15} className="text-[#10B981]" />
+                    <CheckCircle2 size={15} className="text-[#16A34A]" />
                     <span>Seat Tracking</span>
                   </div>
                 </div>
@@ -535,7 +535,7 @@ export const LandingPage = () => {
               {/* Right Column: Featured Campus Events Preview */}
               <div className="lg:col-span-5 space-y-3">
                 <div className="flex items-center justify-between text-xs text-[#64748B] px-1 font-semibold">
-                  <span className="uppercase tracking-wider text-[11px] text-[#4F46E5] flex items-center gap-1.5">
+                  <span className="uppercase tracking-wider text-[11px] text-[#FF5A1F] flex items-center gap-1.5">
                     <Sparkles size={13} /> Featured Events
                   </span>
                   <span>{allEvents.length} Active Events</span>
@@ -551,9 +551,9 @@ export const LandingPage = () => {
                   featuredEvents.slice(0, 2).map((event) => (
                     <div 
                       key={event.id}
-                      className="bg-[#FFFFFF] border border-[#E2E8F0] rounded-xl p-4 shadow-2xs hover:shadow-xs transition-shadow flex items-start gap-4"
+                      className="bg-[#FFFFFF] border border-[#E2E8F0] rounded-xl p-4 shadow-2xs hover:shadow-xs hover:border-[#FFB49A] transition-all flex items-start gap-4"
                     >
-                      <div className="w-20 h-20 rounded-lg overflow-hidden shrink-0 bg-[#EEF2FF]">
+                      <div className="w-20 h-20 rounded-lg overflow-hidden shrink-0 bg-[#FFF7F3]">
                         <img 
                           src={event.image || "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80&w=400"}
                           alt={event.title}
@@ -561,7 +561,7 @@ export const LandingPage = () => {
                         />
                       </div>
                       <div className="flex-1 min-w-0 space-y-1">
-                        <span className="text-[10px] px-2 py-0.5 rounded font-semibold bg-[#EEF2FF] text-[#4F46E5] uppercase">
+                        <span className="text-[10px] px-2.5 py-0.5 rounded font-semibold bg-[#FFF1EB] text-[#E94712] border border-[#FFD2C2] uppercase">
                           {safeString(event.category)}
                         </span>
                         <h4 className="text-xs font-bold text-[#172033] truncate">
@@ -569,10 +569,10 @@ export const LandingPage = () => {
                         </h4>
                         <div className="flex items-center gap-3 text-[11px] text-[#64748B]">
                           <span className="flex items-center gap-1">
-                            <Calendar size={12} /> {safeString(event.date)}
+                            <Calendar size={12} className="text-[#FF5A1F]" /> {safeString(event.date)}
                           </span>
                           <span className="truncate flex items-center gap-1">
-                            <MapPin size={12} /> {safeString(event.venue)}
+                            <MapPin size={12} className="text-[#FF5A1F]" /> {safeString(event.venue)}
                           </span>
                         </div>
                       </div>
@@ -592,7 +592,7 @@ export const LandingPage = () => {
           <section id="recommended-section" className="py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#4F46E5] uppercase tracking-wider mb-1">
+                <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#FF5A1F] uppercase tracking-wider mb-1">
                   <Sparkles size={14} /> AI Recommendation Engine
                 </div>
                 <h2 className="text-xl sm:text-2xl font-bold text-[#172033]">
@@ -605,7 +605,7 @@ export const LandingPage = () => {
 
               <Link 
                 to="/student/recommendations"
-                className="hidden sm:inline-flex items-center gap-1 text-xs font-semibold text-[#4F46E5] hover:text-[#4338CA]"
+                className="hidden sm:inline-flex items-center gap-1 text-xs font-semibold text-[#FF5A1F] hover:text-[#E94712]"
               >
                 <span>View all matches</span>
                 <ChevronRight size={14} />
@@ -630,8 +630,8 @@ export const LandingPage = () => {
                     />
                     {/* Why this event explanation badge */}
                     {event.recommendationReason && (
-                      <div className="mt-2 p-2 rounded-lg bg-[#EEF2FF] border border-[#C7D2FE]/60 text-[11px] text-[#4F46E5] flex items-start gap-1.5">
-                        <Sparkles size={13} className="shrink-0 mt-0.5" />
+                      <div className="mt-2 p-2 rounded-lg bg-[#FFF7F3] border border-[#FFD2C2] text-[11px] text-[#E94712] flex items-start gap-1.5">
+                        <Sparkles size={13} className="shrink-0 mt-0.5 text-[#FF5A1F]" />
                         <span className="line-clamp-2 leading-tight">
                           {safeString(event.recommendationReason)}
                         </span>
@@ -660,7 +660,7 @@ export const LandingPage = () => {
             <div className="flex items-center justify-between mb-5">
               <div>
                 <h2 className="text-xl font-bold text-[#172033] flex items-center gap-2">
-                  <Bookmark size={20} className="text-[#4F46E5]" />
+                  <Bookmark size={20} className="text-[#FF5A1F]" />
                   My Registered Events
                 </h2>
                 <p className="text-xs text-[#64748B] mt-0.5">
@@ -669,7 +669,7 @@ export const LandingPage = () => {
               </div>
               <Link 
                 to="/student/my-events"
-                className="text-xs font-semibold text-[#4F46E5] hover:text-[#4338CA] flex items-center gap-1"
+                className="text-xs font-semibold text-[#FF5A1F] hover:text-[#E94712] flex items-center gap-1"
               >
                 <span>Manage registrations ({myRegistrations.length})</span>
                 <ChevronRight size={14} />
@@ -682,7 +682,7 @@ export const LandingPage = () => {
                 return (
                   <div 
                     key={reg.id || reg.eventId}
-                    className="bg-[#FFFFFF] border border-[#E2E8F0] rounded-xl p-4 flex items-center justify-between gap-3 shadow-2xs"
+                    className="bg-[#FFFFFF] border border-[#E2E8F0] rounded-xl p-4 flex items-center justify-between gap-3 shadow-2xs hover:border-[#FFB49A] transition-colors"
                   >
                     <div className="min-w-0 space-y-1">
                       <span className="text-[10px] px-2 py-0.5 rounded font-semibold bg-[#DCFCE7] text-[#16A34A] border border-[#BBF7D0]">
@@ -693,17 +693,17 @@ export const LandingPage = () => {
                       </h4>
                       <div className="text-[11px] text-[#64748B] flex items-center gap-3">
                         <span className="flex items-center gap-1">
-                          <Calendar size={12} /> {safeString(ev.date) || 'Upcoming'}
+                          <Calendar size={12} className="text-[#FF5A1F]" /> {safeString(ev.date) || 'Upcoming'}
                         </span>
                         <span className="truncate flex items-center gap-1">
-                          <MapPin size={12} /> {safeString(ev.venue) || 'Campus Venue'}
+                          <MapPin size={12} className="text-[#FF5A1F]" /> {safeString(ev.venue) || 'Campus Venue'}
                         </span>
                       </div>
                     </div>
 
                     <Link
                       to={`/events/${ev.id || reg.eventId}`}
-                      className="px-3 py-1.5 rounded-lg border border-[#E2E8F0] text-xs font-semibold text-[#172033] hover:border-[#4F46E5] hover:text-[#4F46E5] shrink-0 transition-colors"
+                      className="px-3 py-1.5 rounded-lg border border-[#E2E8F0] text-xs font-semibold text-[#172033] hover:border-[#FF5A1F] hover:text-[#FF5A1F] hover:bg-[#FFF7F3] shrink-0 transition-colors"
                     >
                       View
                     </Link>
@@ -727,7 +727,7 @@ export const LandingPage = () => {
                 <div className="flex flex-wrap items-center gap-1.5 mt-1">
                   <span className="text-xs text-[#64748B]">Matching topics:</span>
                   {studentInterestsList.map((tag, tIdx) => (
-                    <span key={tIdx} className="text-[11px] px-2 py-0.5 rounded-md bg-[#F1F5F9] text-[#475569] font-medium border border-[#E2E8F0]">
+                    <span key={tIdx} className="text-[11px] px-2.5 py-0.5 rounded-md bg-[#FFF1EB] text-[#E94712] font-semibold border border-[#FFD2C2]">
                       #{tag}
                     </span>
                   ))}
@@ -757,8 +757,8 @@ export const LandingPage = () => {
           {/* Section Header */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
             <div>
-              <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#4F46E5] uppercase tracking-wider mb-1">
-                <Compass size={14} /> Campus Exploration
+              <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#FF5A1F] uppercase tracking-wider mb-1 px-2.5 py-0.5 rounded-md bg-[#FFF1EB] border border-[#FFD2C2]">
+                <Compass size={14} className="text-[#FF5A1F]" /> Campus Exploration
               </div>
               <h2 className="text-2xl font-bold text-[#172033]">
                 Upcoming Campus Events
@@ -779,13 +779,13 @@ export const LandingPage = () => {
             {/* Top row: Search and Department dropdown */}
             <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
               <div className="md:col-span-8 relative">
-                <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#94A3B8]" />
+                <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#FF5A1F]" />
                 <input
                   type="text"
                   placeholder="Find your next campus event by title, venue, or keyword..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 text-xs bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#4F46E5] focus:bg-[#FFFFFF] transition-all"
+                  className="w-full pl-10 pr-4 py-2 text-xs bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#FF5A1F] focus:ring-3 focus:ring-[#FF5A1F]/10 focus:bg-[#FFFFFF] transition-all"
                 />
               </div>
 
@@ -793,7 +793,7 @@ export const LandingPage = () => {
                 <select
                   value={selectedDepartment}
                   onChange={(e) => setSelectedDepartment(e.target.value)}
-                  className="w-full py-2 px-3 text-xs bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl text-[#172033] focus:outline-none focus:border-[#4F46E5] transition-colors"
+                  className="w-full py-2 px-3 text-xs bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl text-[#172033] focus:outline-none focus:border-[#FF5A1F] transition-colors"
                 >
                   {DEPARTMENTS.map(d => (
                     <option key={d} value={d}>{d}</option>
@@ -808,10 +808,10 @@ export const LandingPage = () => {
                 <button
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold shrink-0 transition-colors cursor-pointer
+                  className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold shrink-0 transition-all cursor-pointer
                     ${selectedCategory === cat 
-                      ? 'bg-[#4F46E5] text-white shadow-2xs' 
-                      : 'bg-[#F1F5F9] text-[#64748B] hover:text-[#172033] hover:bg-[#E2E8F0]'}`}
+                      ? 'bg-[#FF5A1F] text-white shadow-xs hover:bg-[#E94712]' 
+                      : 'bg-[#F1F5F9] text-[#64748B] hover:text-[#FF5A1F] hover:bg-[#FFF1EB]'}`}
                 >
                   {cat}
                 </button>
@@ -851,7 +851,7 @@ export const LandingPage = () => {
                   setSelectedCategory('All');
                   setSelectedDepartment('All Departments');
                 }}
-                className="mt-4 px-4 py-2 rounded-lg text-xs font-semibold bg-[#4F46E5] text-white hover:bg-[#4338CA] transition-colors"
+                className="mt-4 px-4 py-2 rounded-lg text-xs font-semibold bg-[#FF5A1F] text-white hover:bg-[#E94712] hover:shadow-[0_8px_20px_rgba(255,90,31,0.20)] transition-all"
               >
                 Reset All Filters
               </button>
@@ -866,7 +866,7 @@ export const LandingPage = () => {
           <div className="bg-[#FFFFFF] border border-[#E2E8F0] rounded-2xl p-6 sm:p-8 shadow-sm">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-[#E2E8F0]">
               <div>
-                <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#4F46E5] uppercase tracking-wider mb-1">
+                <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#FF5A1F] uppercase tracking-wider mb-1 px-2.5 py-0.5 rounded-md bg-[#FFF1EB] border border-[#FFD2C2]">
                   <Bot size={15} /> Campus Intelligence
                 </div>
                 <h3 className="text-xl font-bold text-[#172033]">
@@ -890,7 +890,7 @@ export const LandingPage = () => {
                     onClick={() => {
                       setChatInput(q);
                     }}
-                    className="text-[11px] px-2.5 py-1 rounded-lg bg-[#F8FAFC] border border-[#E2E8F0] text-[#64748B] hover:text-[#4F46E5] hover:border-[#C7D2FE] transition-colors"
+                    className="text-[11px] px-2.5 py-1 rounded-lg bg-[#F8FAFC] border border-[#E2E8F0] text-[#64748B] hover:text-[#FF5A1F] hover:border-[#FFD2C2] hover:bg-[#FFF7F3] transition-colors"
                   >
                     "{q}"
                   </button>
@@ -906,14 +906,14 @@ export const LandingPage = () => {
                   className={`flex items-start gap-2.5 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   {msg.role === 'assistant' && (
-                    <div className="w-7 h-7 rounded-lg bg-[#EEF2FF] text-[#4F46E5] flex items-center justify-center shrink-0 border border-[#C7D2FE]">
+                    <div className="w-7 h-7 rounded-lg bg-[#FFF1EB] text-[#FF5A1F] flex items-center justify-center shrink-0 border border-[#FFD2C2]">
                       <Bot size={15} />
                     </div>
                   )}
 
                   <div className={`max-w-xl p-3 rounded-2xl text-xs leading-relaxed ${
                     msg.role === 'user' 
-                      ? 'bg-[#4F46E5] text-white rounded-tr-none' 
+                      ? 'bg-[#FF5A1F] text-white rounded-tr-none' 
                       : 'bg-[#F8FAFC] text-[#172033] border border-[#E2E8F0] rounded-tl-none'
                   }`}>
                     <p className="whitespace-pre-line">{msg.text}</p>
@@ -923,7 +923,7 @@ export const LandingPage = () => {
                       <div className="mt-2 pt-2 border-t border-[#E2E8F0] text-[10px] text-[#64748B]">
                         <span className="font-semibold">Sources: </span>
                         {msg.sources.map((s, sIdx) => (
-                          <span key={sIdx} className="font-medium text-[#4F46E5] mr-2">
+                          <span key={sIdx} className="font-medium text-[#FF5A1F] mr-2">
                             [{safeString(s.title) || safeString(s.name) || 'Event'}]
                           </span>
                         ))}
@@ -941,7 +941,7 @@ export const LandingPage = () => {
 
               {chatLoading && (
                 <div className="flex items-center gap-2 text-xs text-[#64748B] pl-9">
-                  <RefreshCw size={13} className="animate-spin text-[#4F46E5]" />
+                  <RefreshCw size={13} className="animate-spin text-[#FF5A1F]" />
                   <span>EventIntel AI is querying campus database...</span>
                 </div>
               )}
@@ -954,12 +954,12 @@ export const LandingPage = () => {
                 placeholder="Ask anything about campus events, schedules, or workshops..."
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}
-                className="flex-1 px-3.5 py-2 text-xs bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#4F46E5] focus:bg-[#FFFFFF] transition-all"
+                className="flex-1 px-3.5 py-2 text-xs bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#FF5A1F] focus:ring-3 focus:ring-[#FF5A1F]/10 focus:bg-[#FFFFFF] transition-all"
               />
               <button
                 type="submit"
                 disabled={!chatInput.trim() || chatLoading}
-                className="px-4 py-2 rounded-xl bg-[#4F46E5] text-white text-xs font-semibold hover:bg-[#4338CA] disabled:opacity-50 transition-colors shrink-0 flex items-center gap-1.5 shadow-xs"
+                className="px-4 py-2 rounded-xl bg-[#FF5A1F] text-white text-xs font-semibold hover:bg-[#E94712] hover:shadow-[0_8px_20px_rgba(255,90,31,0.20)] disabled:opacity-50 transition-all shrink-0 flex items-center gap-1.5 shadow-xs"
               >
                 <span>Send</span>
                 <Send size={13} />
@@ -983,13 +983,13 @@ export const LandingPage = () => {
               <div className="flex flex-wrap justify-center gap-3">
                 <Link
                   to="/login"
-                  className="px-6 py-2.5 rounded-xl bg-[#4F46E5] text-white text-xs font-semibold hover:bg-[#4338CA] transition-colors shadow-xs"
+                  className="px-6 py-2.5 rounded-xl bg-[#FF5A1F] text-white text-xs font-semibold hover:bg-[#E94712] hover:shadow-[0_8px_20px_rgba(255,90,31,0.20)] transition-all shadow-xs"
                 >
                   Sign In with Student ID
                 </Link>
                 <Link
                   to="/register"
-                  className="px-6 py-2.5 rounded-xl bg-[#FFFFFF] text-[#172033] text-xs font-semibold hover:bg-[#F8FAFC] transition-colors"
+                  className="px-6 py-2.5 rounded-xl bg-[#FFFFFF] text-[#172033] text-xs font-semibold hover:bg-[#FFF7F3] hover:text-[#FF5A1F] transition-colors"
                 >
                   Create Student Profile
                 </Link>
@@ -1004,7 +1004,7 @@ export const LandingPage = () => {
       <footer className="bg-[#FFFFFF] border-t border-[#E2E8F0] py-8 px-4 sm:px-6 lg:px-8 mt-auto">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#64748B]">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-md bg-[#4F46E5] text-white flex items-center justify-center text-[11px] font-bold">
+            <div className="w-6 h-6 rounded-md bg-[#FF5A1F] text-white flex items-center justify-center text-[11px] font-bold">
               EI
             </div>
             <span className="font-semibold text-[#172033]">EventIntel AI</span>
@@ -1012,9 +1012,9 @@ export const LandingPage = () => {
           </div>
 
           <div className="flex items-center gap-6">
-            <Link to="/login" className="hover:text-[#172033] transition-colors">Portal Login</Link>
-            <Link to="/register" className="hover:text-[#172033] transition-colors">Register</Link>
-            <a href="#assistant-section" className="hover:text-[#172033] transition-colors">AI Assistant</a>
+            <Link to="/login" className="hover:text-[#FF5A1F] transition-colors">Portal Login</Link>
+            <Link to="/register" className="hover:text-[#FF5A1F] transition-colors">Register</Link>
+            <a href="#assistant-section" className="hover:text-[#FF5A1F] transition-colors">AI Assistant</a>
           </div>
         </div>
       </footer>

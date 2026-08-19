@@ -70,7 +70,7 @@ export const EventCreate = () => {
               placeholder="e.g. Cloud Infrastructure & DevOps Workshop"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-2.5 w-full text-xs text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#4F46E5]"
+              className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-2.5 w-full text-xs text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#FF5A1F]"
             />
           </div>
 
@@ -80,7 +80,7 @@ export const EventCreate = () => {
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-2.5 w-full text-xs text-[#172033] focus:outline-none focus:border-[#4F46E5]"
+                className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-2.5 w-full text-xs text-[#172033] focus:outline-none focus:border-[#FF5A1F]"
               >
                 <option value="AI">AI</option>
                 <option value="Technology">Technology</option>
@@ -98,7 +98,7 @@ export const EventCreate = () => {
                 min={5}
                 value={totalSeats}
                 onChange={(e) => setTotalSeats(e.target.value)}
-                className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-2.5 w-full text-xs text-[#172033] focus:outline-none focus:border-[#4F46E5]"
+                className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-2.5 w-full text-xs text-[#172033] focus:outline-none focus:border-[#FF5A1F]"
               />
             </div>
           </div>
@@ -111,7 +111,7 @@ export const EventCreate = () => {
               placeholder="Write a clear event overview, prerequisites, agenda, and requirements..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-2.5 w-full text-xs text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#4F46E5]"
+              className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-2.5 w-full text-xs text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#FF5A1F]"
             />
           </div>
 
@@ -124,7 +124,7 @@ export const EventCreate = () => {
                 placeholder="e.g. Seminar Hall A, Technology Block"
                 value={venue}
                 onChange={(e) => setVenue(e.target.value)}
-                className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-2.5 w-full text-xs text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#4F46E5]"
+                className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-2.5 w-full text-xs text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#FF5A1F]"
               />
             </div>
 
@@ -135,7 +135,7 @@ export const EventCreate = () => {
                 required
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-2.5 w-full text-xs text-[#172033] focus:outline-none focus:border-[#4F46E5]"
+                className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-2.5 w-full text-xs text-[#172033] focus:outline-none focus:border-[#FF5A1F]"
               />
             </div>
           </div>
@@ -148,7 +148,7 @@ export const EventCreate = () => {
               placeholder="e.g. 10:00 AM - 01:00 PM"
               value={time}
               onChange={(e) => setTime(e.target.value)}
-              className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-2.5 w-full text-xs text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#4F46E5]"
+              className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-2.5 w-full text-xs text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#FF5A1F]"
             />
           </div>
 
@@ -164,7 +164,7 @@ export const EventCreate = () => {
             <button
               type="submit"
               disabled={submitting}
-              className="px-4 py-2 rounded-lg bg-[#4F46E5] hover:bg-[#4338CA] text-white font-semibold flex items-center gap-1.5 shadow-xs transition-colors cursor-pointer"
+              className="px-4 py-2 rounded-lg bg-[#FF5A1F] hover:bg-[#E94712] text-white font-semibold flex items-center gap-1.5 shadow-xs transition-colors cursor-pointer"
             >
               <Save size={13} />
               <span>{submitting ? 'Publishing...' : 'Publish Event'}</span>

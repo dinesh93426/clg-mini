@@ -74,7 +74,7 @@ export const OrganizerEvents = () => {
 
         <Link
           to="/organizer/events/create"
-          className="flex items-center gap-1.5 px-3.5 py-2 bg-[#4F46E5] hover:bg-[#4338CA] text-white text-xs font-semibold rounded-lg shadow-xs transition-colors cursor-pointer self-start sm:self-auto"
+          className="flex items-center gap-1.5 px-3.5 py-2 bg-[#FF5A1F] hover:bg-[#E94712] text-white text-xs font-semibold rounded-lg shadow-xs transition-colors cursor-pointer self-start sm:self-auto"
         >
           <Plus size={14} />
           <span>New Event</span>
@@ -93,7 +93,7 @@ export const OrganizerEvents = () => {
             onClick={() => setActiveTab(tab.id)}
             className={`px-4 py-2 border-b-2 transition-colors cursor-pointer -mb-px
               ${activeTab === tab.id 
-                ? 'border-[#4F46E5] text-[#4F46E5]' 
+                ? 'border-[#FF5A1F] text-[#FF5A1F]' 
                 : 'border-transparent text-[#64748B] hover:text-[#172033]'}`}
           >
             {tab.label}
@@ -109,7 +109,7 @@ export const OrganizerEvents = () => {
           placeholder="Search by event title, description, or venue..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-9 pr-3 py-2 bg-[#FFFFFF] border border-[#E2E8F0] rounded-lg text-xs text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#4F46E5] transition-colors"
+          className="w-full pl-9 pr-3 py-2 bg-[#FFFFFF] border border-[#E2E8F0] rounded-lg text-xs text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#FF5A1F] transition-colors"
         />
       </div>
 
@@ -150,10 +150,10 @@ export const OrganizerEvents = () => {
                         <div className="flex items-center gap-3">
                           <img src={e.image} alt={e.title} className="w-9 h-9 object-cover rounded-lg bg-[#F8FAFC] shrink-0 border border-[#E2E8F0]" />
                           <div className="min-w-0">
-                            <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-[#EEF2FF] text-[#4F46E5]">
+                            <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-[#FFF1EB] text-[#FF5A1F]">
                               {e.category}
                             </span>
-                            <span className="font-semibold text-xs text-[#172033] truncate block mt-0.5 hover:text-[#4F46E5] transition-colors cursor-pointer" onClick={() => navigate(`/organizer/events/${e.id}/analytics`)}>
+                            <span className="font-semibold text-xs text-[#172033] truncate block mt-0.5 hover:text-[#FF5A1F] transition-colors cursor-pointer" onClick={() => navigate(`/organizer/events/${e.id}/analytics`)}>
                               {e.title}
                             </span>
                           </div>
@@ -179,7 +179,7 @@ export const OrganizerEvents = () => {
                             <span className="font-semibold text-[#172033]">{percentSeats}%</span>
                           </div>
                           <div className="w-full h-1.5 bg-[#F1F5F9] rounded-full overflow-hidden">
-                            <div className={`h-full rounded-full ${percentSeats >= 90 ? 'bg-[#D97706]' : 'bg-[#4F46E5]'}`} style={{ width: `${Math.min(100, percentSeats)}%` }}></div>
+                            <div className={`h-full rounded-full ${percentSeats >= 90 ? 'bg-[#D97706]' : 'bg-[#FF5A1F]'}`} style={{ width: `${Math.min(100, percentSeats)}%` }}></div>
                           </div>
                         </div>
                       </td>
@@ -193,7 +193,7 @@ export const OrganizerEvents = () => {
                         <div className="flex items-center justify-end gap-1.5">
                           <button
                             onClick={() => navigate(`/organizer/events/${e.id}/analytics`)}
-                            className="p-1.5 rounded-lg bg-[#FFFFFF] hover:bg-[#F8FAFC] text-[#64748B] hover:text-[#4F46E5] border border-[#E2E8F0] transition-colors cursor-pointer"
+                            className="p-1.5 rounded-lg bg-[#FFFFFF] hover:bg-[#F8FAFC] text-[#64748B] hover:text-[#FF5A1F] border border-[#E2E8F0] transition-colors cursor-pointer"
                             title="Analytics Dashboard"
                           >
                             <BarChart3 size={13} />

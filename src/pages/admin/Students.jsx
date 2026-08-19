@@ -56,7 +56,7 @@ export const AdminStudents = () => {
             placeholder="Search student name or dept..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 bg-[#FFFFFF] border border-[#E2E8F0] rounded-lg text-xs text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#4F46E5] transition-colors"
+            className="w-full pl-9 pr-3 py-2 bg-[#FFFFFF] border border-[#E2E8F0] rounded-lg text-xs text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#FF5A1F] transition-colors"
           />
         </div>
 
@@ -64,7 +64,7 @@ export const AdminStudents = () => {
           <select 
             value={selectedCluster} 
             onChange={(e) => setSelectedCluster(e.target.value)}
-            className="bg-[#FFFFFF] border border-[#E2E8F0] rounded-lg px-3 py-2 w-full text-xs text-[#172033] focus:outline-none focus:border-[#4F46E5]"
+            className="bg-[#FFFFFF] border border-[#E2E8F0] rounded-lg px-3 py-2 w-full text-xs text-[#172033] focus:outline-none focus:border-[#FF5A1F]"
           >
             <option value="All">All Behavior Clusters</option>
             <option value="Highly Active">Highly Active</option>
@@ -77,7 +77,7 @@ export const AdminStudents = () => {
           <select 
             value={selectedDept} 
             onChange={(e) => setSelectedDept(e.target.value)}
-            className="bg-[#FFFFFF] border border-[#E2E8F0] rounded-lg px-3 py-2 w-full text-xs text-[#172033] focus:outline-none focus:border-[#4F46E5]"
+            className="bg-[#FFFFFF] border border-[#E2E8F0] rounded-lg px-3 py-2 w-full text-xs text-[#172033] focus:outline-none focus:border-[#FF5A1F]"
           >
             <option value="All">All Departments</option>
             <option value="CSE">CSE</option>
@@ -119,7 +119,7 @@ export const AdminStudents = () => {
                   <tr key={s.id} className="hover:bg-[#F8FAFC] text-[#172033] transition-colors">
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-2.5">
-                        <div className="w-7 h-7 rounded-full bg-[#EEECFF] text-[#4F46E5] flex items-center justify-center font-bold text-xs">
+                        <div className="w-7 h-7 rounded-full bg-[#EEECFF] text-[#FF5A1F] flex items-center justify-center font-bold text-xs">
                           {s?.name ? s.name.charAt(0) : 'S'}
                         </div>
                         <span className="font-semibold text-xs text-[#172033]">{s?.name || 'Student'}</span>
@@ -130,14 +130,14 @@ export const AdminStudents = () => {
                     </td>
                     <td className="px-5 py-3.5">
                       <span className={`inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full border ${
-                        s.cluster === 'Highly Active' ? 'bg-[#EEECFF] text-[#4F46E5] border-[#C7D2FE]' : 
-                        s.cluster === 'Moderately Active' ? 'bg-[#EFF6FF] text-[#2563EB] border-[#BFDBFE]' : 
+                        s.cluster === 'Highly Active' ? 'bg-[#EEECFF] text-[#FF5A1F] border-[#FFD2C2]' : 
+                        s.cluster === 'Moderately Active' ? 'bg-[#FFF7F3] text-[#FF5A1F] border-[#BFDBFE]' : 
                         'bg-[#F1F5F9] text-[#64748B] border-[#E2E8F0]'
                       }`}>
                         <Sparkles size={8} /> {s.cluster}
                       </span>
                     </td>
-                    <td className="px-5 py-3.5 text-[#4F46E5] font-bold">{s.engagement}</td>
+                    <td className="px-5 py-3.5 text-[#FF5A1F] font-bold">{s.engagement}</td>
                     <td className="px-5 py-3.5 text-[#16A34A] font-semibold">{s.attendance}%</td>
                     <td className="px-5 py-3.5 text-right font-medium text-[#64748B]">{s.events} events</td>
                   </tr>

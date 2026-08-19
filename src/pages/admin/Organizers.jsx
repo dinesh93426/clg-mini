@@ -44,7 +44,7 @@ export const AdminOrganizers = () => {
           placeholder="Search coordinator or organization..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-9 pr-3 py-2 bg-[#FFFFFF] border border-[#E2E8F0] rounded-lg text-xs text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#4F46E5] transition-colors"
+          className="w-full pl-9 pr-3 py-2 bg-[#FFFFFF] border border-[#E2E8F0] rounded-lg text-xs text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#FF5A1F] transition-colors"
         />
       </div>
 
@@ -77,7 +77,7 @@ export const AdminOrganizers = () => {
                     <td className="px-5 py-3.5 font-semibold text-xs text-[#172033]">{o.name}</td>
                     <td className="px-5 py-3.5 text-[#64748B]">{o.department}</td>
                     <td className="px-5 py-3.5">
-                      <div className="flex items-center gap-1.5 text-[#4F46E5]">
+                      <div className="flex items-center gap-1.5 text-[#FF5A1F]">
                         <Building size={12} className="text-[#94A3B8]" />
                         <span>{o.organization}</span>
                       </div>

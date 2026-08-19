@@ -105,11 +105,11 @@ export const Predictions = () => {
                 <div className="space-y-1">
                   <div className="flex justify-between text-[#64748B] text-[11px]">
                     <span>AI Projected Registrations</span>
-                    <span className="font-semibold text-[#4F46E5]">{pred.predictedRegistrations} seats ({ratioPredicted}%)</span>
+                    <span className="font-semibold text-[#FF5A1F]">{pred.predictedRegistrations} seats ({ratioPredicted}%)</span>
                   </div>
                   <div className="w-full h-1.5 bg-[#F1F5F9] rounded-full overflow-hidden">
                     <div 
-                      className={`h-full rounded-full ${pred.demandStatus === 'OVERFLOW RISK' ? 'bg-[#DC2626]' : 'bg-[#4F46E5]'}`} 
+                      className={`h-full rounded-full ${pred.demandStatus === 'OVERFLOW RISK' ? 'bg-[#DC2626]' : 'bg-[#FF5A1F]'}`} 
                       style={{ width: `${Math.min(100, ratioPredicted)}%` }}
                     ></div>
                   </div>

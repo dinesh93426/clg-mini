@@ -33,7 +33,7 @@ export const StudentIntelligence = () => {
     );
   }
 
-  const COLORS = ['#4F46E5', '#2563EB', '#64748B', '#0284C7'];
+  const COLORS = ['#FF5A1F', '#FF5A1F', '#64748B', '#0284C7'];
 
   return (
     <div className="space-y-6 pb-12">
@@ -97,7 +97,7 @@ export const StudentIntelligence = () => {
                 <YAxis stroke="#94A3B8" tickLine={false} tick={{ fontSize: 11 }} />
                 <Tooltip contentStyle={{ backgroundColor: '#FFFFFF', borderColor: '#E2E8F0', borderRadius: '8px', fontSize: '11px' }} />
                 <Legend iconSize={10} verticalAlign="top" height={36} wrapperStyle={{ fontSize: '11px' }} />
-                <Bar dataKey="active" fill="#4F46E5" radius={[4, 4, 0, 0]} name="Active Cohort" />
+                <Bar dataKey="active" fill="#FF5A1F" radius={[4, 4, 0, 0]} name="Active Cohort" />
                 <Bar dataKey="inactive" fill="#CBD5E1" radius={[4, 4, 0, 0]} name="Inactive Cohort" />
               </BarChart>
             </ResponsiveContainer>

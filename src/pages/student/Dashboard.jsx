@@ -76,7 +76,7 @@ export const StudentDashboard = () => {
       desc: 'Active registrations', 
       trend: '↑ 12%',
       icon: Calendar, 
-      iconBg: 'bg-[#EEF2FF] text-[#4F46E5]' 
+      iconBg: 'bg-[#FFF1EB] text-[#FF5A1F]' 
     },
     { 
       label: 'ATTENDED', 
@@ -84,7 +84,7 @@ export const StudentDashboard = () => {
       desc: 'Completed events', 
       trend: '↑ 8%',
       icon: Award, 
-      iconBg: 'bg-[#EEF2FF] text-[#4F46E5]' 
+      iconBg: 'bg-[#FFF1EB] text-[#FF5A1F]' 
     },
     { 
       label: 'ATTENDANCE RATE', 
@@ -118,8 +118,8 @@ export const StudentDashboard = () => {
         </div>
 
         {/* AI Profile Badge */}
-        <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#EEF2FF] border border-[#C7D2FE] text-[#4F46E5] text-xs font-semibold w-fit">
-          <BrainCircuit size={13} className="text-[#4F46E5]" />
+        <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FFF1EB] border border-[#FFD2C2] text-[#FF5A1F] text-xs font-semibold w-fit">
+          <BrainCircuit size={13} className="text-[#FF5A1F]" />
           <span>AI Profile: {user?.aiProfile?.type || 'Highly Active'}</span>
         </div>
       </div>
@@ -170,12 +170,12 @@ export const StudentDashboard = () => {
           <div className="bg-[#FFFFFF] border border-[#E2E8F0] rounded-2xl p-6 shadow-xs space-y-4">
             <div className="flex items-center justify-between">
               <h2 className="text-base font-semibold text-[#172033] flex items-center gap-2">
-                <Sparkles size={16} className="text-[#4F46E5]" />
+                <Sparkles size={16} className="text-[#FF5A1F]" />
                 Recommended For You
               </h2>
               <Link 
                 to="/student/recommendations" 
-                className="text-xs font-semibold text-[#4F46E5] hover:text-[#4338CA] flex items-center gap-1 transition-colors"
+                className="text-xs font-semibold text-[#FF5A1F] hover:text-[#E94712] flex items-center gap-1 transition-colors"
               >
                 <span>View all matches</span>
                 <ArrowRight size={13} />
@@ -189,7 +189,7 @@ export const StudentDashboard = () => {
                 <p className="text-[11px] text-[#64748B]">Explore the catalog to unlock personalized AI matches.</p>
                 <Link
                   to="/student/events"
-                  className="inline-flex items-center gap-1 text-xs font-medium text-[#4F46E5] hover:text-[#4338CA] pt-1"
+                  className="inline-flex items-center gap-1 text-xs font-medium text-[#FF5A1F] hover:text-[#E94712] pt-1"
                 >
                   <span>Explore Catalog</span>
                   <ArrowRight size={12} />
@@ -202,7 +202,7 @@ export const StudentDashboard = () => {
                     key={rec.id} 
                     className="bg-[#FFFFFF] border border-[#E2E8F0] rounded-xl overflow-hidden shadow-xs hover:border-[#CBD5E1] transition-all flex flex-col justify-between"
                   >
-                    <div className="h-28 overflow-hidden relative bg-[#EEF2FF]">
+                    <div className="h-28 overflow-hidden relative bg-[#FFF1EB]">
                       <img 
                         src={rec.image || "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80&w=600"} 
                         alt={rec.title} 
@@ -212,14 +212,14 @@ export const StudentDashboard = () => {
                         }}
                         className="w-full h-full object-cover" 
                       />
-                      <div className="absolute top-2 right-2 px-2 py-0.5 rounded bg-[#FFFFFF]/95 text-[#4F46E5] text-[10px] font-bold shadow-xs border border-[#E2E8F0]">
+                      <div className="absolute top-2 right-2 px-2 py-0.5 rounded bg-[#FFFFFF]/95 text-[#FF5A1F] text-[10px] font-bold shadow-xs border border-[#E2E8F0]">
                         {rec.aiMatchPercentage}% Match
                       </div>
                     </div>
 
                     <div className="p-3.5 flex-1 flex flex-col justify-between space-y-2">
                       <div>
-                        <span className="text-[9px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wider bg-[#EEF2FF] text-[#4F46E5]">
+                        <span className="text-[9px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wider bg-[#FFF1EB] text-[#FF5A1F]">
                           {rec.category}
                         </span>
                         <h3 className="font-semibold text-[#172033] text-xs leading-snug truncate mt-1.5" title={rec.title}>
@@ -234,7 +234,7 @@ export const StudentDashboard = () => {
                         <span className="text-[10px] text-[#94A3B8]">{rec.date}</span>
                         <Link 
                           to={`/student/events/${rec.id}`}
-                          className="text-xs font-semibold text-[#4F46E5] hover:text-[#4338CA] flex items-center gap-0.5"
+                          className="text-xs font-semibold text-[#FF5A1F] hover:text-[#E94712] flex items-center gap-0.5"
                         >
                           <span>Details</span>
                           <ArrowUpRight size={12} />
@@ -253,7 +253,7 @@ export const StudentDashboard = () => {
               <h2 className="text-base font-semibold text-[#172033]">Upcoming Events</h2>
               <Link 
                 to="/student/events" 
-                className="text-xs font-semibold text-[#4F46E5] hover:text-[#4338CA] flex items-center gap-1 transition-colors"
+                className="text-xs font-semibold text-[#FF5A1F] hover:text-[#E94712] flex items-center gap-1 transition-colors"
               >
                 <span>Browse all</span>
                 <ArrowRight size={13} />
@@ -271,7 +271,7 @@ export const StudentDashboard = () => {
                     key={event.id} 
                     className="bg-[#FFFFFF] border border-[#E2E8F0] rounded-xl overflow-hidden shadow-xs hover:border-[#CBD5E1] transition-all flex flex-col justify-between"
                   >
-                    <div className="h-28 overflow-hidden relative bg-[#EEF2FF]">
+                    <div className="h-28 overflow-hidden relative bg-[#FFF1EB]">
                       <img 
                         src={event.image || "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80&w=600"} 
                         alt={event.title} 
@@ -301,7 +301,7 @@ export const StudentDashboard = () => {
                         <span className="text-[10px] text-[#94A3B8]">{event.date}</span>
                         <Link 
                           to={`/student/events/${event.id}`}
-                          className="text-xs font-semibold text-[#4F46E5] hover:text-[#4338CA] flex items-center gap-1"
+                          className="text-xs font-semibold text-[#FF5A1F] hover:text-[#E94712] flex items-center gap-1"
                         >
                           <span>Register</span>
                           <ArrowRight size={12} />
@@ -320,7 +320,7 @@ export const StudentDashboard = () => {
           
           {/* AI Insight Panel */}
           <div className="bg-[#FFFFFF] border border-[#E2E8F0] rounded-2xl p-5 shadow-xs space-y-3">
-            <div className="flex items-center gap-2 text-[#4F46E5] text-xs font-bold uppercase tracking-wider">
+            <div className="flex items-center gap-2 text-[#FF5A1F] text-xs font-bold uppercase tracking-wider">
               <BrainCircuit size={15} />
               <span>AI Intelligence Insight</span>
             </div>
@@ -332,7 +332,7 @@ export const StudentDashboard = () => {
             <div className="flex items-center gap-2 pt-1">
               <button 
                 onClick={() => navigate('/student/recommendations')}
-                className="flex-1 py-2 px-3 text-center rounded-lg bg-[#4F46E5] hover:bg-[#4338CA] text-white text-xs font-semibold shadow-xs transition-colors cursor-pointer"
+                className="flex-1 py-2 px-3 text-center rounded-lg bg-[#FF5A1F] hover:bg-[#E94712] text-white text-xs font-semibold shadow-xs transition-colors cursor-pointer"
               >
                 View Matches
               </button>
@@ -367,10 +367,10 @@ export const StudentDashboard = () => {
               <div>
                 <div className="flex items-center justify-between text-xs text-[#64748B] mb-1">
                   <span>Technical Interest</span>
-                  <span className="font-semibold text-[#4F46E5]">High (92%)</span>
+                  <span className="font-semibold text-[#FF5A1F]">High (92%)</span>
                 </div>
                 <div className="w-full h-1.5 bg-[#F1F5F9] rounded-full overflow-hidden">
-                  <div className="h-full bg-[#4F46E5] rounded-full" style={{ width: '92%' }}></div>
+                  <div className="h-full bg-[#FF5A1F] rounded-full" style={{ width: '92%' }}></div>
                 </div>
               </div>
             </div>
@@ -387,7 +387,7 @@ export const StudentDashboard = () => {
                 ).map((cat) => (
                   <span 
                     key={cat} 
-                    className="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-[#EEF2FF] text-[#4F46E5] border border-[#C7D2FE]"
+                    className="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-[#FFF1EB] text-[#FF5A1F] border border-[#FFD2C2]"
                   >
                     {cat}
                   </span>
@@ -397,7 +397,7 @@ export const StudentDashboard = () => {
 
             <button
               onClick={() => navigate('/student/profile')}
-              className="w-full py-2 text-center text-xs font-medium text-[#4F46E5] bg-[#F8FAFC] hover:bg-[#EEF2FF] border border-[#E2E8F0] rounded-lg transition-colors cursor-pointer"
+              className="w-full py-2 text-center text-xs font-medium text-[#FF5A1F] bg-[#F8FAFC] hover:bg-[#FFF1EB] border border-[#E2E8F0] rounded-lg transition-colors cursor-pointer"
             >
               View Full Profile
             </button>

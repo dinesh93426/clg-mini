@@ -83,7 +83,7 @@ export const EventDetails = () => {
         <p className="text-xs text-[#64748B]">{error || 'The requested event could not be found.'}</p>
         <button 
           onClick={() => navigate('/student/events')}
-          className="px-3.5 py-1.5 bg-[#4F46E5] hover:bg-[#4338CA] rounded-lg text-xs font-semibold text-white transition-colors cursor-pointer"
+          className="px-3.5 py-1.5 bg-[#FF5A1F] hover:bg-[#E94712] rounded-lg text-xs font-semibold text-white transition-colors cursor-pointer"
         >
           Back to Catalog
         </button>
@@ -121,7 +121,7 @@ export const EventDetails = () => {
               {event.category}
             </span>
             {event.aiRecommended && (
-              <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-[#4F46E5] text-white font-semibold uppercase tracking-wider flex items-center gap-1 shadow-xs">
+              <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-[#FF5A1F] text-white font-semibold uppercase tracking-wider flex items-center gap-1 shadow-xs">
                 <Sparkles size={10} /> {event.aiMatchPercentage}% AI Match
               </span>
             )}
@@ -141,7 +141,7 @@ export const EventDetails = () => {
           {/* Metadata quick highlights */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-4 rounded-xl bg-[#FFFFFF] border border-[#E2E8F0] shadow-xs">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-[#EEF2FF] text-[#4F46E5] flex items-center justify-center shrink-0">
+              <div className="w-8 h-8 rounded-lg bg-[#FFF1EB] text-[#FF5A1F] flex items-center justify-center shrink-0">
                 <Calendar size={16} />
               </div>
               <div>
@@ -150,7 +150,7 @@ export const EventDetails = () => {
               </div>
             </div>
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-[#EEF2FF] text-[#4F46E5] flex items-center justify-center shrink-0">
+              <div className="w-8 h-8 rounded-lg bg-[#FFF1EB] text-[#FF5A1F] flex items-center justify-center shrink-0">
                 <Clock size={16} />
               </div>
               <div>
@@ -179,8 +179,8 @@ export const EventDetails = () => {
 
           {/* AI matching rationale */}
           {event.aiRecommended && (
-            <div className="p-4 rounded-xl bg-[#F8FAFC] border-l-2 border-[#4F46E5] text-xs text-[#64748B] space-y-1">
-              <div className="flex items-center gap-1 font-bold uppercase tracking-wider text-[10px] text-[#4F46E5]">
+            <div className="p-4 rounded-xl bg-[#F8FAFC] border-l-2 border-[#FF5A1F] text-xs text-[#64748B] space-y-1">
+              <div className="flex items-center gap-1 font-bold uppercase tracking-wider text-[10px] text-[#FF5A1F]">
                 <Sparkles size={12} />
                 <span>AI Matching Rationale</span>
               </div>
@@ -193,11 +193,11 @@ export const EventDetails = () => {
           {/* Agenda */}
           <div className="p-6 rounded-2xl bg-[#FFFFFF] border border-[#E2E8F0] shadow-xs space-y-4">
             <h2 className="text-sm font-bold text-[#172033] flex items-center gap-1.5">
-              <BookOpen size={16} className="text-[#4F46E5]" /> Event Agenda
+              <BookOpen size={16} className="text-[#FF5A1F]" /> Event Agenda
             </h2>
             <div className="space-y-3.5 pl-3.5 border-l-2 border-[#E2E8F0] ml-1.5">
               <div className="relative">
-                <span className="absolute -left-[20px] top-1 w-2.5 h-2.5 rounded-full bg-[#4F46E5] border-2 border-white"></span>
+                <span className="absolute -left-[20px] top-1 w-2.5 h-2.5 rounded-full bg-[#FF5A1F] border-2 border-white"></span>
                 <span className="text-[10px] font-bold text-[#94A3B8] block uppercase">Session 1 • 45 mins</span>
                 <h4 className="text-xs font-bold text-[#172033] mt-0.5">Foundations & Prerequisites Setup</h4>
                 <p className="text-[11px] text-[#64748B] mt-0.5">Verifying environment configuration and introductory briefing.</p>
@@ -215,7 +215,7 @@ export const EventDetails = () => {
           <div className="p-6 rounded-2xl bg-[#FFFFFF] border border-[#E2E8F0] shadow-xs space-y-3">
             <h2 className="text-sm font-bold text-[#172033]">Event Organizer</h2>
             <div className="flex items-center gap-3 p-3 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0]">
-              <div className="w-8 h-8 rounded-full bg-[#EEEFFA] flex items-center justify-center text-[#4F46E5]">
+              <div className="w-8 h-8 rounded-full bg-[#FFF1EB] flex items-center justify-center text-[#FF5A1F]">
                 <UserCircle2 size={20} />
               </div>
               <div>
@@ -244,7 +244,7 @@ export const EventDetails = () => {
               </div>
               <div className="py-2 flex justify-between">
                 <span className="text-[#64748B]">Access:</span>
-                <span className="font-semibold text-[#4F46E5]">Free (Open Campus Entry)</span>
+                <span className="font-semibold text-[#FF5A1F]">Free (Open Campus Entry)</span>
               </div>
             </div>
 
@@ -279,7 +279,7 @@ export const EventDetails = () => {
                 className={`w-full py-2.5 rounded-lg text-xs font-semibold text-white transition-colors shadow-xs flex items-center justify-center gap-1.5 cursor-pointer
                   ${isSoldOut 
                     ? 'bg-[#F8FAFC] text-[#94A3B8] border border-[#E2E8F0] cursor-not-allowed' 
-                    : 'bg-[#4F46E5] hover:bg-[#4338CA]'}`}
+                    : 'bg-[#FF5A1F] hover:bg-[#E94712]'}`}
               >
                 {registering ? (
                   <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white border-t-transparent" />

@@ -49,7 +49,7 @@ export const Feedback = () => {
           <AlertCircle size={22} className="text-[#94A3B8] mx-auto" />
           <h3 className="text-sm font-semibold text-[#172033]">No feedback submitted yet</h3>
           <p className="text-xs text-[#64748B] max-w-sm mx-auto">
-            You haven't submitted feedback reviews yet. Once you attend an event, you can rate it inside <Link to="/student/registrations" className="text-[#4F46E5] hover:underline font-medium">My Registrations</Link>.
+            You haven't submitted feedback reviews yet. Once you attend an event, you can rate it inside <Link to="/student/registrations" className="text-[#FF5A1F] hover:underline font-medium">My Registrations</Link>.
           </p>
         </div>
       ) : (
@@ -58,7 +58,7 @@ export const Feedback = () => {
             <div key={fb.id} className="bg-[#FFFFFF] p-5 rounded-xl border border-[#E2E8F0] shadow-xs hover:border-[#CBD5E1] transition-all flex flex-col justify-between space-y-3">
               <div>
                 <div className="flex items-center justify-between">
-                  <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#EEEFFA] text-[#4F46E5]">
+                  <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#FFF1EB] text-[#FF5A1F]">
                     {fb.event?.category || 'Event'}
                   </span>
                   
@@ -77,7 +77,7 @@ export const Feedback = () => {
 
                 <h3 className="font-semibold text-xs text-[#172033] truncate mt-2">{fb.event?.title}</h3>
                 
-                <p className="text-xs text-[#64748B] leading-relaxed italic bg-[#F8FAFC] border-l-2 border-[#4F46E5] p-2.5 rounded-r-lg mt-2">
+                <p className="text-xs text-[#64748B] leading-relaxed italic bg-[#F8FAFC] border-l-2 border-[#FF5A1F] p-2.5 rounded-r-lg mt-2">
                   "{fb.feedbackText}"
                 </p>
               </div>

@@ -55,7 +55,7 @@ export const EventIntelligence = () => {
                 className="bg-[#FFFFFF] p-4 rounded-xl border border-[#E2E8F0] shadow-xs flex justify-between items-center text-xs"
               >
                 <div>
-                  <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#EEECFF] text-[#4F46E5]">
+                  <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#EEECFF] text-[#FF5A1F]">
                     {e.category}
                   </span>
                   <h4 className="font-semibold text-xs text-[#172033] mt-1 truncate max-w-[260px]">{e.title}</h4>
@@ -88,7 +88,7 @@ export const EventIntelligence = () => {
                   <XAxis type="number" stroke="#94A3B8" tickLine={false} tick={{ fontSize: 11 }} />
                   <YAxis dataKey="name" type="category" stroke="#94A3B8" tickLine={false} tick={{ fontSize: 11 }} />
                   <Tooltip contentStyle={{ backgroundColor: '#FFFFFF', borderColor: '#E2E8F0', borderRadius: '8px', fontSize: '11px' }} />
-                  <Bar dataKey="registrations" fill="#4F46E5" radius={[0, 4, 4, 0]} name="Registrations" />
+                  <Bar dataKey="registrations" fill="#FF5A1F" radius={[0, 4, 4, 0]} name="Registrations" />
                 </BarChart>
               </ResponsiveContainer>
             </div>

@@ -78,7 +78,7 @@ export const AIGenerator = () => {
       {/* Header */}
       <div className="border-b border-[#E2E8F0] pb-5">
         <h1 className="text-2xl font-bold tracking-tight text-[#172033] flex items-center gap-2">
-          <BrainCircuit size={22} className="text-[#4F46E5]" />
+          <BrainCircuit size={22} className="text-[#FF5A1F]" />
           AI Event Generator
         </h1>
         <p className="text-xs text-[#64748B] mt-0.5">Prompt the AI engine to compose structured campus workshops with agendas, seating, and constraints.</p>
@@ -111,14 +111,14 @@ export const AIGenerator = () => {
                   placeholder="e.g. Create a 1-day React 19 hands-on workshop for CSE sophomores. Focus on server components, fetching, and building a project."
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
-                  className="block w-full px-3 py-2.5 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg text-xs text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#4F46E5] transition-colors"
+                  className="block w-full px-3 py-2.5 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg text-xs text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#FF5A1F] transition-colors"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={generating || !prompt.trim()}
-                className="w-full py-2.5 rounded-lg bg-[#4F46E5] hover:bg-[#4338CA] disabled:opacity-50 text-white text-xs font-semibold transition-colors shadow-xs flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full py-2.5 rounded-lg bg-[#FF5A1F] hover:bg-[#E94712] disabled:opacity-50 text-white text-xs font-semibold transition-colors shadow-xs flex items-center justify-center gap-2 cursor-pointer"
               >
                 {generating ? (
                   <>
@@ -139,13 +139,13 @@ export const AIGenerator = () => {
             <span className="font-bold text-[#172033] uppercase block tracking-wider text-[10px]">Sample Prompts:</span>
             <button 
               onClick={() => setPrompt("Create a Generative AI workshop for second-year CSE students.")}
-              className="block text-left text-[#4F46E5] hover:underline cursor-pointer"
+              className="block text-left text-[#FF5A1F] hover:underline cursor-pointer"
             >
               • "Create a Generative AI workshop for second-year CSE students."
             </button>
             <button 
               onClick={() => setPrompt("Create a Figma UI design bootcamp with hands-on design sprints.")}
-              className="block text-left text-[#4F46E5] hover:underline cursor-pointer"
+              className="block text-left text-[#FF5A1F] hover:underline cursor-pointer"
             >
               • "Create a Figma UI design bootcamp with hands-on design sprints."
             </button>
@@ -156,14 +156,14 @@ export const AIGenerator = () => {
         <div className="lg:col-span-7">
           {!generatedDraft && !generating ? (
             <div className="py-20 text-center border border-[#E2E8F0] rounded-2xl bg-[#FFFFFF] text-[#94A3B8] text-xs shadow-xs p-6">
-              <Sparkles size={28} className="mx-auto text-[#C7D2FE] mb-2" />
+              <Sparkles size={28} className="mx-auto text-[#FFD2C2] mb-2" />
               <h4 className="font-semibold text-[#172033] text-sm mb-1">No Draft Generated Yet</h4>
               <p className="max-w-xs mx-auto text-xs text-[#64748B]">Enter a prompt on the left and click Generate Event Draft to synthesize a complete curriculum.</p>
             </div>
           ) : generating ? (
             <div className="py-20 text-center border border-[#E2E8F0] rounded-2xl bg-[#FFFFFF] space-y-3 shadow-xs">
-              <div className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-[#EEEFFA] text-[#4F46E5]">
-                <BrainCircuit size={22} className="animate-spin text-[#4F46E5]" />
+              <div className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-[#FFF1EB] text-[#FF5A1F]">
+                <BrainCircuit size={22} className="animate-spin text-[#FF5A1F]" />
               </div>
               <div className="space-y-0.5">
                 <h4 className="text-sm font-bold text-[#172033]">Synthesizing Curriculum</h4>
@@ -174,7 +174,7 @@ export const AIGenerator = () => {
             <div className="bg-[#FFFFFF] p-6 rounded-2xl space-y-4 border border-[#E2E8F0] shadow-xs text-xs">
               <div className="flex items-center justify-between border-b border-[#E2E8F0] pb-3">
                 <div>
-                  <span className="text-[10px] text-[#4F46E5] font-bold uppercase tracking-wider">Draft Editor</span>
+                  <span className="text-[10px] text-[#FF5A1F] font-bold uppercase tracking-wider">Draft Editor</span>
                   <h3 className="text-sm font-bold text-[#172033]">Review Generated Outline</h3>
                 </div>
                 <button 
@@ -204,7 +204,7 @@ export const AIGenerator = () => {
                     type="text"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-2 w-full text-xs text-[#172033] focus:outline-none focus:border-[#4F46E5]"
+                    className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-2 w-full text-xs text-[#172033] focus:outline-none focus:border-[#FF5A1F]"
                   />
                 </div>
 
@@ -213,7 +213,7 @@ export const AIGenerator = () => {
                   <select 
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
-                    className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-2 w-full text-xs text-[#172033] focus:outline-none focus:border-[#4F46E5]"
+                    className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-2 w-full text-xs text-[#172033] focus:outline-none focus:border-[#FF5A1F]"
                   >
                     <option value="AI">AI</option>
                     <option value="Technology">Technology</option>
@@ -229,7 +229,7 @@ export const AIGenerator = () => {
                     type="text"
                     value={duration}
                     onChange={(e) => setDuration(e.target.value)}
-                    className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-2 w-full text-xs text-[#172033] focus:outline-none focus:border-[#4F46E5]"
+                    className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-2 w-full text-xs text-[#172033] focus:outline-none focus:border-[#FF5A1F]"
                   />
                 </div>
 
@@ -239,7 +239,7 @@ export const AIGenerator = () => {
                     type="text"
                     value={targetAudience}
                     onChange={(e) => setTargetAudience(e.target.value)}
-                    className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-2 w-full text-xs text-[#172033] focus:outline-none focus:border-[#4F46E5]"
+                    className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-2 w-full text-xs text-[#172033] focus:outline-none focus:border-[#FF5A1F]"
                   />
                 </div>
 
@@ -249,7 +249,7 @@ export const AIGenerator = () => {
                     rows={3}
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-2 w-full text-xs text-[#172033] focus:outline-none focus:border-[#4F46E5]"
+                    className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-2 w-full text-xs text-[#172033] focus:outline-none focus:border-[#FF5A1F]"
                   />
                 </div>
 
@@ -259,7 +259,7 @@ export const AIGenerator = () => {
                     rows={3}
                     value={agenda}
                     onChange={(e) => setAgenda(e.target.value)}
-                    className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-2 w-full text-xs text-[#172033] font-mono focus:outline-none focus:border-[#4F46E5]"
+                    className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-2 w-full text-xs text-[#172033] font-mono focus:outline-none focus:border-[#FF5A1F]"
                   />
                 </div>
 
@@ -269,7 +269,7 @@ export const AIGenerator = () => {
                     type="text"
                     value={requirements}
                     onChange={(e) => setRequirements(e.target.value)}
-                    className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-2 w-full text-xs text-[#172033] focus:outline-none focus:border-[#4F46E5]"
+                    className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-2 w-full text-xs text-[#172033] focus:outline-none focus:border-[#FF5A1F]"
                   />
                 </div>
               </div>
@@ -284,7 +284,7 @@ export const AIGenerator = () => {
                 </button>
                 <button
                   onClick={handlePublish}
-                  className="px-4 py-1.5 rounded-lg bg-[#4F46E5] hover:bg-[#4338CA] text-white font-semibold flex items-center gap-1.5 shadow-xs transition-colors cursor-pointer"
+                  className="px-4 py-1.5 rounded-lg bg-[#FF5A1F] hover:bg-[#E94712] text-white font-semibold flex items-center gap-1.5 shadow-xs transition-colors cursor-pointer"
                 >
                   <Send size={12} />
                   <span>Publish Event</span>

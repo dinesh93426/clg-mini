@@ -53,9 +53,9 @@ export const OrganizerProfile = () => {
       </div>
 
       {/* Authority Card */}
-      <div className="p-5 rounded-2xl border border-[#C7D2FE] bg-[#FFFFFF] shadow-xs space-y-2">
+      <div className="p-5 rounded-2xl border border-[#FFD2C2] bg-[#FFFFFF] shadow-xs space-y-2">
         <h4 className="text-xs font-bold text-[#172033] flex items-center gap-1.5 uppercase tracking-wider">
-          <CalendarRange size={15} className="text-[#4F46E5]" />
+          <CalendarRange size={15} className="text-[#FF5A1F]" />
           <span>Organizer Authority Roster</span>
         </h4>
         <p className="text-xs text-[#64748B] leading-relaxed">

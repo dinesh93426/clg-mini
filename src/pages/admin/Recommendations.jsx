@@ -39,7 +39,7 @@ export const AdminRecommendations = () => {
       {/* Header */}
       <div className="border-b border-[#E2E8F0] pb-5">
         <h1 className="text-2xl font-bold tracking-tight text-[#172033] flex items-center gap-2">
-          <Sparkles size={22} className="text-[#4F46E5]" />
+          <Sparkles size={22} className="text-[#FF5A1F]" />
           Recommendation Analytics
         </h1>
         <p className="text-xs text-[#64748B] mt-0.5">Review recommendation conversion ratios and monitor AI click-through rates.</p>
@@ -73,7 +73,7 @@ export const AdminRecommendations = () => {
               <Tooltip contentStyle={{ backgroundColor: '#FFFFFF', borderColor: '#E2E8F0', borderRadius: '8px', fontSize: '11px' }} />
               <Legend iconSize={10} verticalAlign="top" height={36} wrapperStyle={{ fontSize: '11px' }} />
               <Bar dataKey="base" fill="#CBD5E1" radius={[4, 4, 0, 0]} name="Standard Registrations" />
-              <Bar dataKey="ai" fill="#4F46E5" radius={[4, 4, 0, 0]} name="AI Recommended Registrations" />
+              <Bar dataKey="ai" fill="#FF5A1F" radius={[4, 4, 0, 0]} name="AI Recommended Registrations" />
             </BarChart>
           </ResponsiveContainer>
         </div>

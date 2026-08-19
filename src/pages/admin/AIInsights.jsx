@@ -28,7 +28,7 @@ export const AIInsights = () => {
       case 'warning': return 'bg-[#FEF3C7] border-[#FDE68A] text-[#D97706]';
       case 'critical': return 'bg-[#FEE2E2] border-[#FECACA] text-[#DC2626]';
       case 'success': return 'bg-[#DCFCE7] border-[#BBF7D0] text-[#16A34A]';
-      default: return 'bg-[#EEECFF] border-[#C7D2FE] text-[#4F46E5]';
+      default: return 'bg-[#EEECFF] border-[#FFD2C2] text-[#FF5A1F]';
     }
   };
 
@@ -45,8 +45,8 @@ export const AIInsights = () => {
     switch (type) {
       case 'WARNING': return <AlertTriangle size={16} className="text-[#D97706]" />;
       case 'TREND': return <TrendingUp size={16} className="text-[#16A34A]" />;
-      case 'OPPORTUNITY': return <Lightbulb size={16} className="text-[#4F46E5]" />;
-      default: return <BrainCircuit size={16} className="text-[#4F46E5]" />;
+      case 'OPPORTUNITY': return <Lightbulb size={16} className="text-[#FF5A1F]" />;
+      default: return <BrainCircuit size={16} className="text-[#FF5A1F]" />;
     }
   };
 
@@ -68,13 +68,13 @@ export const AIInsights = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E2E8F0] pb-5">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-[#172033] flex items-center gap-2">
-            <BrainCircuit size={22} className="text-[#4F46E5]" />
+            <BrainCircuit size={22} className="text-[#FF5A1F]" />
             AI Insights Command Center
           </h1>
           <p className="text-xs text-[#64748B] mt-0.5">Automated algorithmic logs identifying demand anomalies, seating overflows, and satisfaction markers.</p>
         </div>
         
-        <div className="flex items-center gap-1.5 px-3 py-1 bg-[#EEECFF] border border-[#C7D2FE] text-[#4F46E5] rounded-full text-xs font-semibold self-start sm:self-auto">
+        <div className="flex items-center gap-1.5 px-3 py-1 bg-[#EEECFF] border border-[#FFD2C2] text-[#FF5A1F] rounded-full text-xs font-semibold self-start sm:self-auto">
           <Sparkles size={12} />
           <span>Real-time Monitoring Active</span>
         </div>
@@ -117,7 +117,7 @@ export const AIInsights = () => {
             <div className="pt-2.5 border-t border-[#E2E8F0] flex items-center justify-between text-[10px]">
               <span className="text-[#94A3B8]">Logged {ins.timestamp}</span>
               {ins.relatedEvent && (
-                <div className="flex items-center gap-1 text-[#4F46E5] font-semibold">
+                <div className="flex items-center gap-1 text-[#FF5A1F] font-semibold">
                   <CornerDownRight size={10} />
                   <span>Ref: {ins.relatedEvent}</span>
                 </div>

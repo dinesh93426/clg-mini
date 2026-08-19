@@ -78,22 +78,22 @@ export const Recommendations = () => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#E2E8F0] pb-5">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-[#172033] flex items-center gap-2">
-            <Sparkles size={20} className="text-[#4F46E5]" />
+            <Sparkles size={20} className="text-[#FF5A1F]" />
             AI Recommendations
           </h1>
           <p className="text-xs text-[#64748B] mt-0.5">Events custom-curated by our campus neural network matching your academic profile.</p>
         </div>
         
         {/* Recommendation Intelligence Badge */}
-        <div className="flex items-center gap-1.5 px-3 py-1 bg-[#EEEFFA] border border-[#C7D2FE] text-[#4F46E5] rounded-full text-xs font-semibold w-fit">
-          <BrainCircuit size={13} className="text-[#4F46E5]" />
+        <div className="flex items-center gap-1.5 px-3 py-1 bg-[#FFF1EB] border border-[#FFD2C2] text-[#FF5A1F] rounded-full text-xs font-semibold w-fit">
+          <BrainCircuit size={13} className="text-[#FF5A1F]" />
           <span>Profile Accuracy: 94%</span>
         </div>
       </div>
 
       {/* Explanatory Intelligence Banner */}
       <div className="p-5 rounded-xl border border-[#E2E8F0] bg-[#FFFFFF] shadow-xs flex items-start gap-3.5">
-        <div className="w-8 h-8 rounded-lg bg-[#EEEFFA] text-[#4F46E5] flex items-center justify-center shrink-0">
+        <div className="w-8 h-8 rounded-lg bg-[#FFF1EB] text-[#FF5A1F] flex items-center justify-center shrink-0">
           <BrainCircuit size={16} />
         </div>
         <div className="space-y-0.5">
@@ -114,7 +114,7 @@ export const Recommendations = () => {
           </p>
           <Link
             to="/student/events"
-            className="inline-flex items-center gap-1 px-3.5 py-1.5 rounded-lg bg-[#4F46E5] hover:bg-[#4338CA] text-white text-xs font-semibold shadow-xs transition-colors"
+            className="inline-flex items-center gap-1 px-3.5 py-1.5 rounded-lg bg-[#FF5A1F] hover:bg-[#E94712] text-white text-xs font-semibold shadow-xs transition-colors"
           >
             Explore Catalog
           </Link>

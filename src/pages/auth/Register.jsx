@@ -52,14 +52,14 @@ export const Register = () => {
     <div className="w-full max-w-md mx-auto">
       {/* Brand Header */}
       <div className="text-center mb-6">
-        <div className="inline-flex items-center justify-center w-11 h-11 rounded-xl bg-[#4F46E5] text-white shadow-xs mb-3">
+        <div className="inline-flex items-center justify-center w-11 h-11 rounded-xl bg-[#FF5A1F] text-white shadow-xs mb-3">
           <BrainCircuit size={22} />
         </div>
         <h2 className="text-2xl font-bold text-[#172033] tracking-tight">
           Create Campus Account
         </h2>
         <p className="mt-1 text-xs text-[#64748B]">
-          Join the EventIntel AI University Platform
+          Join the EventIntel <span className="text-[#FF5A1F] font-semibold">AI</span> University Platform
         </p>
       </div>
 
@@ -94,7 +94,7 @@ export const Register = () => {
                 placeholder="Alex Johnson"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full pl-9 pr-3 py-2 text-xs bg-[#FFFFFF] border border-[#E2E8F0] rounded-lg text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#4F46E5] focus:ring-1 focus:ring-[#4F46E5] transition-colors"
+                className="w-full pl-9 pr-3 py-2 text-xs bg-[#FFFFFF] border border-[#E2E8F0] rounded-lg text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#FF5A1F] focus:ring-1 focus:ring-[#FF5A1F] transition-colors"
               />
             </div>
           </div>
@@ -114,7 +114,7 @@ export const Register = () => {
                 placeholder="alex@university.edu"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full pl-9 pr-3 py-2 text-xs bg-[#FFFFFF] border border-[#E2E8F0] rounded-lg text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#4F46E5] focus:ring-1 focus:ring-[#4F46E5] transition-colors"
+                className="w-full pl-9 pr-3 py-2 text-xs bg-[#FFFFFF] border border-[#E2E8F0] rounded-lg text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#FF5A1F] focus:ring-1 focus:ring-[#FF5A1F] transition-colors"
               />
             </div>
           </div>
@@ -134,12 +134,12 @@ export const Register = () => {
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-9 pr-9 py-2 text-xs bg-[#FFFFFF] border border-[#E2E8F0] rounded-lg text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#4F46E5] focus:ring-1 focus:ring-[#4F46E5] transition-colors"
+                className="w-full pl-9 pr-9 py-2 text-xs bg-[#FFFFFF] border border-[#E2E8F0] rounded-lg text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#FF5A1F] focus:ring-1 focus:ring-[#FF5A1F] transition-colors"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#94A3B8] hover:text-[#172033]"
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#94A3B8] hover:text-[#172033] cursor-pointer"
               >
                 {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
               </button>
@@ -154,7 +154,7 @@ export const Register = () => {
               <select
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
-                className="w-full px-2.5 py-2 text-xs bg-[#FFFFFF] border border-[#E2E8F0] rounded-lg text-[#172033] focus:outline-none focus:border-[#4F46E5]"
+                className="w-full px-2.5 py-2 text-xs bg-[#FFFFFF] border border-[#E2E8F0] rounded-lg text-[#172033] focus:outline-none focus:border-[#FF5A1F]"
               >
                 <option value="student">Student</option>
                 <option value="organizer">Event Organizer</option>
@@ -168,7 +168,7 @@ export const Register = () => {
               <select
                 value={department}
                 onChange={(e) => setDepartment(e.target.value)}
-                className="w-full px-2.5 py-2 text-xs bg-[#FFFFFF] border border-[#E2E8F0] rounded-lg text-[#172033] focus:outline-none focus:border-[#4F46E5]"
+                className="w-full px-2.5 py-2 text-xs bg-[#FFFFFF] border border-[#E2E8F0] rounded-lg text-[#172033] focus:outline-none focus:border-[#FF5A1F]"
               >
                 <option value="Computer Science & Engineering">CSE</option>
                 <option value="Electronics & Communication">ECE</option>
@@ -190,7 +190,7 @@ export const Register = () => {
                 <select
                   value={year}
                   onChange={(e) => setYear(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 text-xs bg-[#FFFFFF] border border-[#E2E8F0] rounded-lg text-[#172033] focus:outline-none focus:border-[#4F46E5]"
+                  className="w-full pl-9 pr-3 py-2 text-xs bg-[#FFFFFF] border border-[#E2E8F0] rounded-lg text-[#172033] focus:outline-none focus:border-[#FF5A1F]"
                 >
                   <option value="1">1st Year (Freshman)</option>
                   <option value="2">2nd Year (Sophomore)</option>
@@ -204,7 +204,7 @@ export const Register = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex justify-center items-center py-2.5 px-4 rounded-lg text-xs font-semibold text-white bg-[#4F46E5] hover:bg-[#4338CA] focus:outline-none focus:ring-2 focus:ring-[#4F46E5] disabled:opacity-50 transition-colors shadow-xs cursor-pointer mt-4"
+            className="w-full flex justify-center items-center py-2.5 px-4 rounded-lg text-xs font-semibold text-white bg-[#FF5A1F] hover:bg-[#E94712] hover:shadow-[0_8px_20px_rgba(255,90,31,0.20)] focus:outline-none focus:ring-2 focus:ring-[#FF5A1F] disabled:opacity-50 transition-all shadow-xs cursor-pointer mt-4"
           >
             {loading ? 'Creating Profile...' : 'Complete Registration'}
           </button>
@@ -213,7 +213,7 @@ export const Register = () => {
 
       <p className="mt-4 text-center text-xs text-[#64748B]">
         Already have a profile?{' '}
-        <Link to="/login" className="font-semibold text-[#4F46E5] hover:text-[#4338CA]">
+        <Link to="/login" className="font-semibold text-[#FF5A1F] hover:text-[#E94712]">
           Sign in
         </Link>
       </p>

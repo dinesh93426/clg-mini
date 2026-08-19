@@ -60,11 +60,11 @@ export const Login = () => {
     <div className="w-full max-w-md mx-auto">
       {/* Brand logo & header */}
       <div className="text-center mb-6">
-        <div className="inline-flex items-center justify-center w-11 h-11 rounded-xl bg-[#4F46E5] text-white shadow-xs mb-3">
+        <div className="inline-flex items-center justify-center w-11 h-11 rounded-xl bg-[#FF5A1F] text-white shadow-xs mb-3">
           <BrainCircuit size={22} />
         </div>
         <h2 className="text-2xl font-bold text-[#172033] tracking-tight">
-          Sign in to EventIntel <span className="text-[#4F46E5]">AI</span>
+          Sign in to EventIntel <span className="text-[#FF5A1F]">AI</span>
         </h2>
         <p className="mt-1 text-xs text-[#64748B]">
           AI-Powered Campus Intelligence Platform
@@ -86,7 +86,7 @@ export const Login = () => {
               onClick={() => setPortalRole(tab.id)}
               className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-colors cursor-pointer
                 ${portalRole === tab.id 
-                  ? 'bg-[#FFFFFF] text-[#4F46E5] shadow-xs' 
+                  ? 'bg-[#FFFFFF] text-[#FF5A1F] shadow-xs' 
                   : 'text-[#64748B] hover:text-[#172033]'}`}
             >
               {tab.label}
@@ -118,7 +118,7 @@ export const Login = () => {
                 placeholder="alex.johnson@university.edu"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full pl-9 pr-3 py-2 text-xs bg-[#FFFFFF] border border-[#E2E8F0] rounded-lg text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#4F46E5] focus:ring-1 focus:ring-[#4F46E5] transition-colors"
+                className="w-full pl-9 pr-3 py-2 text-xs bg-[#FFFFFF] border border-[#E2E8F0] rounded-lg text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#FF5A1F] focus:ring-1 focus:ring-[#FF5A1F] transition-colors"
               />
             </div>
           </div>
@@ -139,12 +139,12 @@ export const Login = () => {
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-9 pr-9 py-2 text-xs bg-[#FFFFFF] border border-[#E2E8F0] rounded-lg text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#4F46E5] focus:ring-1 focus:ring-[#4F46E5] transition-colors"
+                className="w-full pl-9 pr-9 py-2 text-xs bg-[#FFFFFF] border border-[#E2E8F0] rounded-lg text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#FF5A1F] focus:ring-1 focus:ring-[#FF5A1F] transition-colors"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#94A3B8] hover:text-[#172033]"
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#94A3B8] hover:text-[#172033] cursor-pointer"
               >
                 {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
               </button>
@@ -152,14 +152,14 @@ export const Login = () => {
           </div>
 
           <div className="flex items-center justify-between text-xs pt-1">
-            <label className="flex items-center text-[#64748B]">
+            <label className="flex items-center text-[#64748B] cursor-pointer">
               <input
                 type="checkbox"
-                className="h-3.5 w-3.5 rounded border-[#CBD5E1] text-[#4F46E5] focus:ring-[#4F46E5]"
+                className="h-3.5 w-3.5 rounded border-[#CBD5E1] text-[#FF5A1F] focus:ring-[#FF5A1F]"
               />
               <span className="ml-2">Remember me</span>
             </label>
-            <a href="#" className="font-medium text-[#4F46E5] hover:text-[#4338CA]">
+            <a href="#" className="font-medium text-[#FF5A1F] hover:text-[#E94712]">
               Forgot password?
             </a>
           </div>
@@ -167,7 +167,7 @@ export const Login = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex justify-center items-center py-2.5 px-4 rounded-lg text-xs font-semibold text-white bg-[#4F46E5] hover:bg-[#4338CA] focus:outline-none focus:ring-2 focus:ring-[#4F46E5] disabled:opacity-50 transition-colors shadow-xs cursor-pointer mt-2"
+            className="w-full flex justify-center items-center py-2.5 px-4 rounded-lg text-xs font-semibold text-white bg-[#FF5A1F] hover:bg-[#E94712] hover:shadow-[0_8px_20px_rgba(255,90,31,0.20)] focus:outline-none focus:ring-2 focus:ring-[#FF5A1F] disabled:opacity-50 transition-all shadow-xs cursor-pointer mt-2"
           >
             {loading ? (
               <span className="flex items-center gap-2">
@@ -188,7 +188,7 @@ export const Login = () => {
               type="button"
               onClick={() => handleQuickLogin('student')}
               disabled={loading}
-              className="py-1.5 px-1 text-center rounded-lg text-xs font-medium bg-[#F8FAFC] text-[#4F46E5] border border-[#E2E8F0] hover:bg-[#EEF2FF] hover:border-[#C7D2FE] transition-colors cursor-pointer"
+              className="py-1.5 px-1 text-center rounded-lg text-xs font-semibold bg-[#F8FAFC] text-[#FF5A1F] border border-[#E2E8F0] hover:bg-[#FFF1EB] hover:border-[#FFD2C2] transition-colors cursor-pointer"
             >
               Student
             </button>
@@ -196,7 +196,7 @@ export const Login = () => {
               type="button"
               onClick={() => handleQuickLogin('organizer')}
               disabled={loading}
-              className="py-1.5 px-1 text-center rounded-lg text-xs font-medium bg-[#F8FAFC] text-[#4F46E5] border border-[#E2E8F0] hover:bg-[#EEF2FF] hover:border-[#C7D2FE] transition-colors cursor-pointer"
+              className="py-1.5 px-1 text-center rounded-lg text-xs font-semibold bg-[#F8FAFC] text-[#FF5A1F] border border-[#E2E8F0] hover:bg-[#FFF1EB] hover:border-[#FFD2C2] transition-colors cursor-pointer"
             >
               Organizer
             </button>
@@ -204,7 +204,7 @@ export const Login = () => {
               type="button"
               onClick={() => handleQuickLogin('admin')}
               disabled={loading}
-              className="py-1.5 px-1 text-center rounded-lg text-xs font-medium bg-[#F8FAFC] text-[#4F46E5] border border-[#E2E8F0] hover:bg-[#EEF2FF] hover:border-[#C7D2FE] transition-colors cursor-pointer"
+              className="py-1.5 px-1 text-center rounded-lg text-xs font-semibold bg-[#F8FAFC] text-[#FF5A1F] border border-[#E2E8F0] hover:bg-[#FFF1EB] hover:border-[#FFD2C2] transition-colors cursor-pointer"
             >
               Dean (Admin)
             </button>
@@ -214,7 +214,7 @@ export const Login = () => {
 
       <p className="mt-4 text-center text-xs text-[#64748B]">
         Don't have an account?{' '}
-        <Link to="/register" className="font-semibold text-[#4F46E5] hover:text-[#4338CA]">
+        <Link to="/register" className="font-semibold text-[#FF5A1F] hover:text-[#E94712]">
           Register profile
         </Link>
       </p>

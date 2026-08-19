@@ -83,7 +83,7 @@ export const Certificates = () => {
   if (loading) {
     return (
       <div className="flex justify-center py-20">
-        <span className="h-8 w-8 animate-spin rounded-full border-2 border-[#4F46E5] border-t-transparent" />
+        <span className="h-8 w-8 animate-spin rounded-full border-2 border-[#FF5A1F] border-t-transparent" />
       </div>
     );
   }
@@ -104,7 +104,7 @@ export const Certificates = () => {
 
       <div className="border-b border-[#E2E8F0] pb-4">
         <h1 className="text-2xl font-bold tracking-tight text-[#172033] flex items-center gap-2">
-          <Award size={22} className="text-[#4F46E5]" />
+          <Award size={22} className="text-[#FF5A1F]" />
           Certificate Dispatch Hub
         </h1>
         <p className="text-xs text-[#64748B] mt-0.5">
@@ -126,13 +126,13 @@ export const Certificates = () => {
           return (
             <div key={s.num} className="flex flex-col items-center gap-1.5 bg-[#F8FAFC] px-3">
               <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${
-                isActive ? 'bg-[#4F46E5] text-white shadow-xs' : 
+                isActive ? 'bg-[#FF5A1F] text-white shadow-xs' : 
                 isPassed ? 'bg-[#DCFCE7] text-[#16A34A] border border-[#BBF7D0]' : 
                 'bg-[#FFFFFF] text-[#94A3B8] border border-[#E2E8F0]'
               }`}>
                 {isPassed ? <CheckCircle size={13} /> : displayNum}
               </div>
-              <span className={`text-[10px] font-semibold uppercase tracking-wider ${isActive ? 'text-[#4F46E5]' : isPassed ? 'text-[#16A34A]' : 'text-[#94A3B8]'}`}>
+              <span className={`text-[10px] font-semibold uppercase tracking-wider ${isActive ? 'text-[#FF5A1F]' : isPassed ? 'text-[#16A34A]' : 'text-[#94A3B8]'}`}>
                 {s.label}
               </span>
             </div>
@@ -162,7 +162,7 @@ export const Certificates = () => {
           
           <button 
             onClick={() => fileInputRef.current.click()}
-            className="px-5 py-2.5 rounded-lg bg-[#4F46E5] hover:bg-[#4338CA] text-white text-xs font-semibold shadow-xs flex items-center gap-2 transition-colors cursor-pointer"
+            className="px-5 py-2.5 rounded-lg bg-[#FF5A1F] hover:bg-[#E94712] text-white text-xs font-semibold shadow-xs flex items-center gap-2 transition-colors cursor-pointer"
           >
             <UploadCloud size={15} />
             <span>Browse Template File</span>
@@ -182,7 +182,7 @@ export const Certificates = () => {
           <div className="space-y-2.5">
             <div className="flex items-center justify-between">
               <span className="text-[10px] text-[#64748B] font-bold uppercase tracking-wider flex items-center gap-1">
-                <Sparkles size={11} className="text-[#4F46E5]" /> Interactive Field Placement
+                <Sparkles size={11} className="text-[#FF5A1F]" /> Interactive Field Placement
               </span>
               <span className="text-[10px] text-[#94A3B8]">Drag items to reposition</span>
             </div>
@@ -197,11 +197,11 @@ export const Certificates = () => {
               <div 
                 onMouseDown={() => handleMouseDown('name')}
                 className={`absolute -translate-x-1/2 -translate-y-1/2 p-3 text-center cursor-move transition-all ${
-                  activeDrag === 'name' ? 'bg-[#EEECFF] border-2 border-[#4F46E5]' : 'bg-[#EEECFF]/70 border border-dashed border-[#4F46E5] hover:bg-[#EEECFF]'
+                  activeDrag === 'name' ? 'bg-[#EEECFF] border-2 border-[#FF5A1F]' : 'bg-[#EEECFF]/70 border border-dashed border-[#FF5A1F] hover:bg-[#EEECFF]'
                 }`}
                 style={{ left: `${positions.name.x}%`, top: `${positions.name.y}%`, width: '75%' }}
               >
-                <span className="absolute -top-2.5 -left-1 bg-[#4F46E5] text-white text-[8px] px-1 py-0.5 rounded font-bold uppercase tracking-wider">
+                <span className="absolute -top-2.5 -left-1 bg-[#FF5A1F] text-white text-[8px] px-1 py-0.5 rounded font-bold uppercase tracking-wider">
                   Student Name
                 </span>
                 <h2 className="text-xl font-serif text-[#172033] italic">Alex Johnson (Student Name)</h2>
@@ -210,11 +210,11 @@ export const Certificates = () => {
               <div 
                 onMouseDown={() => handleMouseDown('title')}
                 className={`absolute -translate-x-1/2 -translate-y-1/2 p-2 text-center cursor-move transition-all ${
-                  activeDrag === 'title' ? 'bg-[#EEECFF] border-2 border-[#4F46E5]' : 'bg-[#EEECFF]/70 border border-dashed border-[#4F46E5] hover:bg-[#EEECFF]'
+                  activeDrag === 'title' ? 'bg-[#EEECFF] border-2 border-[#FF5A1F]' : 'bg-[#EEECFF]/70 border border-dashed border-[#FF5A1F] hover:bg-[#EEECFF]'
                 }`}
                 style={{ left: `${positions.title.x}%`, top: `${positions.title.y}%` }}
               >
-                <span className="absolute -top-2.5 -left-1 bg-[#4F46E5] text-white text-[8px] px-1 py-0.5 rounded font-bold uppercase tracking-wider">
+                <span className="absolute -top-2.5 -left-1 bg-[#FF5A1F] text-white text-[8px] px-1 py-0.5 rounded font-bold uppercase tracking-wider">
                   Event Title
                 </span>
                 <p className="text-xs font-semibold text-[#172033] uppercase tracking-wider whitespace-nowrap">{event?.title}</p>
@@ -260,7 +260,7 @@ export const Certificates = () => {
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-[#64748B]">Delivery Method</span>
-                    <span className="font-semibold text-[#4F46E5] flex items-center gap-1">
+                    <span className="font-semibold text-[#FF5A1F] flex items-center gap-1">
                       <Mail size={12} /> Direct Email
                     </span>
                   </div>
@@ -275,7 +275,7 @@ export const Certificates = () => {
               <button
                 onClick={handleDispatch}
                 disabled={dispatching}
-                className="w-full py-2.5 rounded-lg bg-[#4F46E5] hover:bg-[#4338CA] disabled:opacity-50 text-white text-xs font-semibold transition-colors shadow-xs flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full py-2.5 rounded-lg bg-[#FF5A1F] hover:bg-[#E94712] disabled:opacity-50 text-white text-xs font-semibold transition-colors shadow-xs flex items-center justify-center gap-2 cursor-pointer"
               >
                 {dispatching ? (
                   <>
@@ -309,7 +309,7 @@ export const Certificates = () => {
 
           <button 
             onClick={() => navigate(`/organizer/events/${id}/analytics`)}
-            className="px-4 py-2 rounded-lg bg-[#4F46E5] hover:bg-[#4338CA] text-white text-xs font-semibold shadow-xs transition-colors cursor-pointer"
+            className="px-4 py-2 rounded-lg bg-[#FF5A1F] hover:bg-[#E94712] text-white text-xs font-semibold shadow-xs transition-colors cursor-pointer"
           >
             Return to Analytics
           </button>

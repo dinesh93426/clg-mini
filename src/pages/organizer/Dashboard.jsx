@@ -200,10 +200,10 @@ export const OrganizerDashboard = () => {
         <div className="bg-[#FFFFFF] border border-[#E5E5EA] rounded-2xl p-4 shadow-2xs">
           <div className="flex items-center justify-between text-[#6B6B76] mb-2">
             <span className="text-xs font-medium">Upcoming Events</span>
-            <Sparkles size={15} className="text-[#7C3AED]" />
+            <Sparkles size={15} className="text-[#FF7A3D]" />
           </div>
           <div className="text-2xl font-bold text-[#16161A] tracking-tight">{kpis.upcomingEvents}</div>
-          <span className="text-[11px] text-[#7C3AED] font-medium mt-1 inline-block">Published schedule</span>
+          <span className="text-[11px] text-[#FF7A3D] font-medium mt-1 inline-block">Published schedule</span>
         </div>
 
         <div className="bg-[#FFFFFF] border border-[#E5E5EA] rounded-2xl p-4 shadow-2xs">

@@ -185,8 +185,8 @@ export const AdminDashboard = () => {
 
         <div className="bg-[#FFFFFF] border border-[#E5E5EA] rounded-2xl p-3.5 shadow-2xs">
           <div className="text-[11px] text-[#6B6B76] font-medium mb-1">Organizers</div>
-          <div className="text-xl font-bold text-[#7C3AED]">{kpis.activeOrganizers}</div>
-          <span className="text-[10px] text-[#7C3AED] font-medium">Active staff</span>
+          <div className="text-xl font-bold text-[#FF7A3D]">{kpis.activeOrganizers}</div>
+          <span className="text-[10px] text-[#FF7A3D] font-medium">Active staff</span>
         </div>
       </div>
 
@@ -194,7 +194,7 @@ export const AdminDashboard = () => {
       <div className="bg-gradient-to-br from-[#FFFFFF] to-[#F5F5F7] border border-[#E5E5EA] rounded-2xl p-6 shadow-2xs space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#E5E5EA] pb-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#5B4CFB] to-[#7C3AED] flex items-center justify-center text-white shadow-sm">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#5B4CFB] to-[#FF7A3D] flex items-center justify-center text-white shadow-sm">
               <BrainCircuit size={20} />
             </div>
             <div>
