@@ -27,10 +27,11 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(na
 def _auto_train():
     """
     Auto-train all models that require pre-training on startup.
-    Runs in a background thread — errors are logged but never crash or block the service.
+    Runs in a background thread with garbage collection — errors are logged but never crash or block the service.
     """
     import time
-    time.sleep(1)
+    import gc
+    time.sleep(3)
 
     # ── 1. K-Means student behavior clustering ──────────────────────────────
     logger.info("[startup] Training student behavior model (K-Means)...")
@@ -47,6 +48,7 @@ def _auto_train():
             logger.info(f"[startup] Behavior model loaded — {len(svc.cluster_labels)} cluster labels active.")
     except Exception as e:
         logger.error(f"[startup] Behavior model training failed: {e}")
+    gc.collect()
 
     # ── 2. RandomForest event demand prediction ─────────────────────────────
     logger.info("[startup] Training event demand prediction model (RandomForest)...")
@@ -61,15 +63,17 @@ def _auto_train():
         logger.warning(f"[startup] Demand model skipped — not enough data: {e}")
     except Exception as e:
         logger.error(f"[startup] Demand model training failed: {e}")
+    gc.collect()
 
     # ── 3. Sentiment — batch-analyze all unanalyzed feedback ───────────────
     logger.info("[startup] Running sentiment analysis on unanalyzed feedback...")
     try:
         from routers.sentiment import analyze_all_db_feedback
-        result = analyze_all_db_feedback(batch_size=100)
+        result = analyze_all_db_feedback(batch_size=50)
         logger.info(f"[startup] Sentiment analysis complete — {result.get('analyzed', 0)} feedback records processed.")
     except Exception as e:
         logger.error(f"[startup] Sentiment analysis failed: {e}")
+    gc.collect()
 
     # ── 4. RAG — index all events into KnowledgeDocument ───────────────────
     logger.info("[startup] Indexing events for RAG knowledge base...")
@@ -79,6 +83,7 @@ def _auto_train():
         logger.info(f"[startup] RAG index complete — {result}")
     except Exception as e:
         logger.error(f"[startup] RAG indexing failed: {e}")
+    gc.collect()
 
     # ── 5. AI Insights — generate fresh insights from DB analytics ─────────
     logger.info("[startup] Generating AI insights...")
@@ -89,6 +94,7 @@ def _auto_train():
         logger.info(f"[startup] AI insights generated — {count} insights stored.")
     except Exception as e:
         logger.error(f"[startup] Insights generation failed: {e}")
+    gc.collect()
 
     logger.info("[startup] ✅ All auto-training and indexing complete.")
 
