@@ -4,7 +4,14 @@ import axios from 'axios';
 // Default to true for local testing with high-fidelity mock data.
 export const DEMO_MODE = false;
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
+let rawBaseUrl = (import.meta.env.VITE_API_URL || '/api').trim();
+if (rawBaseUrl.endsWith('/')) {
+  rawBaseUrl = rawBaseUrl.slice(0, -1);
+}
+// Automatically normalize: if host without /api is given, append /api
+const API_BASE_URL = (rawBaseUrl.endsWith('/api') || rawBaseUrl === '/api')
+  ? rawBaseUrl
+  : `${rawBaseUrl}/api`;
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,

@@ -18,7 +18,9 @@ app.use(express.json());
 
 // Existing routes (do not modify)
 app.use('/api/auth',   authRoutes);
+app.use('/auth',       authRoutes);
 app.use('/api/events', eventRoutes);
+app.use('/events',     eventRoutes);
 
 // Registration / attendance / feedback
 app.use('/api', registrationRoutes);
