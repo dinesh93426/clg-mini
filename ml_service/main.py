@@ -115,10 +115,10 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# CORS — only allow requests from the Node.js backend (localhost:5000)
+# CORS — allow requests from local and production deployed backends
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5000", "http://localhost:5173"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -149,6 +149,17 @@ os.makedirs(static_path, exist_ok=True)
 app.mount("/static", StaticFiles(directory=static_path), name="static")
 
 
+@app.get("/")
+def root():
+    return {
+        "status": "online",
+        "service": "EventIntel AI ML Service",
+        "version": "1.0.0",
+        "health": "/health",
+        "startup_status": "/startup-status"
+    }
+
+
 @app.get("/health")
 def health():
     return {"status": "ok", "service": "college-events-ml"}
@@ -172,4 +183,5 @@ def startup_status():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run("main:app", host="0.0.0.0", port=port)
