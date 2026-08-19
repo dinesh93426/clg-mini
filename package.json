@@ -7,7 +7,10 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "seed:test": "python scripts/seed-ai-test-data.py --seed",
+    "seed:test:reset": "python scripts/seed-ai-test-data.py --reset",
+    "seed:test:validate": "python scripts/seed-ai-test-data.py --validate"
   },
   "dependencies": {
     "axios": "^1.19.0",

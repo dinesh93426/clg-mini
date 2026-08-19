@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { eventService } from '../../services/eventService';
-import { ArrowLeft, Save, Sparkles } from 'lucide-react';
+import { ArrowLeft, Save } from 'lucide-react';
 
 export const EventCreate = () => {
   const navigate = useNavigate();
@@ -43,44 +43,44 @@ export const EventCreate = () => {
   };
 
   return (
-    <div className="space-y-6 max-w-2xl mx-auto">
+    <div className="space-y-6 max-w-2xl mx-auto pb-12">
       
       {/* Header back link */}
       <button 
         onClick={() => navigate(-1)}
-        className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors cursor-pointer"
+        className="flex items-center gap-1.5 text-xs font-medium text-[#64748B] hover:text-[#172033] transition-colors cursor-pointer"
       >
         <ArrowLeft size={14} />
         <span>Back to Events list</span>
       </button>
 
-      <div>
-        <h1 className="font-display font-bold text-3xl text-white">Create New Event</h1>
-        <p className="text-slate-400 text-sm mt-1">Configure event details and seats allocation to publish manually.</p>
+      <div className="border-b border-[#E2E8F0] pb-4">
+        <h1 className="text-2xl font-bold tracking-tight text-[#172033]">Create New Event</h1>
+        <p className="text-xs text-[#64748B] mt-0.5">Configure event schedule, venue, and seat allocations to publish.</p>
       </div>
 
-      <div className="glass-card p-6 rounded-2xl border border-slate-900">
-        <form onSubmit={handleSubmit} className="space-y-5 text-xs">
+      <div className="bg-[#FFFFFF] p-6 rounded-2xl border border-[#E2E8F0] shadow-xs">
+        <form onSubmit={handleSubmit} className="space-y-4 text-xs">
           
           <div>
-            <label className="text-slate-500 font-bold block mb-1 uppercase tracking-wider text-[9px]">Event Title *</label>
+            <label className="text-[#172033] font-semibold block mb-1">Event Title *</label>
             <input
               type="text"
               required
-              placeholder="e.g. Docker and Kubernetes Deep-Dive"
+              placeholder="e.g. Cloud Infrastructure & DevOps Workshop"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="bg-slate-950/60 border border-slate-800 rounded-xl p-2.5 w-full text-white placeholder-slate-600 focus:outline-none"
+              className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-2.5 w-full text-xs text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#4F46E5]"
             />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="text-slate-500 font-bold block mb-1 uppercase tracking-wider text-[9px]">Category</label>
+              <label className="text-[#172033] font-semibold block mb-1">Category</label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="bg-slate-950/60 border border-slate-800 rounded-xl p-2.5 w-full text-white"
+                className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-2.5 w-full text-xs text-[#172033] focus:outline-none focus:border-[#4F46E5]"
               >
                 <option value="AI">AI</option>
                 <option value="Technology">Technology</option>
@@ -91,72 +91,72 @@ export const EventCreate = () => {
             </div>
 
             <div>
-              <label className="text-slate-500 font-bold block mb-1 uppercase tracking-wider text-[9px]">Total Seating Capacity *</label>
+              <label className="text-[#172033] font-semibold block mb-1">Total Seating Capacity *</label>
               <input
                 type="number"
                 required
                 min={5}
                 value={totalSeats}
                 onChange={(e) => setTotalSeats(e.target.value)}
-                className="bg-slate-950/60 border border-slate-800 rounded-xl p-2.5 w-full text-white focus:outline-none"
+                className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-2.5 w-full text-xs text-[#172033] focus:outline-none focus:border-[#4F46E5]"
               />
             </div>
           </div>
 
           <div>
-            <label className="text-slate-500 font-bold block mb-1 uppercase tracking-wider text-[9px]">Description & Summary *</label>
+            <label className="text-[#172033] font-semibold block mb-1">Description & Summary *</label>
             <textarea
               required
               rows={4}
-              placeholder="Write a clear event overview, prerequisites, objectives, and what to bring..."
+              placeholder="Write a clear event overview, prerequisites, agenda, and requirements..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="bg-slate-950/60 border border-slate-800 rounded-xl p-2.5 w-full text-white placeholder-slate-650 focus:outline-none"
+              className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-2.5 w-full text-xs text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#4F46E5]"
             />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="sm:col-span-2">
-              <label className="text-slate-500 font-bold block mb-1 uppercase tracking-wider text-[9px]">Venue Details *</label>
+              <label className="text-[#172033] font-semibold block mb-1">Venue *</label>
               <input
                 type="text"
                 required
-                placeholder="e.g. Auditorium 2, MBA Block"
+                placeholder="e.g. Seminar Hall A, Technology Block"
                 value={venue}
                 onChange={(e) => setVenue(e.target.value)}
-                className="bg-slate-950/60 border border-slate-800 rounded-xl p-2.5 w-full text-white placeholder-slate-600 focus:outline-none"
+                className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-2.5 w-full text-xs text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#4F46E5]"
               />
             </div>
 
             <div>
-              <label className="text-slate-500 font-bold block mb-1 uppercase tracking-wider text-[9px]">Scheduled Date *</label>
+              <label className="text-[#172033] font-semibold block mb-1">Date *</label>
               <input
                 type="date"
                 required
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="bg-slate-950/60 border border-slate-800 rounded-xl p-2.5 w-full text-white focus:outline-none"
+                className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-2.5 w-full text-xs text-[#172033] focus:outline-none focus:border-[#4F46E5]"
               />
             </div>
           </div>
 
           <div>
-            <label className="text-slate-500 font-bold block mb-1 uppercase tracking-wider text-[9px]">Scheduled Timing *</label>
+            <label className="text-[#172033] font-semibold block mb-1">Time Schedule *</label>
             <input
               type="text"
               required
-              placeholder="e.g. 14:00 - 17:00"
+              placeholder="e.g. 10:00 AM - 01:00 PM"
               value={time}
               onChange={(e) => setTime(e.target.value)}
-              className="bg-slate-950/60 border border-slate-800 rounded-xl p-2.5 w-full text-white placeholder-slate-600 focus:outline-none"
+              className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-2.5 w-full text-xs text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#4F46E5]"
             />
           </div>
 
-          <div className="pt-4 border-t border-slate-900 flex justify-end gap-2.5">
+          <div className="pt-4 border-t border-[#E2E8F0] flex justify-end gap-2">
             <button
               type="button"
               onClick={() => navigate('/organizer/events')}
-              className="px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 text-slate-400 font-semibold cursor-pointer"
+              className="px-4 py-2 rounded-lg bg-[#FFFFFF] border border-[#E2E8F0] hover:bg-[#F8FAFC] text-[#64748B] font-semibold transition-colors cursor-pointer"
             >
               Cancel
             </button>
@@ -164,10 +164,10 @@ export const EventCreate = () => {
             <button
               type="submit"
               disabled={submitting}
-              className="px-5 py-2 rounded-xl bg-indigo-650 hover:bg-indigo-600 text-white font-bold flex items-center gap-1.5 shadow-lg shadow-indigo-600/10 cursor-pointer"
+              className="px-4 py-2 rounded-lg bg-[#4F46E5] hover:bg-[#4338CA] text-white font-semibold flex items-center gap-1.5 shadow-xs transition-colors cursor-pointer"
             >
-              <Save size={12} />
-              <span>{submitting ? 'Publishing...' : 'Publish Campaign'}</span>
+              <Save size={13} />
+              <span>{submitting ? 'Publishing...' : 'Publish Event'}</span>
             </button>
           </div>
         </form>

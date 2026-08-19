@@ -53,7 +53,7 @@ export const MOCK_EVENTS = [
     totalSeats: 120,
     availableSeats: 12,
     registrationCount: 108,
-    image: "https://images.unsplash.com/photo-1677442136019-21780efad99a?auto=format&fit=crop&q=80&w=600",
+    image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=600",
     aiMatchPercentage: 96,
     recommendationReason: "Recommended because you frequently participate in AI and technical workshops.",
     aiRecommended: true,

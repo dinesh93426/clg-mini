@@ -30,7 +30,6 @@ export const Scanner = () => {
     e.preventDefault();
     if (!studentIdInput.trim()) return;
     
-    // Simulate API call and success
     setScanResult(null);
     setTimeout(() => {
       setScanResult({
@@ -40,11 +39,10 @@ export const Scanner = () => {
       });
       setStudentIdInput('');
       
-      // Auto-clear result after 3 seconds to be ready for next scan
       setTimeout(() => {
         setScanResult(null);
       }, 3000);
-    }, 600);
+    }, 500);
   };
 
   const handleMockRandomScan = () => {
@@ -58,100 +56,90 @@ export const Scanner = () => {
       setTimeout(() => {
         setScanResult(null);
       }, 3000);
-    }, 600);
+    }, 500);
   };
 
   if (loading) {
     return (
       <div className="flex justify-center py-20">
-        <span className="h-8 w-8 animate-spin rounded-full border-4 border-indigo-500 border-t-transparent" />
+        <span className="h-8 w-8 animate-spin rounded-full border-2 border-[#4F46E5] border-t-transparent" />
       </div>
     );
   }
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto h-[calc(100vh-8rem)] flex flex-col">
+    <div className="space-y-6 max-w-4xl mx-auto pb-12">
       
       {/* Header back */}
       <div className="shrink-0">
         <button 
           onClick={() => navigate(-1)}
-          className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors cursor-pointer mb-6"
+          className="flex items-center gap-1.5 text-xs font-medium text-[#64748B] hover:text-[#172033] transition-colors cursor-pointer mb-4"
         >
           <ArrowLeft size={14} />
           <span>Back to Analytics</span>
         </button>
 
-        <div>
-          <h1 className="font-display font-bold text-3xl text-white flex items-center gap-2">
-            <QrCode size={26} className="text-indigo-400" />
+        <div className="border-b border-[#E2E8F0] pb-4">
+          <h1 className="text-2xl font-bold tracking-tight text-[#172033] flex items-center gap-2">
+            <QrCode size={22} className="text-[#4F46E5]" />
             Check-in Scanner
           </h1>
-          <p className="text-slate-400 text-sm mt-1">
-            Scan attendee QR passes for <strong>{event?.title}</strong> to mark attendance.
+          <p className="text-xs text-[#64748B] mt-0.5">
+            Scan attendee QR passes for <strong>{event?.title}</strong> to verify attendance.
           </p>
         </div>
       </div>
 
-      <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-8 mt-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-4">
         
         {/* Left Column: Scanner View */}
-        <div className="glass-card rounded-3xl border-2 border-slate-800 overflow-hidden relative flex flex-col items-center justify-center bg-[#0b0f19]">
-          
-          {/* Simulated Camera feed overlay */}
-          <div className="absolute inset-0 opacity-20 pointer-events-none" style={{ backgroundImage: 'radial-gradient(#4f46e5 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
-          
+        <div className="bg-[#FFFFFF] rounded-2xl border border-[#E2E8F0] overflow-hidden relative flex flex-col items-center justify-center p-8 min-h-[320px] shadow-xs">
           {!scanResult ? (
-            <div className="relative z-10 flex flex-col items-center">
-              {/* Scanner targeting reticle */}
-              <div className="w-64 h-64 border-2 border-dashed border-indigo-500/50 rounded-3xl relative flex items-center justify-center overflow-hidden">
-                {/* Scanning line animation */}
-                <div className="absolute top-0 left-0 right-0 h-0.5 bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,1)] animate-[scan_2s_ease-in-out_infinite]"></div>
-                <ScanLine size={48} className="text-indigo-500/30" />
-                
-                {/* Corner markers */}
-                <div className="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-indigo-500 rounded-tl-xl"></div>
-                <div className="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-indigo-500 rounded-tr-xl"></div>
-                <div className="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-indigo-500 rounded-bl-xl"></div>
-                <div className="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-indigo-500 rounded-br-xl"></div>
+            <div className="flex flex-col items-center">
+              <div className="w-52 h-52 border-2 border-dashed border-[#4F46E5]/40 rounded-2xl relative flex items-center justify-center bg-[#F8FAFC]">
+                <ScanLine size={40} className="text-[#4F46E5]/30" />
+                <div className="absolute top-0 left-0 w-6 h-6 border-t-3 border-l-3 border-[#4F46E5] rounded-tl-lg"></div>
+                <div className="absolute top-0 right-0 w-6 h-6 border-t-3 border-r-3 border-[#4F46E5] rounded-tr-lg"></div>
+                <div className="absolute bottom-0 left-0 w-6 h-6 border-b-3 border-l-3 border-[#4F46E5] rounded-bl-lg"></div>
+                <div className="absolute bottom-0 right-0 w-6 h-6 border-b-3 border-r-3 border-[#4F46E5] rounded-br-lg"></div>
               </div>
-              <p className="mt-6 text-sm font-semibold text-slate-300 animate-pulse">Waiting for QR Code...</p>
+              <p className="mt-4 text-xs font-semibold text-[#64748B]">Waiting for QR Code scan...</p>
             </div>
           ) : (
-            <div className="relative z-10 flex flex-col items-center text-center animate-fade-in bg-slate-900/90 backdrop-blur-md p-8 rounded-3xl border border-emerald-500/30 shadow-[0_0_50px_rgba(16,185,129,0.15)]">
-              <div className="w-20 h-20 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center mb-4 border-4 border-emerald-500/40">
-                <CheckCircle2 size={40} />
+            <div className="flex flex-col items-center text-center p-6 rounded-xl bg-[#DCFCE7] border border-[#BBF7D0]">
+              <div className="w-14 h-14 rounded-full bg-[#16A34A] text-white flex items-center justify-center mb-2">
+                <CheckCircle2 size={28} />
               </div>
-              <h3 className="text-2xl font-bold text-white font-display mb-1">Checked In!</h3>
-              <p className="text-emerald-400 font-semibold">{scanResult.studentName}</p>
-              <span className="text-[10px] text-slate-500 mt-4 block">Scanned at {scanResult.timestamp}</span>
+              <h3 className="text-lg font-bold text-[#16A34A]">Checked In Successfully</h3>
+              <p className="text-xs text-[#172033] font-semibold mt-0.5">{scanResult.studentName}</p>
+              <span className="text-[10px] text-[#64748B] mt-2 block">Scanned at {scanResult.timestamp}</span>
             </div>
           )}
 
-          {/* Warning banner */}
-          <div className="absolute bottom-0 left-0 right-0 bg-amber-500/10 border-t border-amber-500/20 p-3 flex items-center justify-center gap-2 text-[10px] text-amber-400 font-bold uppercase tracking-widest backdrop-blur-md">
-            <AlertTriangle size={12} />
+          <div className="absolute bottom-0 left-0 right-0 bg-[#FEF3C7] border-t border-[#FDE68A] p-2 flex items-center justify-center gap-1.5 text-[10px] text-[#D97706] font-bold uppercase tracking-wider">
+            <AlertTriangle size={11} />
             <span>Simulated Scanner Mode Active</span>
           </div>
         </div>
 
         {/* Right Column: Manual Simulator Controls */}
-        <div className="space-y-6">
-          <div className="glass-card p-6 rounded-2xl border border-slate-900 h-full flex flex-col">
+        <div className="space-y-4">
+          <div className="bg-[#FFFFFF] p-6 rounded-2xl border border-[#E2E8F0] shadow-xs flex flex-col justify-between h-full space-y-4">
             <div>
-              <h3 className="text-sm font-bold text-white mb-2 flex items-center gap-2">
-                <UserCheck size={16} className="text-indigo-400" />
+              <h3 className="text-sm font-bold text-[#172033] mb-1 flex items-center gap-1.5">
+                <UserCheck size={16} className="text-[#4F46E5]" />
                 Manual Entry & Simulation
               </h3>
-              <p className="text-xs text-slate-400 leading-relaxed mb-6">
-                Because camera permissions are disabled in demo mode, use these tools to simulate scanning an attendee's QR pass.
+              <p className="text-xs text-[#64748B] leading-relaxed">
+                Use the tools below to simulate scanning an attendee's digital QR pass.
               </p>
             </div>
 
-            <form onSubmit={handleSimulateScan} className="space-y-4 flex-1">
+            <form onSubmit={handleSimulateScan} className="space-y-3">
               <div>
-                <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">
-                  Simulate QR Payload (Student ID)
+                <label className="block text-[10px] font-bold uppercase tracking-wider text-[#64748B] mb-1">
+                  Student ID Payload
                 </label>
                 <div className="flex gap-2">
                   <input
@@ -160,11 +148,11 @@ export const Scanner = () => {
                     placeholder="e.g. stu-10452"
                     value={studentIdInput}
                     onChange={(e) => setStudentIdInput(e.target.value)}
-                    className="flex-1 bg-slate-950/60 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-indigo-500 transition-colors"
+                    className="flex-1 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg px-3 py-2 text-xs text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#4F46E5] transition-colors"
                   />
                   <button
                     type="submit"
-                    className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold transition-all shadow-[0_0_15px_rgba(79,70,229,0.3)] cursor-pointer"
+                    className="px-4 py-2 bg-[#4F46E5] hover:bg-[#4338CA] text-white rounded-lg text-xs font-semibold transition-colors shadow-xs cursor-pointer"
                   >
                     Check In
                   </button>
@@ -172,16 +160,13 @@ export const Scanner = () => {
               </div>
             </form>
 
-            <div className="pt-6 border-t border-slate-900 mt-6">
-              <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-3 text-center">
-                Or trigger a random mock scan
-              </span>
+            <div className="pt-4 border-t border-[#E2E8F0]">
               <button
                 onClick={handleMockRandomScan}
-                className="w-full py-3 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-2"
+                className="w-full py-2.5 bg-[#F8FAFC] hover:bg-[#EEF2FF] border border-[#E2E8F0] text-[#4F46E5] rounded-lg text-xs font-semibold transition-colors cursor-pointer flex items-center justify-center gap-1.5"
               >
-                <ScanLine size={14} />
-                Simulate Next Student QR
+                <ScanLine size={13} />
+                <span>Simulate Next Student QR</span>
               </button>
             </div>
 

@@ -3,7 +3,8 @@ import { useAuth } from '../../hooks/useAuth';
 import { recommendationService } from '../../services/recommendationService';
 import { EventCard } from '../../components/events/EventCard';
 import { eventService } from '../../services/eventService';
-import { Sparkles, BrainCircuit, LineChart, Award, ThumbsUp, X } from 'lucide-react';
+import { Sparkles, BrainCircuit, Compass } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export const Recommendations = () => {
   const { user } = useAuth();
@@ -37,11 +38,9 @@ export const Recommendations = () => {
     setRegisteringId(eventId);
     try {
       await eventService.registerForEvent(eventId, user?.id);
-      // Refresh local registrations
       const updatedRegs = await eventService.getRegistrations(user?.id);
       setRegistrations(updatedRegs);
       
-      // Update seat counts in local list
       setRecommendations(prev => prev.map(e => {
         if (e.id === eventId) {
           return {
@@ -61,11 +60,11 @@ export const Recommendations = () => {
 
   if (loading) {
     return (
-      <div className="space-y-6">
-        <div className="h-10 w-48 bg-slate-900 rounded-md animate-pulse"></div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="space-y-6 animate-pulse">
+        <div className="h-7 w-64 bg-[#E2E8F0] rounded-lg"></div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {[1, 2, 3].map(n => (
-            <div key={n} className="h-80 bg-slate-900 rounded-2xl animate-pulse"></div>
+            <div key={n} className="h-72 bg-[#FFFFFF] border border-[#E2E8F0] rounded-xl"></div>
           ))}
         </div>
       </div>
@@ -73,49 +72,55 @@ export const Recommendations = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-10">
       
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#E2E8F0] pb-5">
         <div>
-          <h1 className="font-display font-bold text-3xl text-white flex items-center gap-2">
-            <Sparkles size={26} className="text-purple-400" />
+          <h1 className="text-2xl font-bold tracking-tight text-[#172033] flex items-center gap-2">
+            <Sparkles size={20} className="text-[#4F46E5]" />
             AI Recommendations
           </h1>
-          <p className="text-slate-400 text-sm mt-1">Events custom-curated by our campus neural network matching your active profile.</p>
+          <p className="text-xs text-[#64748B] mt-0.5">Events custom-curated by our campus neural network matching your academic profile.</p>
         </div>
         
         {/* Recommendation Intelligence Badge */}
-        <div className="flex items-center gap-2 px-3 py-1 bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 rounded-xl text-xs font-semibold">
-          <BrainCircuit size={14} className="text-indigo-400" />
+        <div className="flex items-center gap-1.5 px-3 py-1 bg-[#EEEFFA] border border-[#C7D2FE] text-[#4F46E5] rounded-full text-xs font-semibold w-fit">
+          <BrainCircuit size={13} className="text-[#4F46E5]" />
           <span>Profile Accuracy: 94%</span>
         </div>
       </div>
 
       {/* Explanatory Intelligence Banner */}
-      <div className="p-5 rounded-2xl border border-purple-500/15 bg-gradient-to-r from-purple-500/5 via-indigo-500/5 to-transparent flex items-start gap-4">
-        <div className="p-2 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400 shrink-0">
-          <BrainCircuit size={20} />
+      <div className="p-5 rounded-xl border border-[#E2E8F0] bg-[#FFFFFF] shadow-xs flex items-start gap-3.5">
+        <div className="w-8 h-8 rounded-lg bg-[#EEEFFA] text-[#4F46E5] flex items-center justify-center shrink-0">
+          <BrainCircuit size={16} />
         </div>
-        <div className="space-y-1">
-          <h4 className="text-xs font-bold text-white uppercase tracking-wider">How are these matches calculated?</h4>
-          <p className="text-xs text-slate-300 leading-relaxed">
-            We map your catalog searches, department academic tracks, self-declared programming skills, and comments sentiment index. As you register and provide ratings, the recommendations adapt dynamically to find relevant bootcamps.
+        <div className="space-y-0.5">
+          <h4 className="text-xs font-bold text-[#172033]">How are these matches calculated?</h4>
+          <p className="text-xs text-[#64748B] leading-relaxed">
+            We map your catalog searches, department academic tracks, self-declared programming skills, and past event attendance. Recommendations adapt dynamically to highlight relevant bootcamps and workshops.
           </p>
         </div>
       </div>
 
       {/* Recommendations Grid */}
       {recommendations.length === 0 ? (
-        <div className="py-16 text-center space-y-3 border border-dashed border-slate-800 rounded-2xl bg-slate-950/20">
-          <BrainCircuit size={32} className="mx-auto text-slate-600 animate-pulse" />
-          <h3 className="text-sm font-bold text-white">Learning your profile...</h3>
-          <p className="text-xs text-slate-450 max-w-sm mx-auto">
-            We're still learning your interests. Register for a few events or update your profile skill list to unlock personalized matching recommendations.
+        <div className="py-12 text-center space-y-2 border border-[#E2E8F0] rounded-2xl bg-[#FFFFFF] shadow-xs">
+          <Compass size={22} className="text-[#94A3B8] mx-auto" />
+          <h3 className="text-sm font-semibold text-[#172033]">Learning your profile...</h3>
+          <p className="text-xs text-[#64748B] max-w-sm mx-auto">
+            Explore events or update your profile skill list to unlock personalized matching recommendations.
           </p>
+          <Link
+            to="/student/events"
+            className="inline-flex items-center gap-1 px-3.5 py-1.5 rounded-lg bg-[#4F46E5] hover:bg-[#4338CA] text-white text-xs font-semibold shadow-xs transition-colors"
+          >
+            Explore Catalog
+          </Link>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
           {recommendations.map(event => {
             const isReg = registrations.some(r => r.eventId === event.id && r.status !== 'cancelled');
             return (

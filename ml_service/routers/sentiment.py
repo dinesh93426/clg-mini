@@ -1,67 +1,28 @@
 """
-Module 2 — Feedback Sentiment Analysis
-Uses HuggingFace distilbert-base-uncased-finetuned-sst-2-english for sentiment,
-with lexicon-based fallback and topic extraction.
-
-Schema facts (from prisma/schema.prisma):
-  Feedback.sentiment      String?   (POSITIVE | NEGATIVE | NEUTRAL)
-  Feedback.sentimentScore Float?
-  Feedback.topics         String[]  (no 'aspects' column — topics is the correct name)
-  Feedback has NO updatedAt column.
-  Feedback has @@unique([studentId, eventId]).
+Module 2 — Student Feedback Sentiment Analysis API Router
+FastAPI router for single text inference, batch database analysis,
+per-event feedback sentiment, and aggregated sentiment analytics.
 """
 
-import re
-from collections import defaultdict
-from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
-from typing import List
+from typing import Optional, List, Dict, Any
+from datetime import datetime, timezone
+from fastapi import APIRouter, HTTPException, Query
+from pydantic import BaseModel, Field
 
 from core.db import execute_query, get_db_connection
-from core.llm_provider import call_hf_inference
+from services.sentiment_service import get_sentiment_service, preprocess_feedback_text
 
 router = APIRouter()
 
-HF_SENTIMENT_MODEL = "distilbert-base-uncased-finetuned-sst-2-english"
-
-POSITIVE_WORDS = {
-    "amazing", "excellent", "fantastic", "great", "good", "wonderful", "outstanding",
-    "brilliant", "superb", "awesome", "loved", "enjoyed", "impressive", "helpful",
-    "informative", "engaging", "inspiring", "fun", "useful", "valuable", "best",
-    "learned", "recommend", "well", "organized", "clear", "insightful", "exciting",
-    "innovative", "practical", "professional", "thorough", "comprehensive",
-}
-NEGATIVE_WORDS = {
-    "bad", "terrible", "awful", "boring", "poor", "worst", "disappointing",
-    "useless", "waste", "confusing", "unclear", "disorganized", "late", "rushed",
-    "superficial", "irrelevant", "difficult", "complicated", "mediocre", "lacking",
-    "inadequate", "slow", "unorganized", "unhelpful", "dull", "dry",
-}
-
-# Topic categories (stored in Feedback.topics String[])
+# Topic extraction categories
 TOPIC_KEYWORDS = {
-    "Content":      ["content", "topic", "material", "curriculum", "subject", "information", "knowledge"],
-    "Organization": ["organized", "schedule", "timing", "venue", "logistics", "management", "coordination"],
-    "Speaker":      ["speaker", "presenter", "instructor", "teacher", "facilitator", "host"],
+    "Content":      ["content", "topic", "material", "curriculum", "subject", "information", "knowledge", "concepts"],
+    "Organization": ["organized", "organization", "arrangements", "schedule", "timing", "venue", "logistics", "crowded"],
+    "Speaker":      ["speaker", "presenter", "instructor", "teacher", "facilitator", "host", "explain"],
     "Networking":   ["networking", "connections", "meet", "interact", "community", "people"],
-    "Hands-on":     ["hands-on", "practical", "workshop", "activity", "exercise", "demonstration", "lab"],
-    "Value":        ["worth", "valuable", "value", "helpful", "useful", "benefit", "impact"],
+    "Hands-on":     ["hands-on", "practical", "workshop", "activity", "exercise", "examples", "lab"],
+    "Value":        ["worth", "valuable", "value", "helpful", "useful", "benefit", "learned", "studies"],
 }
-
-
-def _lexicon_sentiment(text: str) -> dict:
-    words = re.findall(r'\b\w+\b', text.lower())
-    pos = sum(1 for w in words if w in POSITIVE_WORDS)
-    neg = sum(1 for w in words if w in NEGATIVE_WORDS)
-    total = pos + neg
-    if total == 0:
-        return {"label": "POSITIVE", "score": 0.55}
-    pos_ratio = pos / total
-    if pos_ratio >= 0.6:
-        return {"label": "POSITIVE", "score": min(0.5 + pos_ratio * 0.5, 0.99)}
-    elif pos_ratio <= 0.4:
-        return {"label": "NEGATIVE", "score": min(0.5 + (1 - pos_ratio) * 0.5, 0.99)}
-    return {"label": "POSITIVE", "score": 0.52}
 
 
 def _extract_topics(text: str) -> List[str]:
@@ -70,182 +31,287 @@ def _extract_topics(text: str) -> List[str]:
     for topic, keywords in TOPIC_KEYWORDS.items():
         if any(kw in text_lower for kw in keywords):
             found.append(topic)
-    return found or ["Content"]
+    return found or ["General"]
 
-
-def analyze_text(text: str) -> dict:
-    """Analyze sentiment of a single text string. Returns label, score, source."""
-    try:
-        result = call_hf_inference(HF_SENTIMENT_MODEL, {"inputs": text})
-        if result and isinstance(result, list) and len(result) > 0:
-            top = result[0]
-            if isinstance(top, list):
-                top = max(top, key=lambda x: x.get("score", 0))
-            label = top.get("label", "POSITIVE").upper()
-            score = float(top.get("score", 0.5))
-            if label not in ("POSITIVE", "NEGATIVE"):
-                label = "POSITIVE"
-            return {"label": label, "score": score, "source": "huggingface"}
-    except Exception:
-        pass
-    result = _lexicon_sentiment(text)
-    result["source"] = "lexicon"
-    return result
-
-
-# ── Routes ─────────────────────────────────────────────────────────────────────
 
 class AnalyzeRequest(BaseModel):
-    text: str
+    text: str = Field(..., description="Feedback comment text to analyze")
 
-
-@router.post("/analyze")
-def analyze_single(req: AnalyzeRequest):
-    if not req.text.strip():
-        raise HTTPException(status_code=400, detail="Empty text")
-    sentiment = analyze_text(req.text)
-    topics = _extract_topics(req.text)
-    return {
-        "text": req.text,
-        "sentiment": sentiment["label"],
-        "score": sentiment["score"],
-        "topics": topics,
-        "source": sentiment.get("source", "lexicon"),
+    model_config = {
+        "json_schema_extra": {
+            "example": {
+                "text": "The workshop was excellent and very useful."
+            }
+        }
     }
 
 
-@router.post("/analyze-event/{event_id}")
-def analyze_event_feedback(event_id: str):
-    """Analyze all feedback for an event and update DB."""
-    feedbacks = execute_query(
-        """
-        SELECT id, "studentId", comment, rating
-        FROM "Feedback"
-        WHERE "eventId" = %s AND comment IS NOT NULL AND comment <> ''
-        """,
-        (event_id,),
-    )
-    if not feedbacks:
-        raise HTTPException(status_code=404, detail="No feedback with comments found")
+class AnalyzeResponse(BaseModel):
+    sentiment: str
+    confidence: float
+    model: str
+    topics: Optional[List[str]] = None
 
-    results = []
-    topic_counts: dict = defaultdict(lambda: defaultdict(int))
 
-    conn = get_db_connection()
+# ── 1. Single Text Analysis Endpoint ──────────────────────────────────────────
+
+@router.post("/analyze", response_model=AnalyzeResponse)
+def analyze_single_feedback(payload: AnalyzeRequest):
+    """Classifies a feedback string into POSITIVE, NEUTRAL, or NEGATIVE."""
     try:
-        with conn.cursor() as cur:
-            for fb in feedbacks:
-                sentiment = analyze_text(fb["comment"])
-                topics    = _extract_topics(fb["comment"])
-                label     = sentiment["label"]
-                score     = sentiment["score"]
+        clean_text = preprocess_feedback_text(payload.text)
+        service = get_sentiment_service()
+        result = service.analyze_sentiment(clean_text)
+        topics = _extract_topics(clean_text)
+        return {
+            "sentiment": result["sentiment"],
+            "confidence": result["confidence"],
+            "model": result["model"],
+            "topics": topics
+        }
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except TypeError as e:
+        raise HTTPException(status_code=422, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Inference error: {e}")
 
-                for t in topics:
-                    topic_counts[t][label] += 1
 
-                # Update Feedback.sentiment, .sentimentScore, .topics
-                # NOTE: Feedback has NO updatedAt column in the schema
-                cur.execute(
-                    """
-                    UPDATE "Feedback"
-                    SET sentiment      = %s,
-                        "sentimentScore" = %s,
-                        topics         = %s
-                    WHERE id = %s
-                    """,
-                    (label, score, topics, fb["id"]),
-                )
-                results.append({
-                    "feedback_id": fb["id"],
-                    "sentiment": label,
-                    "score": round(score, 4),
-                    "topics": topics,
-                })
-        conn.commit()
-    finally:
-        conn.close()
-
-    pos = sum(1 for r in results if r["sentiment"] == "POSITIVE")
-    neg = len(results) - pos
-    return {
-        "event_id": event_id,
-        "total": len(results),
-        "positive": pos,
-        "negative": neg,
-        "results": results,
-        "topic_breakdown": {
-            t: dict(counts) for t, counts in topic_counts.items()
-        },
-    }
-
+# ── 2. Batch Analysis of Unanalyzed DB Feedback ───────────────────────────────
 
 @router.post("/analyze-all")
-def analyze_all_feedback():
-    """Batch analyze all feedback that has comments but no sentiment yet."""
+def analyze_all_db_feedback(batch_size: int = Query(100, ge=10, le=500)):
+    """
+    Retrieves unanalyzed feedback from PostgreSQL in batches,
+    runs Transformer inference, and persists sentiment fields to DB.
+    """
+    service = get_sentiment_service()
+
+    # Query unanalyzed feedback
     feedbacks = execute_query(
         """
         SELECT id, "eventId", comment
         FROM "Feedback"
         WHERE comment IS NOT NULL AND comment <> ''
-          AND sentiment IS NULL
+          AND (sentiment IS NULL OR "sentimentAnalyzedAt" IS NULL)
+        ORDER BY "createdAt" ASC
         """
     )
+
     if not feedbacks:
-        return {"status": "no_pending", "processed": 0}
+        # Check overall summary
+        overall = execute_query(
+            """
+            SELECT
+                COUNT(*) as total,
+                COUNT(*) FILTER (WHERE sentiment = 'POSITIVE') as positive,
+                COUNT(*) FILTER (WHERE sentiment = 'NEUTRAL') as neutral,
+                COUNT(*) FILTER (WHERE sentiment = 'NEGATIVE') as negative
+            FROM "Feedback"
+            """
+        )
+        row = overall[0] if overall else {}
+        return {
+            "processed": 0,
+            "message": "All database feedback is already analyzed.",
+            "totalInDb": row.get("total", 0),
+            "positive": row.get("positive", 0),
+            "neutral": row.get("neutral", 0),
+            "negative": row.get("negative", 0)
+        }
+
+    total_processed = 0
+    pos_count = 0
+    neu_count = 0
+    neg_count = 0
 
     conn = get_db_connection()
-    processed = 0
     try:
         with conn.cursor() as cur:
-            for fb in feedbacks:
-                sentiment = analyze_text(fb["comment"])
-                topics    = _extract_topics(fb["comment"])
-                cur.execute(
-                    """
-                    UPDATE "Feedback"
-                    SET sentiment        = %s,
-                        "sentimentScore" = %s,
-                        topics           = %s
-                    WHERE id = %s
-                    """,
-                    (sentiment["label"], sentiment["score"], topics, fb["id"]),
-                )
-                processed += 1
-        conn.commit()
+            for i in range(0, len(feedbacks), batch_size):
+                chunk = feedbacks[i : i + batch_size]
+                texts = [fb["comment"] for fb in chunk]
+                
+                # Perform batch inference
+                results = service.analyze_batch(texts)
+
+                for fb, res in zip(chunk, results):
+                    topics = _extract_topics(fb["comment"])
+                    sent = res["sentiment"]
+                    score = res["confidence"]
+                    model = res["model"]
+
+                    if sent == "POSITIVE":
+                        pos_count += 1
+                    elif sent == "NEUTRAL":
+                        neu_count += 1
+                    elif sent == "NEGATIVE":
+                        neg_count += 1
+
+                    cur.execute(
+                        """
+                        UPDATE "Feedback"
+                        SET sentiment            = %s,
+                            "sentimentScore"     = %s,
+                            "sentimentModel"     = %s,
+                            "sentimentAnalyzedAt"= NOW(),
+                            topics               = %s
+                        WHERE id = %s
+                        """,
+                        (sent, score, model, topics, fb["id"])
+                    )
+                    total_processed += 1
+
+                conn.commit()
     finally:
         conn.close()
-    return {"status": "done", "processed": processed}
+
+    return {
+        "processed": total_processed,
+        "positive": pos_count,
+        "neutral": neu_count,
+        "negative": neg_count
+    }
 
 
-@router.get("/event-summary/{event_id}")
-def get_event_sentiment_summary(event_id: str):
-    rows = execute_query(
+# ── 3. Event Sentiment Analysis Endpoint ──────────────────────────────────────
+
+@router.post("/event/{event_id}")
+@router.post("/analyze-event/{event_id}")
+def analyze_event_feedback(event_id: str):
+    """
+    Analyzes feedback for a specific event, updates missing sentiments,
+    and returns metrics and percentage distributions.
+    """
+    feedbacks = execute_query(
         """
-        SELECT sentiment, "sentimentScore", topics, rating
+        SELECT id, comment, rating, sentiment, "sentimentScore"
         FROM "Feedback"
         WHERE "eventId" = %s
         """,
-        (event_id,),
+        (event_id,)
     )
-    if not rows:
-        raise HTTPException(status_code=404, detail="No feedback found")
 
-    pos = sum(1 for r in rows if r.get("sentiment") == "POSITIVE")
-    neg = sum(1 for r in rows if r.get("sentiment") == "NEGATIVE")
-    avg_score  = sum(r.get("sentimentScore") or 0 for r in rows) / len(rows)
-    avg_rating = sum(r.get("rating") or 0 for r in rows) / len(rows)
+    if not feedbacks:
+        raise HTTPException(status_code=404, detail=f"No feedback records found for event '{event_id}'.")
 
-    topic_counts: dict = defaultdict(int)
-    for r in rows:
-        for t in (r.get("topics") or []):
-            topic_counts[t] += 1
+    service = get_sentiment_service()
+    conn = get_db_connection()
+    
+    try:
+        with conn.cursor() as cur:
+            for fb in feedbacks:
+                if not fb.get("sentiment") and fb.get("comment"):
+                    res = service.analyze_sentiment(fb["comment"])
+                    topics = _extract_topics(fb["comment"])
+                    fb["sentiment"] = res["sentiment"]
+                    fb["sentimentScore"] = res["confidence"]
+                    cur.execute(
+                        """
+                        UPDATE "Feedback"
+                        SET sentiment            = %s,
+                            "sentimentScore"     = %s,
+                            "sentimentModel"     = %s,
+                            "sentimentAnalyzedAt"= NOW(),
+                            topics               = %s
+                        WHERE id = %s
+                        """,
+                        (res["sentiment"], res["confidence"], res["model"], topics, fb["id"])
+                    )
+        conn.commit()
+    finally:
+        conn.close()
+
+    total = len(feedbacks)
+    pos = sum(1 for fb in feedbacks if fb.get("sentiment") == "POSITIVE")
+    neu = sum(1 for fb in feedbacks if fb.get("sentiment") == "NEUTRAL")
+    neg = sum(1 for fb in feedbacks if fb.get("sentiment") == "NEGATIVE")
+
+    pos_pct = round((pos / total) * 100, 1) if total > 0 else 0.0
+    neu_pct = round((neu / total) * 100, 1) if total > 0 else 0.0
+    neg_pct = round((neg / total) * 100, 1) if total > 0 else 0.0
 
     return {
-        "event_id": event_id,
-        "total_feedback": len(rows),
+        "eventId": event_id,
+        "totalFeedback": total,
         "positive": pos,
+        "neutral": neu,
         "negative": neg,
-        "avg_sentiment_score": round(avg_score, 4),
-        "avg_rating": round(avg_rating, 2),
-        "topic_breakdown": dict(topic_counts),
+        "positivePercentage": pos_pct,
+        "neutralPercentage": neu_pct,
+        "negativePercentage": neg_pct
+    }
+
+
+# ── 4. Overall Sentiment Analytics Endpoint ───────────────────────────────────
+
+@router.get("/analytics")
+def get_sentiment_analytics(
+    event_id: Optional[str] = Query(None, alias="eventId"),
+    category: Optional[str] = None,
+    department: Optional[str] = None,
+    start_date: Optional[str] = Query(None, alias="startDate"),
+    end_date: Optional[str] = Query(None, alias="endDate")
+):
+    """
+    Returns aggregated sentiment statistics with optional filtering
+    by eventId, event category, student department, and date range.
+    """
+    where_clauses = ["1=1"]
+    params = []
+
+    if event_id and isinstance(event_id, str):
+        where_clauses.append('f."eventId" = %s')
+        params.append(event_id)
+
+    if category and isinstance(category, str):
+        where_clauses.append('e.category ILIKE %s')
+        params.append(category)
+
+    if department and isinstance(department, str):
+        where_clauses.append('s.department ILIKE %s')
+        params.append(department)
+
+    if start_date and isinstance(start_date, str):
+        where_clauses.append('f."createdAt" >= %s')
+        params.append(start_date)
+
+    if end_date and isinstance(end_date, str):
+        where_clauses.append('f."createdAt" <= %s')
+        params.append(end_date)
+
+    sql = f"""
+        SELECT
+            COUNT(f.id) as total,
+            COUNT(f.id) FILTER (WHERE f.sentiment = 'POSITIVE') as positive,
+            COUNT(f.id) FILTER (WHERE f.sentiment = 'NEUTRAL') as neutral,
+            COUNT(f.id) FILTER (WHERE f.sentiment = 'NEGATIVE') as negative,
+            AVG(f.rating) as avg_rating
+        FROM "Feedback" f
+        LEFT JOIN "Event" e ON e.id = f."eventId"
+        LEFT JOIN "Student" s ON s.id = f."studentId"
+        WHERE {' AND '.join(where_clauses)}
+    """
+
+    res = execute_query(sql, tuple(params) if params else None)
+    row = res[0] if res else {"total": 0, "positive": 0, "neutral": 0, "negative": 0, "avg_rating": 0.0}
+
+    total = int(row.get("total") or 0)
+    pos = int(row.get("positive") or 0)
+    neu = int(row.get("neutral") or 0)
+    neg = int(row.get("negative") or 0)
+
+    pos_pct = round((pos / total) * 100, 1) if total > 0 else 0.0
+    neu_pct = round((neu / total) * 100, 1) if total > 0 else 0.0
+    neg_pct = round((neg / total) * 100, 1) if total > 0 else 0.0
+
+    return {
+        "totalFeedback": total,
+        "positive": pos,
+        "neutral": neu,
+        "negative": neg,
+        "positivePercentage": pos_pct,
+        "neutralPercentage": neu_pct,
+        "negativePercentage": neg_pct,
+        "averageRating": round(float(row.get("avg_rating") or 0.0), 2)
     }

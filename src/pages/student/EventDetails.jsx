@@ -17,8 +17,6 @@ export const EventDetails = () => {
   const [error, setError] = useState('');
   const [registered, setRegistered] = useState(false);
   const [registering, setRegistering] = useState(false);
-  
-  // Registration success indicator
   const [showSuccessMsg, setShowSuccessMsg] = useState(false);
 
   useEffect(() => {
@@ -29,7 +27,6 @@ export const EventDetails = () => {
         const ev = await eventService.getEventById(id);
         setEvent(ev);
         
-        // Check if user is registered for this event
         const userRegs = await eventService.getRegistrations(user?.id);
         const isReg = userRegs.some(r => r.eventId === id && r.status !== 'cancelled');
         setRegistered(isReg);
@@ -51,7 +48,6 @@ export const EventDetails = () => {
       await eventService.registerForEvent(event.id, user?.id);
       setRegistered(true);
       setShowSuccessMsg(true);
-      // Increment registration count locally
       setEvent(prev => ({
         ...prev,
         availableSeats: Math.max(0, prev.availableSeats - 1),
@@ -67,14 +63,13 @@ export const EventDetails = () => {
   if (loading) {
     return (
       <div className="space-y-6 animate-pulse">
-        <div className="h-6 w-32 bg-slate-900 rounded"></div>
-        <div className="h-64 w-full bg-slate-900 rounded-2xl"></div>
+        <div className="h-6 w-32 bg-[#E2E8F0] rounded"></div>
+        <div className="h-64 w-full bg-[#FFFFFF] border border-[#E2E8F0] rounded-2xl"></div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-4">
-            <div className="h-10 bg-slate-900 rounded"></div>
-            <div className="h-32 bg-slate-900 rounded"></div>
+            <div className="h-28 bg-[#FFFFFF] border border-[#E2E8F0] rounded-xl"></div>
           </div>
-          <div className="h-48 bg-slate-900 rounded-xl"></div>
+          <div className="h-48 bg-[#FFFFFF] border border-[#E2E8F0] rounded-xl"></div>
         </div>
       </div>
     );
@@ -82,13 +77,13 @@ export const EventDetails = () => {
 
   if (error || !event) {
     return (
-      <div className="py-12 text-center space-y-4 max-w-md mx-auto">
-        <AlertTriangle size={40} className="mx-auto text-rose-500" />
-        <h2 className="font-display font-bold text-lg text-white">Event not found</h2>
-        <p className="text-xs text-slate-400">{error || 'The requested event could not be found.'}</p>
+      <div className="py-12 text-center space-y-3 max-w-md mx-auto bg-[#FFFFFF] border border-[#E2E8F0] p-6 rounded-2xl shadow-xs">
+        <AlertTriangle size={32} className="mx-auto text-[#D97706]" />
+        <h2 className="text-base font-bold text-[#172033]">Event not found</h2>
+        <p className="text-xs text-[#64748B]">{error || 'The requested event could not be found.'}</p>
         <button 
           onClick={() => navigate('/student/events')}
-          className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-xl text-xs font-bold text-white transition-all cursor-pointer"
+          className="px-3.5 py-1.5 bg-[#4F46E5] hover:bg-[#4338CA] rounded-lg text-xs font-semibold text-white transition-colors cursor-pointer"
         >
           Back to Catalog
         </button>
@@ -99,127 +94,133 @@ export const EventDetails = () => {
   const isSoldOut = event.availableSeats === 0;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-12">
       
       {/* Breadcrumb back navigation */}
       <button 
         onClick={() => navigate(-1)}
-        className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors cursor-pointer"
+        className="flex items-center gap-1.5 text-xs font-medium text-[#64748B] hover:text-[#172033] transition-colors cursor-pointer"
       >
         <ArrowLeft size={14} />
-        <span>Back to Directory</span>
+        <span>Back to Events</span>
       </button>
 
-      {/* Banner / Hero Image */}
-      <div className="h-64 md:h-80 w-full rounded-2xl overflow-hidden relative border border-slate-900">
+      {/* Banner Hero Image */}
+      <div className="h-60 md:h-72 w-full rounded-2xl overflow-hidden relative border border-[#E2E8F0] shadow-xs bg-[#F8FAFC]">
         <img 
           src={event.image} 
           alt={event.title} 
           className="w-full h-full object-cover" 
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
         
         {/* Banner Details Overlay */}
-        <div className="absolute bottom-6 left-6 right-6">
-          <div className="flex flex-wrap items-center gap-2 mb-2">
-            <span className="text-[9px] px-2.5 py-0.5 rounded-lg bg-indigo-600 text-white border border-indigo-500/20 font-bold uppercase tracking-wider">
+        <div className="absolute bottom-5 left-6 right-6">
+          <div className="flex flex-wrap items-center gap-2 mb-1.5">
+            <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-[#FFFFFF]/90 text-[#172033] font-semibold uppercase tracking-wider shadow-xs">
               {event.category}
             </span>
             {event.aiRecommended && (
-              <span className="text-[9px] px-2.5 py-0.5 rounded-lg bg-purple-600/90 text-white font-bold uppercase tracking-wider flex items-center gap-1">
-                <Sparkles size={8} /> {event.aiMatchPercentage}% AI Match
+              <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-[#4F46E5] text-white font-semibold uppercase tracking-wider flex items-center gap-1 shadow-xs">
+                <Sparkles size={10} /> {event.aiMatchPercentage}% AI Match
               </span>
             )}
           </div>
-          <h1 className="font-display font-extrabold text-xl sm:text-3xl text-white leading-tight">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-white leading-tight">
             {event.title}
           </h1>
         </div>
       </div>
 
       {/* Main Grid Details Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
         
         {/* Left Column: Event Specs */}
         <div className="lg:col-span-2 space-y-6">
           
           {/* Metadata quick highlights */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-4 rounded-xl bg-slate-900/40 border border-slate-900 text-xs">
-            <div className="flex items-center gap-3">
-              <Calendar size={18} className="text-slate-500 shrink-0" />
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-4 rounded-xl bg-[#FFFFFF] border border-[#E2E8F0] shadow-xs">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-[#EEF2FF] text-[#4F46E5] flex items-center justify-center shrink-0">
+                <Calendar size={16} />
+              </div>
               <div>
-                <span className="block text-slate-500 text-[10px] uppercase font-bold tracking-wider">Date</span>
-                <span className="font-semibold text-white">{event.date}</span>
+                <span className="block text-[#94A3B8] text-[10px] uppercase font-bold tracking-wider">Date</span>
+                <span className="font-semibold text-[#172033] text-xs">{event.date}</span>
               </div>
             </div>
-            <div className="flex items-center gap-3">
-              <Clock size={18} className="text-slate-500 shrink-0" />
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-[#EEF2FF] text-[#4F46E5] flex items-center justify-center shrink-0">
+                <Clock size={16} />
+              </div>
               <div>
-                <span className="block text-slate-500 text-[10px] uppercase font-bold tracking-wider">Time</span>
-                <span className="font-semibold text-white">{event.time}</span>
+                <span className="block text-[#94A3B8] text-[10px] uppercase font-bold tracking-wider">Time</span>
+                <span className="font-semibold text-[#172033] text-xs">{event.time}</span>
               </div>
             </div>
-            <div className="flex items-center gap-3">
-              <MapPin size={18} className="text-slate-500 shrink-0" />
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-[#DCFCE7] text-[#16A34A] flex items-center justify-center shrink-0">
+                <MapPin size={16} />
+              </div>
               <div>
-                <span className="block text-slate-500 text-[10px] uppercase font-bold tracking-wider">Venue</span>
-                <span className="font-semibold text-white truncate max-w-[150px] block">{event.venue}</span>
+                <span className="block text-[#94A3B8] text-[10px] uppercase font-bold tracking-wider">Venue</span>
+                <span className="font-semibold text-[#172033] text-xs truncate max-w-[140px] block">{event.venue}</span>
               </div>
             </div>
           </div>
 
           {/* About / Description */}
-          <div className="space-y-2">
-            <h2 className="font-display font-bold text-lg text-white">About the Event</h2>
-            <p className="text-xs text-slate-350 leading-relaxed">
+          <div className="p-6 rounded-2xl bg-[#FFFFFF] border border-[#E2E8F0] shadow-xs space-y-2">
+            <h2 className="text-sm font-bold text-[#172033]">About the Event</h2>
+            <p className="text-xs text-[#64748B] leading-relaxed">
               {event.description}
             </p>
           </div>
 
-          {/* AI suggested details mock if recommended */}
+          {/* AI matching rationale */}
           {event.aiRecommended && (
-            <div className="p-4 rounded-xl bg-purple-500/5 border border-purple-500/15 text-xs text-purple-300 space-y-2">
-              <div className="flex items-center gap-1.5 font-bold uppercase tracking-wider text-[10px]">
-                <Sparkles size={14} className="text-purple-400" />
+            <div className="p-4 rounded-xl bg-[#F8FAFC] border-l-2 border-[#4F46E5] text-xs text-[#64748B] space-y-1">
+              <div className="flex items-center gap-1 font-bold uppercase tracking-wider text-[10px] text-[#4F46E5]">
+                <Sparkles size={12} />
                 <span>AI Matching Rationale</span>
               </div>
-              <p className="italic">
-                "Our algorithms matching interest clusters for {user?.name.split(' ')[0]} detected a {event.aiMatchPercentage}% match based on your recent engagement with technical events, search histories regarding APIs/React, and CSE club activities."
+              <p className="italic leading-relaxed">
+                "Our algorithms detected a {event.aiMatchPercentage}% match based on your recent activity profile, participation in technical events, and preferred campus workshops."
               </p>
             </div>
           )}
 
           {/* Agenda */}
-          <div className="space-y-3">
-            <h2 className="font-display font-bold text-lg text-white flex items-center gap-2">
-              <BookOpen size={16} className="text-slate-500" /> Event Agenda
+          <div className="p-6 rounded-2xl bg-[#FFFFFF] border border-[#E2E8F0] shadow-xs space-y-4">
+            <h2 className="text-sm font-bold text-[#172033] flex items-center gap-1.5">
+              <BookOpen size={16} className="text-[#4F46E5]" /> Event Agenda
             </h2>
-            <div className="space-y-4 pl-4 border-l border-slate-800">
+            <div className="space-y-3.5 pl-3.5 border-l-2 border-[#E2E8F0] ml-1.5">
               <div className="relative">
-                <span className="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full bg-indigo-500 border border-slate-950"></span>
-                <span className="text-[10px] text-slate-500 block">Session 1</span>
-                <h4 className="text-xs font-semibold text-white mt-0.5">Foundations & Prerequisites Setup</h4>
-                <p className="text-[10px] text-slate-400 mt-1">Downloading dependencies, verifying environment configuration, and introductory lecture.</p>
+                <span className="absolute -left-[20px] top-1 w-2.5 h-2.5 rounded-full bg-[#4F46E5] border-2 border-white"></span>
+                <span className="text-[10px] font-bold text-[#94A3B8] block uppercase">Session 1 • 45 mins</span>
+                <h4 className="text-xs font-bold text-[#172033] mt-0.5">Foundations & Prerequisites Setup</h4>
+                <p className="text-[11px] text-[#64748B] mt-0.5">Verifying environment configuration and introductory briefing.</p>
               </div>
               <div className="relative">
-                <span className="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full bg-slate-700 border border-slate-950"></span>
-                <span className="text-[10px] text-slate-500 block">Session 2</span>
-                <h4 className="text-xs font-semibold text-white mt-0.5">Hands-on Workshops & Labs</h4>
-                <p className="text-[10px] text-slate-400 mt-1">Live pairing coding tasks led by student mentors with structural exercise templates.</p>
+                <span className="absolute -left-[20px] top-1 w-2.5 h-2.5 rounded-full bg-[#CBD5E1] border-2 border-white"></span>
+                <span className="text-[10px] font-bold text-[#94A3B8] block uppercase">Session 2 • 90 mins</span>
+                <h4 className="text-xs font-bold text-[#172033] mt-0.5">Hands-on Workshops & Labs</h4>
+                <p className="text-[11px] text-[#64748B] mt-0.5">Interactive coding challenges mentored by student committee leads.</p>
               </div>
             </div>
           </div>
 
           {/* Organizer details */}
-          <div className="space-y-3 pt-3">
-            <h2 className="font-display font-bold text-lg text-white">Event Organizer</h2>
-            <div className="flex items-center gap-3 p-4 rounded-xl bg-slate-900/20 border border-slate-900">
-              <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 text-sm">
-                <UserCircle2 size={24} className="text-slate-500" />
+          <div className="p-6 rounded-2xl bg-[#FFFFFF] border border-[#E2E8F0] shadow-xs space-y-3">
+            <h2 className="text-sm font-bold text-[#172033]">Event Organizer</h2>
+            <div className="flex items-center gap-3 p-3 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0]">
+              <div className="w-8 h-8 rounded-full bg-[#EEEFFA] flex items-center justify-center text-[#4F46E5]">
+                <UserCircle2 size={20} />
               </div>
               <div>
-                <h4 className="text-xs font-semibold text-white">{event.organizer}</h4>
-                <p className="text-[10px] text-slate-500 mt-0.5">Student Body & Department Organization</p>
+                <h4 className="text-xs font-bold text-[#172033]">{event.organizer}</h4>
+                <p className="text-[11px] text-[#64748B] mt-0.5">Campus Student Committee & Department Organization</p>
               </div>
             </div>
           </div>
@@ -227,31 +228,31 @@ export const EventDetails = () => {
 
         {/* Right Column: Sticky Registration Card */}
         <div className="space-y-6 lg:sticky lg:top-24 h-fit">
-          <div className="glass-card p-5 rounded-2xl space-y-4 border border-slate-850">
-            <h3 className="text-sm font-bold text-white">Event Registration</h3>
+          <div className="bg-[#FFFFFF] p-6 rounded-2xl space-y-4 border border-[#E2E8F0] shadow-xs">
+            <h3 className="text-sm font-bold text-[#172033]">Registration Details</h3>
             
-            <div className="divide-y divide-slate-900 text-xs">
-              <div className="py-2.5 flex justify-between">
-                <span className="text-slate-400">Total Seating:</span>
-                <span className="font-semibold text-white">{event.totalSeats} seats</span>
+            <div className="divide-y divide-[#E2E8F0] text-xs">
+              <div className="py-2 flex justify-between">
+                <span className="text-[#64748B]">Capacity:</span>
+                <span className="font-semibold text-[#172033]">{event.totalSeats} seats</span>
               </div>
-              <div className="py-2.5 flex justify-between">
-                <span className="text-slate-400">Remaining Seats:</span>
-                <span className={`font-semibold ${isSoldOut ? 'text-rose-450' : 'text-emerald-450'}`}>
+              <div className="py-2 flex justify-between">
+                <span className="text-[#64748B]">Remaining:</span>
+                <span className={`font-semibold ${isSoldOut ? 'text-[#DC2626]' : 'text-[#16A34A]'}`}>
                   {isSoldOut ? 'Sold Out' : `${event.availableSeats} available`}
                 </span>
               </div>
-              <div className="py-2.5 flex justify-between">
-                <span className="text-slate-400">Access Type:</span>
-                <span className="font-semibold text-indigo-400">Free (Open Entry)</span>
+              <div className="py-2 flex justify-between">
+                <span className="text-[#64748B]">Access:</span>
+                <span className="font-semibold text-[#4F46E5]">Free (Open Campus Entry)</span>
               </div>
             </div>
 
             {/* Success message on registration */}
             {showSuccessMsg && (
-              <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-xl text-[10px] text-center font-semibold animate-fade-in flex items-center gap-1.5 justify-center">
-                <ShieldCheck size={12} />
-                <span>Registered ✓ Details sent to email</span>
+              <div className="p-2.5 bg-[#DCFCE7] border border-[#BBF7D0] text-[#16A34A] rounded-lg text-xs text-center font-medium flex items-center gap-1.5 justify-center">
+                <ShieldCheck size={14} />
+                <span>Seat confirmed successfully</span>
               </div>
             )}
 
@@ -259,40 +260,40 @@ export const EventDetails = () => {
               <div className="space-y-2">
                 <button
                   disabled
-                  className="w-full py-3 bg-emerald-600/10 border border-emerald-500/20 text-emerald-400 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5"
+                  className="w-full py-2.5 bg-[#DCFCE7] border border-[#BBF7D0] text-[#16A34A] rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5"
                 >
                   <ShieldCheck size={14} />
                   <span>Seating Confirmed</span>
                 </button>
                 <Link
                   to="/student/registrations"
-                  className="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-850 text-slate-300 text-xs font-bold text-center block border border-slate-800 transition-all cursor-pointer"
+                  className="w-full py-2 rounded-lg bg-[#F8FAFC] hover:bg-[#F1F5F9] text-[#172033] text-xs font-medium text-center block border border-[#E2E8F0] transition-colors"
                 >
-                  Manage My Registrations
+                  View My Event Pass
                 </Link>
               </div>
             ) : (
               <button
                 onClick={handleRegister}
                 disabled={isSoldOut || registering}
-                className={`w-full py-3 rounded-xl text-xs font-bold text-white transition-all shadow-lg flex items-center justify-center gap-1.5 cursor-pointer
+                className={`w-full py-2.5 rounded-lg text-xs font-semibold text-white transition-colors shadow-xs flex items-center justify-center gap-1.5 cursor-pointer
                   ${isSoldOut 
-                    ? 'bg-slate-800 text-slate-500 shadow-none cursor-not-allowed' 
-                    : 'bg-indigo-600 hover:bg-indigo-500 shadow-indigo-600/20 hover:scale-[1.01]'}`}
+                    ? 'bg-[#F8FAFC] text-[#94A3B8] border border-[#E2E8F0] cursor-not-allowed' 
+                    : 'bg-[#4F46E5] hover:bg-[#4338CA]'}`}
               >
                 {registering ? (
-                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                  <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white border-t-transparent" />
                 ) : (
                   <>
                     <span>{isSoldOut ? 'Sold Out' : 'Register Now'}</span>
-                    {!isSoldOut && <ArrowRight size={14} />}
+                    {!isSoldOut && <ArrowRight size={13} />}
                   </>
                 )}
               </button>
             )}
 
-            <p className="text-[10px] text-slate-500 text-center leading-normal">
-              By clicking register, your attendance tracking code will be generated and sent directly to your campus wallet.
+            <p className="text-[10px] text-[#94A3B8] text-center leading-normal">
+              An attendance barcode will be associated with your student ID upon registration.
             </p>
           </div>
         </div>

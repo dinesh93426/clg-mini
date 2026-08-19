@@ -10,11 +10,8 @@ export const AdminLayout = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-[#0b0f19]">
-        <div className="relative flex h-12 w-12">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-500 opacity-75"></span>
-          <span className="relative inline-flex rounded-full h-12 w-12 bg-indigo-600 shadow-[0_0_15px_rgba(99,102,241,0.5)]"></span>
-        </div>
+      <div className="flex items-center justify-center min-h-screen bg-[#F8FAFC]">
+        <div className="w-8 h-8 rounded-full border-2 border-[#4F46E5] border-t-transparent animate-spin"></div>
       </div>
     );
   }
@@ -28,11 +25,11 @@ export const AdminLayout = () => {
   }
 
   return (
-    <div className="flex min-h-screen bg-[#0b0f19] text-slate-100 font-sans">
+    <div className="flex min-h-screen bg-[#F8FAFC] text-[#172033] font-sans antialiased">
       <Sidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />
       <div className="flex-1 flex flex-col min-w-0">
         <Topbar onMenuClick={() => setSidebarOpen(true)} />
-        <main className="flex-1 p-4 md:p-8 overflow-y-auto max-w-7xl w-full mx-auto">
+        <main className="flex-1 p-6 md:p-8 overflow-y-auto max-w-[1440px] w-full mx-auto">
           <Outlet />
         </main>
       </div>

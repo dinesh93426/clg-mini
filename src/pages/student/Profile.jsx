@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
-import { User, Mail, GraduationCap, Building2, Tag, ShieldCheck, BrainCircuit, Heart, Plus } from 'lucide-react';
+import { User, Mail, GraduationCap, Building2, Tag, ShieldCheck, BrainCircuit, Heart, Plus, Check } from 'lucide-react';
 
 export const Profile = () => {
   const { user, updateProfile } = useAuth();
@@ -72,26 +72,35 @@ export const Profile = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-10">
       
       {/* Header */}
-      <div>
-        <h1 className="font-display font-bold text-3xl text-white">My Profile</h1>
-        <p className="text-slate-400 text-sm mt-1">Configure interest tags and review your AI behavioral characteristics.</p>
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#E2E8F0] pb-5">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-[#172033]">My Profile</h1>
+          <p className="text-xs text-[#64748B] mt-0.5">Configure skill tags, interest topics, and review your AI behavioral characteristics.</p>
+        </div>
+
+        {success && (
+          <div className="flex items-center gap-1.5 px-3 py-1 bg-[#DCFCE7] text-[#16A34A] border border-[#BBF7D0] rounded-full text-xs font-semibold">
+            <Check size={13} />
+            <span>Profile Saved</span>
+          </div>
+        )}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
         
         {/* Left Column: Personal info & tags configuration */}
         <div className="lg:col-span-2 space-y-6">
           
           {/* Personal Info Card */}
-          <div className="glass-card p-6 rounded-2xl space-y-4">
-            <div className="flex justify-between items-center border-b border-slate-900 pb-3">
-              <h3 className="text-sm font-bold text-white">Personal Information</h3>
+          <div className="bg-[#FFFFFF] p-6 rounded-2xl border border-[#E2E8F0] shadow-xs space-y-5">
+            <div className="flex justify-between items-center border-b border-[#E2E8F0] pb-3.5">
+              <h3 className="text-sm font-bold text-[#172033]">Personal Information</h3>
               <button 
                 onClick={() => isEditing ? handleSaveProfile() : setIsEditing(true)}
-                className="text-xs font-bold text-indigo-400 hover:text-indigo-300 px-3 py-1 rounded-lg bg-indigo-500/10 border border-indigo-500/20 transition-all cursor-pointer"
+                className="text-xs font-semibold text-[#4F46E5] hover:text-[#4338CA] px-3 py-1 rounded-lg bg-[#EEEFFA] border border-[#C7D2FE] transition-colors cursor-pointer"
               >
                 {isEditing ? 'Save Changes' : 'Edit Profile'}
               </button>
@@ -99,61 +108,61 @@ export const Profile = () => {
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 text-xs">
               <div className="space-y-1">
-                <span className="text-slate-500 font-bold uppercase tracking-wider text-[9px] block">Full Name</span>
-                <div className="flex items-center gap-2 text-slate-200 py-1">
-                  <User size={14} className="text-slate-500 shrink-0" />
+                <span className="text-[#94A3B8] font-bold uppercase tracking-wider text-[10px] block">Full Name</span>
+                <div className="flex items-center gap-2 text-[#172033]">
+                  <User size={15} className="text-[#94A3B8] shrink-0" />
                   {isEditing ? (
                     <input 
                       type="text" 
                       value={editForm.name} 
                       onChange={e => setEditForm({...editForm, name: e.target.value})}
-                      className="bg-slate-900 border border-slate-700 rounded px-2 py-1 w-full focus:outline-none focus:border-indigo-500"
+                      className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg px-2.5 py-1 w-full text-xs text-[#172033] focus:outline-none focus:border-[#4F46E5]"
                     />
                   ) : (
-                    <span>{user?.name}</span>
+                    <span className="font-semibold">{user?.name}</span>
                   )}
                 </div>
               </div>
 
               <div className="space-y-1">
-                <span className="text-slate-500 font-bold uppercase tracking-wider text-[9px] block">Email Address</span>
-                <div className="flex items-center gap-2 text-slate-200 py-1">
-                  <Mail size={14} className="text-slate-500 shrink-0" />
-                  <span className="opacity-70">{user?.email} (Cannot edit)</span>
+                <span className="text-[#94A3B8] font-bold uppercase tracking-wider text-[10px] block">Email Address</span>
+                <div className="flex items-center gap-2 text-[#172033]">
+                  <Mail size={15} className="text-[#94A3B8] shrink-0" />
+                  <span className="font-medium text-[#64748B]">{user?.email}</span>
                 </div>
               </div>
 
               <div className="space-y-1">
-                <span className="text-slate-500 font-bold uppercase tracking-wider text-[9px] block">Academic Department</span>
-                <div className="flex items-center gap-2 text-slate-200 py-1">
-                  <Building2 size={14} className="text-slate-500 shrink-0" />
+                <span className="text-[#94A3B8] font-bold uppercase tracking-wider text-[10px] block">Academic Department</span>
+                <div className="flex items-center gap-2 text-[#172033]">
+                  <Building2 size={15} className="text-[#94A3B8] shrink-0" />
                   {isEditing ? (
                     <select 
                       value={editForm.department} 
                       onChange={e => setEditForm({...editForm, department: e.target.value})}
-                      className="bg-slate-900 border border-slate-700 rounded px-2 py-1 w-full focus:outline-none focus:border-indigo-500"
+                      className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg px-2.5 py-1 w-full text-xs text-[#172033] focus:outline-none focus:border-[#4F46E5]"
                     >
-                      <option value="Computer Science & Engineering">CSE</option>
-                      <option value="Electronics & Communication">ECE</option>
-                      <option value="Mechanical Engineering">ME</option>
-                      <option value="Business Administration">MBA</option>
+                      <option value="Computer Science & Engineering">Computer Science & Engineering</option>
+                      <option value="Electronics & Communication">Electronics & Communication</option>
+                      <option value="Mechanical Engineering">Mechanical Engineering</option>
+                      <option value="Business Administration">Business Administration</option>
                     </select>
                   ) : (
-                    <span>{user?.department}</span>
+                    <span className="font-semibold">{user?.department}</span>
                   )}
                 </div>
               </div>
 
               {user?.year && (
                 <div className="space-y-1">
-                  <span className="text-slate-500 font-bold uppercase tracking-wider text-[9px] block">Enrollment Year</span>
-                  <div className="flex items-center gap-2 text-slate-200 py-1">
-                    <GraduationCap size={14} className="text-slate-500 shrink-0" />
+                  <span className="text-[#94A3B8] font-bold uppercase tracking-wider text-[10px] block">Enrollment Year</span>
+                  <div className="flex items-center gap-2 text-[#172033]">
+                    <GraduationCap size={15} className="text-[#94A3B8] shrink-0" />
                     {isEditing ? (
                       <select 
                         value={editForm.year} 
                         onChange={e => setEditForm({...editForm, year: e.target.value})}
-                        className="bg-slate-900 border border-slate-700 rounded px-2 py-1 w-full focus:outline-none focus:border-indigo-500"
+                        className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg px-2.5 py-1 w-full text-xs text-[#172033] focus:outline-none focus:border-[#4F46E5]"
                       >
                         <option value="1">1st Year</option>
                         <option value="2">2nd Year</option>
@@ -161,7 +170,7 @@ export const Profile = () => {
                         <option value="4">4th Year</option>
                       </select>
                     ) : (
-                      <span>{user?.year}</span>
+                      <span className="font-semibold">{user?.year} Year</span>
                     )}
                   </div>
                 </div>
@@ -170,31 +179,31 @@ export const Profile = () => {
           </div>
 
           {/* Interests and Skills configuration */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             
             {/* Interests card */}
-            <div className="glass-card p-6 rounded-2xl space-y-4">
-              <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                <Heart size={14} className="text-rose-400" />
+            <div className="bg-[#FFFFFF] p-5 rounded-2xl border border-[#E2E8F0] shadow-xs space-y-3.5">
+              <h3 className="text-xs font-bold text-[#172033] flex items-center gap-1.5 uppercase tracking-wider">
+                <Heart size={14} className="text-[#DC2626]" />
                 <span>Interests</span>
               </h3>
               
-              <div className="flex flex-wrap gap-1.5 min-h-[60px] content-start">
+              <div className="flex flex-wrap gap-1.5 min-h-[40px] content-start">
                 {interests.map(interest => (
-                  <span key={interest} className="text-[10px] font-bold px-2 py-0.5 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-350">
+                  <span key={interest} className="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-[#FEE2E2] border border-[#FECACA] text-[#DC2626]">
                     {interest}
                   </span>
                 ))}
               </div>
 
-              <div className="space-y-2 pt-2 border-t border-slate-900">
-                <span className="text-[9px] text-slate-500 font-bold uppercase tracking-wider block">Recommended for {user?.department}</span>
-                <div className="flex flex-wrap gap-1.5">
+              <div className="space-y-1.5 pt-2.5 border-t border-[#E2E8F0]">
+                <span className="text-[9px] text-[#94A3B8] font-bold uppercase tracking-wider block">Recommended for {user?.department}</span>
+                <div className="flex flex-wrap gap-1">
                   {currentRecs.interests.filter(i => !interests.includes(i)).map(rec => (
                     <button 
                       key={rec}
                       onClick={() => handleAddInterest(null, rec)}
-                      className="text-[9px] px-2 py-0.5 rounded border border-slate-800 text-slate-400 hover:text-white hover:border-slate-600 transition-colors cursor-pointer flex items-center gap-1"
+                      className="text-[10px] px-2 py-0.5 rounded-full border border-[#E2E8F0] text-[#64748B] hover:text-[#172033] hover:bg-[#F8FAFC] transition-colors cursor-pointer flex items-center gap-1"
                     >
                       <Plus size={10} /> {rec}
                     </button>
@@ -202,43 +211,43 @@ export const Profile = () => {
                 </div>
               </div>
 
-              <form onSubmit={handleAddInterest} className="flex gap-2">
+              <form onSubmit={handleAddInterest} className="flex gap-1.5 pt-1">
                 <input
                   type="text"
                   placeholder="Add interest tag..."
                   value={newInterest}
                   onChange={(e) => setNewInterest(e.target.value)}
-                  className="flex-1 bg-slate-950/60 border border-slate-800 rounded-xl px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none"
+                  className="flex-1 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg px-3 py-1.5 text-xs text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#4F46E5]"
                 />
-                <button type="submit" className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white cursor-pointer">
+                <button type="submit" className="p-1.5 rounded-lg bg-[#4F46E5] text-white hover:bg-[#4338CA] transition-colors cursor-pointer">
                   <Plus size={14} />
                 </button>
               </form>
             </div>
 
             {/* Skills card */}
-            <div className="glass-card p-6 rounded-2xl space-y-4">
-              <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                <Tag size={14} className="text-indigo-400" />
+            <div className="bg-[#FFFFFF] p-5 rounded-2xl border border-[#E2E8F0] shadow-xs space-y-3.5">
+              <h3 className="text-xs font-bold text-[#172033] flex items-center gap-1.5 uppercase tracking-wider">
+                <Tag size={14} className="text-[#4F46E5]" />
                 <span>Skills</span>
               </h3>
 
-              <div className="flex flex-wrap gap-1.5 min-h-[60px] content-start">
+              <div className="flex flex-wrap gap-1.5 min-h-[40px] content-start">
                 {skills.map(skill => (
-                  <span key={skill} className="text-[10px] font-bold px-2 py-0.5 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-350">
+                  <span key={skill} className="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-[#EEEFFA] border border-[#C7D2FE] text-[#4F46E5]">
                     {skill}
                   </span>
                 ))}
               </div>
 
-              <div className="space-y-2 pt-2 border-t border-slate-900">
-                <span className="text-[9px] text-slate-500 font-bold uppercase tracking-wider block">Recommended for {user?.department}</span>
-                <div className="flex flex-wrap gap-1.5">
+              <div className="space-y-1.5 pt-2.5 border-t border-[#E2E8F0]">
+                <span className="text-[9px] text-[#94A3B8] font-bold uppercase tracking-wider block">Recommended for {user?.department}</span>
+                <div className="flex flex-wrap gap-1">
                   {currentRecs.skills.filter(s => !skills.includes(s)).map(rec => (
                     <button 
                       key={rec}
                       onClick={() => handleAddSkill(null, rec)}
-                      className="text-[9px] px-2 py-0.5 rounded border border-slate-800 text-slate-400 hover:text-white hover:border-slate-600 transition-colors cursor-pointer flex items-center gap-1"
+                      className="text-[10px] px-2 py-0.5 rounded-full border border-[#E2E8F0] text-[#64748B] hover:text-[#172033] hover:bg-[#F8FAFC] transition-colors cursor-pointer flex items-center gap-1"
                     >
                       <Plus size={10} /> {rec}
                     </button>
@@ -246,15 +255,15 @@ export const Profile = () => {
                 </div>
               </div>
 
-              <form onSubmit={handleAddSkill} className="flex gap-2">
+              <form onSubmit={handleAddSkill} className="flex gap-1.5 pt-1">
                 <input
                   type="text"
                   placeholder="Add skill tag..."
                   value={newSkill}
                   onChange={(e) => setNewSkill(e.target.value)}
-                  className="flex-1 bg-slate-950/60 border border-slate-800 rounded-xl px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none"
+                  className="flex-1 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg px-3 py-1.5 text-xs text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#4F46E5]"
                 />
-                <button type="submit" className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white cursor-pointer">
+                <button type="submit" className="p-1.5 rounded-lg bg-[#4F46E5] text-white hover:bg-[#4338CA] transition-colors cursor-pointer">
                   <Plus size={14} />
                 </button>
               </form>
@@ -264,46 +273,44 @@ export const Profile = () => {
 
         {/* Right Column: AI Behavior intelligence */}
         <div className="space-y-6">
-          <div className="p-5 rounded-2xl border border-purple-500/15 bg-gradient-to-b from-purple-500/5 to-transparent space-y-4 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-24 h-24 bg-purple-500/5 rounded-full blur-2xl"></div>
-            
-            <div className="flex items-center gap-2 text-purple-400 text-xs font-bold uppercase tracking-wider">
-              <BrainCircuit size={16} className="animate-pulse" />
+          <div className="p-5 rounded-2xl border border-[#E2E8F0] bg-[#FFFFFF] space-y-3.5 shadow-xs">
+            <div className="flex items-center gap-2 text-[#4F46E5] text-xs font-bold uppercase tracking-wider">
+              <BrainCircuit size={15} />
               <span>AI Behavioral Profile</span>
             </div>
 
-            <div className="divide-y divide-slate-900 text-xs">
-              <div className="py-2.5 flex justify-between">
-                <span className="text-slate-400">Activity Level:</span>
-                <span className="font-bold text-white">{user?.aiProfile?.type || 'Highly Active'}</span>
+            <div className="divide-y divide-[#E2E8F0] text-xs">
+              <div className="py-2 flex justify-between">
+                <span className="text-[#64748B]">Activity Level:</span>
+                <span className="font-semibold text-[#172033]">{user?.aiProfile?.type || 'Highly Active'}</span>
               </div>
-              <div className="py-2.5 flex justify-between">
-                <span className="text-slate-400">Technical Focus:</span>
-                <span className="font-bold text-indigo-400">{user?.aiProfile?.technicalInterest || 'High'}</span>
+              <div className="py-2 flex justify-between">
+                <span className="text-[#64748B]">Technical Focus:</span>
+                <span className="font-semibold text-[#4F46E5]">{user?.aiProfile?.technicalInterest || 'High'}</span>
               </div>
-              <div className="py-2.5 flex justify-between">
-                <span className="text-slate-400">Attendance Index:</span>
-                <span className="font-bold text-emerald-450">{user?.aiProfile?.attendanceRate || 87}%</span>
+              <div className="py-2 flex justify-between">
+                <span className="text-[#64748B]">Attendance Index:</span>
+                <span className="font-semibold text-[#16A34A]">{user?.aiProfile?.attendanceRate || 87}%</span>
               </div>
-              <div className="py-2.5 flex justify-between">
-                <span className="text-slate-400">Engagement Score:</span>
-                <span className="font-bold text-pink-400">{user?.aiProfile?.engagementScore || 92} / 100</span>
+              <div className="py-2 flex justify-between">
+                <span className="text-[#64748B]">Engagement Score:</span>
+                <span className="font-semibold text-[#D97706]">{user?.aiProfile?.engagementScore || 92} / 100</span>
               </div>
             </div>
 
-            <div className="pt-2">
-              <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block mb-2">Calculated Core Focus</span>
-              <div className="flex flex-wrap gap-1.5">
+            <div className="pt-1.5">
+              <span className="text-[10px] text-[#94A3B8] font-bold uppercase tracking-wider block mb-1.5">Calculated Core Focus</span>
+              <div className="flex flex-wrap gap-1">
                 {(user?.aiProfile?.preferredCategories || ['AI', 'Technology', 'Workshops']).map(item => (
-                  <span key={item} className="text-[9px] px-2.5 py-0.5 font-bold rounded-lg bg-purple-500/10 text-purple-300 border border-purple-500/15">
+                  <span key={item} className="text-[10px] px-2.5 py-0.5 font-semibold rounded-full bg-[#EEEFFA] text-[#4F46E5] border border-[#C7D2FE]">
                     {item}
                   </span>
                 ))}
               </div>
             </div>
             
-            <p className="text-[10px] text-slate-500 leading-normal border-t border-slate-900 pt-3">
-              *Your behavioral logs are updated automatically upon check-in scans. Profile metrics determine recommendation matches.
+            <p className="text-[10px] text-[#94A3B8] leading-relaxed border-t border-[#E2E8F0] pt-2.5">
+              Behavioral telemetry is updated automatically upon check-in scans. Profile metrics determine recommendation matches.
             </p>
           </div>
         </div>

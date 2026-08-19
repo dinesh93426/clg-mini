@@ -6,13 +6,25 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-DATABASE_URL = os.getenv("DATABASE_URL", "")
+DATABASE_URL = (
+    os.getenv("DATABASE_URL", "")
+    .replace("-pooler", "")
+    .replace("&channel_binding=require", "")
+    .replace("?channel_binding=require", "")
+)
 
 
 def get_db_connection():
     """Return a new psycopg2 connection with RealDictCursor as default."""
-    conn = psycopg2.connect(DATABASE_URL, cursor_factory=psycopg2.extras.RealDictCursor)
-    return conn
+    import time
+    for attempt in range(3):
+        try:
+            conn = psycopg2.connect(DATABASE_URL, cursor_factory=psycopg2.extras.RealDictCursor)
+            return conn
+        except Exception as e:
+            if attempt == 2:
+                raise
+            time.sleep(1)
 
 
 def execute_query(sql: str, params=None) -> list[dict]:

@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { eventService } from '../../services/eventService';
 import { EventCard } from '../../components/events/EventCard';
-import { Search, SlidersHorizontal, LayoutGrid, List, AlertCircle, X, Sparkles, CheckCircle2 } from 'lucide-react';
+import { Search, SlidersHorizontal, LayoutGrid, List, AlertCircle, X, Sparkles, CheckCircle2, MapPin, Calendar, Users } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export const Events = () => {
   const { user } = useAuth();
@@ -11,14 +12,11 @@ export const Events = () => {
   const [registrations, setRegistrations] = useState([]);
   const [loading, setLoading] = useState(true);
   
-  // Search and filters
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [showFilters, setShowFilters] = useState(false);
-  const [viewMode, setViewMode] = useState('grid'); // grid | list
+  const [viewMode, setViewMode] = useState('grid');
   const [registeringId, setRegisteringId] = useState(null);
-
-  // Modal alert notification
   const [alertInfo, setAlertInfo] = useState(null);
 
   const categories = ['All', 'AI', 'Technology', 'Business', 'Arts', 'Sports'];
@@ -46,17 +44,15 @@ export const Events = () => {
   const handleRegister = async (eventId) => {
     setRegisteringId(eventId);
     try {
-      const reg = await eventService.registerForEvent(eventId, user?.id);
+      await eventService.registerForEvent(eventId, user?.id);
       setAlertInfo({
         type: 'success',
-        title: 'Registration Confirmed!',
-        text: `You have successfully reserved a seat. A calendar invite has been dispatched to ${user?.email}.`
+        title: 'Registration Confirmed',
+        text: `You have successfully reserved a seat for this event.`
       });
-      // Refresh local registrations
       const updatedRegs = await eventService.getRegistrations(user?.id);
       setRegistrations(updatedRegs);
       
-      // Update seat counts in local list
       setEvents(prev => prev.map(e => {
         if (e.id === eventId) {
           return {
@@ -78,7 +74,6 @@ export const Events = () => {
     }
   };
 
-  // Filter logic on client-side
   const filteredEvents = events.filter(e => {
     const matchesSearch = e.title.toLowerCase().includes(search.toLowerCase()) || 
                           e.description.toLowerCase().includes(search.toLowerCase()) ||
@@ -88,71 +83,71 @@ export const Events = () => {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-10">
       
       {/* Alert Overlay Modal */}
       {alertInfo && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl w-full max-w-sm text-center space-y-4 shadow-2xl relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0F172A]/30 backdrop-blur-xs">
+          <div className="bg-[#FFFFFF] border border-[#E2E8F0] p-6 rounded-2xl w-full max-w-sm text-center space-y-4 shadow-xl relative">
             <button 
               onClick={() => setAlertInfo(null)}
-              className="absolute top-3 right-3 text-slate-500 hover:text-white"
+              className="absolute top-4 right-4 text-[#94A3B8] hover:text-[#172033] cursor-pointer"
             >
-              <X size={16} />
+              <X size={15} />
             </button>
-            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-indigo-500/10 text-indigo-400">
+            <div className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-[#DCFCE7] text-[#16A34A]">
               {alertInfo.type === 'success' ? (
-                <CheckCircle2 size={24} className="text-emerald-400" />
+                <CheckCircle2 size={22} className="text-[#16A34A]" />
               ) : (
-                <AlertCircle size={24} className="text-rose-400" />
+                <AlertCircle size={22} className="text-[#DC2626]" />
               )}
             </div>
             <div>
-              <h4 className="text-sm font-bold text-white">{alertInfo.title}</h4>
-              <p className="text-xs text-slate-400 leading-normal mt-1.5">{alertInfo.text}</p>
+              <h4 className="text-sm font-bold text-[#172033]">{alertInfo.title}</h4>
+              <p className="text-xs text-[#64748B] leading-relaxed mt-1">{alertInfo.text}</p>
             </div>
             <button
               onClick={() => setAlertInfo(null)}
-              className="w-full py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold transition-all"
+              className="w-full py-2 bg-[#4F46E5] hover:bg-[#4338CA] text-white rounded-lg text-xs font-semibold shadow-xs transition-colors cursor-pointer"
             >
-              Okay, Thanks
+              Confirm
             </button>
           </div>
         </div>
       )}
 
       {/* Header */}
-      <div>
-        <h1 className="font-display font-bold text-3xl text-white">Discover Events</h1>
-        <p className="text-slate-400 text-sm mt-1">Explore student activities, professional bootcamps, and cultural festivals.</p>
+      <div className="border-b border-[#E2E8F0] pb-5">
+        <h1 className="text-2xl font-bold tracking-tight text-[#172033]">Discover Events</h1>
+        <p className="text-xs text-[#64748B] mt-0.5">Explore university workshops, technical hackathons, and guest lectures.</p>
       </div>
 
       {/* Search and Filters Tool Panel */}
       <div className="flex flex-col md:flex-row gap-3">
         <div className="flex-1 relative">
-          <Search size={16} className="absolute left-3.5 top-3 text-slate-500" />
+          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8]" />
           <input
             type="text"
-            placeholder="Search events, workshops, hackathons..."
+            placeholder="Search events by title, description, or organizer..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 bg-slate-900/60 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full pl-9 pr-3 py-2 bg-[#FFFFFF] border border-[#E2E8F0] rounded-lg text-xs text-[#172033] placeholder-[#94A3B8] focus:outline-none focus:border-[#4F46E5] transition-colors"
           />
         </div>
         
         <div className="flex items-center gap-2">
           {/* Grid/List View switcher */}
-          <div className="flex bg-slate-900 border border-slate-800 rounded-xl p-1 shrink-0">
+          <div className="flex bg-[#FFFFFF] border border-[#E2E8F0] rounded-lg p-1 shrink-0">
             <button
               onClick={() => setViewMode('grid')}
-              className={`p-1.5 rounded-lg text-slate-400 transition-all cursor-pointer ${viewMode === 'grid' ? 'bg-indigo-600 text-white shadow' : 'hover:text-slate-200'}`}
+              className={`p-1.5 rounded transition-colors cursor-pointer ${viewMode === 'grid' ? 'bg-[#EEF2FF] text-[#4F46E5]' : 'text-[#64748B] hover:text-[#172033]'}`}
               title="Grid View"
             >
               <LayoutGrid size={14} />
             </button>
             <button
               onClick={() => setViewMode('list')}
-              className={`p-1.5 rounded-lg text-slate-400 transition-all cursor-pointer ${viewMode === 'list' ? 'bg-indigo-600 text-white shadow' : 'hover:text-slate-200'}`}
+              className={`p-1.5 rounded transition-colors cursor-pointer ${viewMode === 'list' ? 'bg-[#EEF2FF] text-[#4F46E5]' : 'text-[#64748B] hover:text-[#172033]'}`}
               title="List View"
             >
               <List size={14} />
@@ -161,36 +156,36 @@ export const Events = () => {
 
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className="flex items-center gap-1.5 px-3 py-2.5 bg-slate-900 border border-slate-800 hover:bg-slate-850 rounded-xl text-xs font-semibold text-slate-300 hover:text-white transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-2 bg-[#FFFFFF] border border-[#E2E8F0] hover:bg-[#F8FAFC] rounded-lg text-xs font-semibold text-[#172033] transition-colors cursor-pointer"
           >
-            <SlidersHorizontal size={12} />
+            <SlidersHorizontal size={13} className="text-[#64748B]" />
             <span>Filters</span>
           </button>
         </div>
       </div>
 
-      {/* Category Horizontal scrollbar */}
-      <div className="flex overflow-x-auto gap-2 pb-2 scrollbar-none">
+      {/* Category Filter Pills */}
+      <div className="flex overflow-x-auto gap-1.5 pb-1">
         {categories.map(cat => (
           <button
             key={cat}
             onClick={() => setSelectedCategory(cat)}
-            className={`px-4 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap border transition-all cursor-pointer
+            className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap border transition-colors cursor-pointer
               ${selectedCategory === cat 
-                ? 'bg-indigo-600 border-indigo-600 text-white shadow-md shadow-indigo-600/10' 
-                : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-white hover:border-slate-700'}`}
+                ? 'bg-[#EEF2FF] border-[#C7D2FE] text-[#4F46E5] font-semibold' 
+                : 'bg-[#FFFFFF] border-[#E2E8F0] text-[#64748B] hover:text-[#172033] hover:bg-[#F8FAFC]'}`}
           >
             {cat}
           </button>
         ))}
       </div>
 
-      {/* Expanded filters options drawer (Mock) */}
+      {/* Expanded filters drawer */}
       {showFilters && (
-        <div className="p-4 rounded-xl bg-slate-900/40 border border-slate-800 grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
+        <div className="p-4 rounded-xl bg-[#FFFFFF] border border-[#E2E8F0] grid grid-cols-2 md:grid-cols-4 gap-3 text-xs shadow-xs">
           <div>
-            <label className="text-slate-500 font-bold block mb-1 uppercase tracking-wider text-[9px]">Department</label>
-            <select className="bg-slate-900 border border-slate-800 rounded-lg p-2 w-full text-slate-300">
+            <label className="text-[#64748B] font-bold block mb-1 uppercase tracking-wider text-[10px]">Department</label>
+            <select className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-1.5 w-full text-[#172033] focus:outline-none focus:border-[#4F46E5]">
               <option>All Departments</option>
               <option>Computer Science</option>
               <option>Electronics</option>
@@ -198,16 +193,16 @@ export const Events = () => {
             </select>
           </div>
           <div>
-            <label className="text-slate-500 font-bold block mb-1 uppercase tracking-wider text-[9px]">Seat Availability</label>
-            <select className="bg-slate-900 border border-slate-800 rounded-lg p-2 w-full text-slate-300">
+            <label className="text-[#64748B] font-bold block mb-1 uppercase tracking-wider text-[10px]">Seat Availability</label>
+            <select className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-1.5 w-full text-[#172033] focus:outline-none focus:border-[#4F46E5]">
               <option>All Events</option>
               <option>Seats Available</option>
               <option>Sold Out</option>
             </select>
           </div>
           <div>
-            <label className="text-slate-500 font-bold block mb-1 uppercase tracking-wider text-[9px]">Schedule</label>
-            <select className="bg-slate-900 border border-slate-800 rounded-lg p-2 w-full text-slate-300">
+            <label className="text-[#64748B] font-bold block mb-1 uppercase tracking-wider text-[10px]">Schedule</label>
+            <select className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-1.5 w-full text-[#172033] focus:outline-none focus:border-[#4F46E5]">
               <option>Anytime</option>
               <option>This Week</option>
               <option>Next Week</option>
@@ -215,12 +210,12 @@ export const Events = () => {
             </select>
           </div>
           <div>
-            <label className="text-slate-500 font-bold block mb-1 uppercase tracking-wider text-[9px]">Event Type</label>
-            <select className="bg-slate-900 border border-slate-800 rounded-lg p-2 w-full text-slate-300">
+            <label className="text-[#64748B] font-bold block mb-1 uppercase tracking-wider text-[10px]">Event Type</label>
+            <select className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-1.5 w-full text-[#172033] focus:outline-none focus:border-[#4F46E5]">
               <option>All Formats</option>
               <option>Workshop / Lab</option>
               <option>Hackathon</option>
-              <option>Cultural / Night</option>
+              <option>Seminar</option>
             </select>
           </div>
         </div>
@@ -228,19 +223,25 @@ export const Events = () => {
 
       {/* Event Grid/List Body */}
       {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {[1, 2, 3, 4, 5, 6].map(n => (
-            <div key={n} className="h-80 bg-slate-900 rounded-2xl animate-pulse"></div>
+            <div key={n} className="h-72 bg-[#FFFFFF] border border-[#E2E8F0] rounded-xl p-4 shadow-xs animate-pulse" />
           ))}
         </div>
       ) : filteredEvents.length === 0 ? (
-        <div className="py-16 text-center space-y-3 border border-dashed border-slate-800 rounded-2xl bg-slate-950/20">
-          <AlertCircle size={32} className="mx-auto text-slate-600" />
-          <h3 className="text-sm font-bold text-white">No upcoming events found</h3>
-          <p className="text-xs text-slate-450 max-w-sm mx-auto">Try clearing search filters or check again later for updates.</p>
+        <div className="py-12 text-center space-y-2.5 border border-[#E2E8F0] rounded-2xl bg-[#FFFFFF] shadow-xs">
+          <AlertCircle size={22} className="text-[#94A3B8] mx-auto" />
+          <h3 className="text-sm font-semibold text-[#172033]">No events found</h3>
+          <p className="text-xs text-[#64748B] max-w-sm mx-auto">Try adjusting your search terms or clearing selected category filters.</p>
+          <button
+            onClick={() => { setSearch(''); setSelectedCategory('All'); }}
+            className="px-3.5 py-1.5 bg-[#4F46E5] hover:bg-[#4338CA] text-white rounded-lg text-xs font-semibold shadow-xs transition-colors cursor-pointer"
+          >
+            Reset Filters
+          </button>
         </div>
       ) : viewMode === 'grid' ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
           {filteredEvents.map(event => {
             const isReg = registrations.some(r => r.eventId === event.id && r.status !== 'cancelled');
             return (
@@ -255,60 +256,69 @@ export const Events = () => {
           })}
         </div>
       ) : (
-        // List View Row Rendering
-        <div className="space-y-4">
+        /* List View */
+        <div className="space-y-3">
           {filteredEvents.map(event => {
             const isReg = registrations.some(r => r.eventId === event.id && r.status !== 'cancelled');
             const isSoldOut = event.availableSeats === 0;
             return (
               <div 
                 key={event.id}
-                className="glass-card p-4 rounded-xl flex flex-col md:flex-row gap-4 items-center justify-between border border-slate-900"
+                className="bg-[#FFFFFF] border border-[#E2E8F0] p-4 rounded-xl flex flex-col md:flex-row gap-4 items-center justify-between shadow-xs hover:border-[#CBD5E1] transition-all"
               >
-                <div className="flex gap-4 items-center w-full md:w-auto">
-                  <img src={event.image} alt={event.title} className="w-16 h-16 object-cover rounded-lg bg-slate-900 shrink-0" />
+                <div className="flex gap-3.5 items-center w-full md:w-auto">
+                  <img src={event.image} alt={event.title} className="w-16 h-16 object-cover rounded-lg bg-[#F8FAFC] shrink-0 border border-[#E2E8F0]" />
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="text-[8px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded bg-indigo-600/10 text-indigo-400 border border-indigo-500/15">
+                      <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#EEF2FF] text-[#4F46E5]">
                         {event.category}
                       </span>
                       {event.aiRecommended && (
-                        <span className="text-[8px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded bg-purple-600/15 text-purple-400 border border-purple-500/20 flex items-center gap-0.5">
-                          <Sparkles size={8} /> AI Match
+                        <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#EEF2FF] text-[#4F46E5] border border-[#C7D2FE] flex items-center gap-1">
+                          <Sparkles size={10} /> {event.aiMatchPercentage}% Match
                         </span>
                       )}
                     </div>
-                    <h3 className="text-xs sm:text-sm font-bold text-white mt-1 truncate">{event.title}</h3>
-                    <p className="text-[10px] text-slate-400 mt-1 line-clamp-1">{event.description}</p>
+                    <Link to={`/student/events/${event.id}`}>
+                      <h3 className="text-xs font-semibold text-[#172033] hover:text-[#4F46E5] transition-colors mt-1 truncate">{event.title}</h3>
+                    </Link>
+                    <p className="text-[11px] text-[#64748B] mt-0.5 line-clamp-1">{event.description}</p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-6 w-full md:w-auto justify-between md:justify-end text-xs">
-                  <div className="text-left text-[10px] text-slate-400">
-                    <span className="block font-medium">{event.date}</span>
-                    <span className="block text-slate-500 mt-0.5">{event.venue}</span>
+                <div className="flex items-center gap-5 w-full md:w-auto justify-between md:justify-end text-xs">
+                  <div className="text-left text-[11px] text-[#64748B]">
+                    <span className="block font-medium text-[#172033]">{event.date}</span>
+                    <span className="block text-[#94A3B8] truncate max-w-[120px]">{event.venue}</span>
                   </div>
 
-                  <div className="text-center text-[10px] text-slate-400 shrink-0">
-                    <span className="block font-bold text-white">{event.availableSeats}</span>
-                    <span className="block text-slate-500">Seats Left</span>
+                  <div className="text-center text-[11px] text-[#64748B] shrink-0">
+                    <span className={`block font-bold text-xs ${isSoldOut ? 'text-[#DC2626]' : 'text-[#16A34A]'}`}>
+                      {isSoldOut ? 'Sold Out' : `${event.availableSeats} Left`}
+                    </span>
                   </div>
 
-                  <div className="flex gap-2">
+                  <div className="flex items-center gap-2">
+                    <Link
+                      to={`/student/events/${event.id}`}
+                      className="px-3 py-1.5 rounded-lg bg-[#FFFFFF] border border-[#E2E8F0] hover:bg-[#F8FAFC] text-[#172033] text-xs font-medium transition-colors"
+                    >
+                      Details
+                    </Link>
                     {isReg ? (
-                      <span className="px-3 py-1.5 rounded-lg bg-emerald-500/15 text-emerald-400 border border-emerald-500/20 font-bold text-[10px] flex items-center gap-1">
-                        <CheckCircle2 size={10} /> Registered
+                      <span className="px-3 py-1.5 rounded-lg bg-[#DCFCE7] text-[#16A34A] border border-[#BBF7D0] font-semibold text-xs flex items-center gap-1">
+                        <CheckCircle2 size={12} /> Registered
                       </span>
                     ) : (
                       <button
                         onClick={() => handleRegister(event.id)}
                         disabled={isSoldOut || registeringId === event.id}
-                        className={`px-4 py-1.5 rounded-lg text-[10px] font-bold text-white transition-all cursor-pointer
+                        className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold text-white transition-colors cursor-pointer
                           ${isSoldOut 
-                            ? 'bg-slate-800 text-slate-500 cursor-not-allowed' 
-                            : 'bg-indigo-600 hover:bg-indigo-500'}`}
+                            ? 'bg-[#F8FAFC] text-[#94A3B8] border border-[#E2E8F0] cursor-not-allowed' 
+                            : 'bg-[#4F46E5] hover:bg-[#4338CA]'}`}
                       >
-                        {registeringId === event.id ? '...' : 'Register'}
+                        {registeringId === event.id ? 'Registering...' : 'Register'}
                       </button>
                     )}
                   </div>

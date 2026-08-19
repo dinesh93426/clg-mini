@@ -13,12 +13,9 @@ export const Certificates = () => {
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Feature Steps
-  // 1: Upload, 2: AI Processing, 3: Preview & Dispatch, 4: Success
   const [step, setStep] = useState(1);
   const [templatePreview, setTemplatePreview] = useState(null);
   
-  // Field positions (percentages)
   const [positions, setPositions] = useState({
     name: { x: 50, y: 40 },
     title: { x: 50, y: 65 },
@@ -26,10 +23,7 @@ export const Certificates = () => {
   });
   const [activeDrag, setActiveDrag] = useState(null);
   const containerRef = useRef(null);
-
-  // Dispatch mock
   const [dispatching, setDispatching] = useState(false);
-
   const fileInputRef = useRef(null);
 
   useEffect(() => {
@@ -51,11 +45,10 @@ export const Certificates = () => {
     if (file) {
       const url = URL.createObjectURL(file);
       setTemplatePreview(url);
-      setStep(3); // Skip straight to the manual editor
+      setStep(3);
     }
   };
 
-  // Drag logic
   const handleMouseDown = (field) => {
     setActiveDrag(field);
   };
@@ -81,48 +74,47 @@ export const Certificates = () => {
 
   const handleDispatch = () => {
     setDispatching(true);
-    // Simulate email dispatch delay
     setTimeout(() => {
       setDispatching(false);
       setStep(4);
-    }, 3000);
+    }, 2500);
   };
 
   if (loading) {
     return (
       <div className="flex justify-center py-20">
-        <span className="h-8 w-8 animate-spin rounded-full border-4 border-indigo-500 border-t-transparent" />
+        <span className="h-8 w-8 animate-spin rounded-full border-2 border-[#4F46E5] border-t-transparent" />
       </div>
     );
   }
 
-  const eligibleCount = Math.floor((event?.registrationCount || 0) * 0.85); // mock 85% attended
+  const eligibleCount = Math.floor((event?.registrationCount || 0) * 0.85);
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto">
+    <div className="space-y-6 max-w-4xl mx-auto pb-12">
       
       {/* Header back */}
       <button 
         onClick={() => navigate(-1)}
-        className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors cursor-pointer"
+        className="flex items-center gap-1.5 text-xs font-medium text-[#64748B] hover:text-[#172033] transition-colors cursor-pointer"
       >
         <ArrowLeft size={14} />
         <span>Back to Analytics</span>
       </button>
 
-      <div>
-        <h1 className="font-display font-bold text-3xl text-white flex items-center gap-2">
-          <Award size={26} className="text-purple-400" />
+      <div className="border-b border-[#E2E8F0] pb-4">
+        <h1 className="text-2xl font-bold tracking-tight text-[#172033] flex items-center gap-2">
+          <Award size={22} className="text-[#4F46E5]" />
           Certificate Dispatch Hub
         </h1>
-        <p className="text-slate-400 text-sm mt-1">
-          Automate bulk certificate generation for {event?.title} attendees using visual AI placement.
+        <p className="text-xs text-[#64748B] mt-0.5">
+          Automate bulk certificate generation for {event?.title} attendees using visual placement.
         </p>
       </div>
 
       {/* Stepper UI */}
-      <div className="flex items-center justify-between pb-6 border-b border-slate-900 relative">
-        <div className="absolute left-0 right-0 top-1/2 h-0.5 bg-slate-900 -z-10 -translate-y-1/2"></div>
+      <div className="flex items-center justify-between pb-4 border-b border-[#E2E8F0] relative">
+        <div className="absolute left-0 right-0 top-1/2 h-0.5 bg-[#E2E8F0] -z-10 -translate-y-1/2"></div>
         {[
           { num: 1, label: 'Upload Template' },
           { num: 3, label: 'Position Fields' },
@@ -132,15 +124,15 @@ export const Certificates = () => {
           const isPassed = step > s.num;
           const displayNum = index + 1;
           return (
-            <div key={s.num} className="flex flex-col items-center gap-2 bg-[#0b0f19] px-2">
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-colors
-                ${isActive ? 'bg-purple-600 text-white shadow-[0_0_15px_rgba(168,85,247,0.4)] border-2 border-purple-500' : 
-                  isPassed ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/50' : 
-                  'bg-slate-900 text-slate-500 border border-slate-800'}`}
-              >
-                {isPassed ? <CheckCircle size={14} /> : displayNum}
+            <div key={s.num} className="flex flex-col items-center gap-1.5 bg-[#F8FAFC] px-3">
+              <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${
+                isActive ? 'bg-[#4F46E5] text-white shadow-xs' : 
+                isPassed ? 'bg-[#DCFCE7] text-[#16A34A] border border-[#BBF7D0]' : 
+                'bg-[#FFFFFF] text-[#94A3B8] border border-[#E2E8F0]'
+              }`}>
+                {isPassed ? <CheckCircle size={13} /> : displayNum}
               </div>
-              <span className={`text-[10px] font-semibold uppercase tracking-wider ${isActive ? 'text-purple-400' : isPassed ? 'text-emerald-500' : 'text-slate-600'}`}>
+              <span className={`text-[10px] font-semibold uppercase tracking-wider ${isActive ? 'text-[#4F46E5]' : isPassed ? 'text-[#16A34A]' : 'text-[#94A3B8]'}`}>
                 {s.label}
               </span>
             </div>
@@ -150,14 +142,14 @@ export const Certificates = () => {
 
       {/* Step 1: Upload */}
       {step === 1 && (
-        <div className="glass-card rounded-2xl p-8 border border-slate-900 flex flex-col items-center justify-center text-center animate-fade-in">
-          <div className="w-20 h-20 rounded-full bg-slate-900/50 border border-slate-800 flex items-center justify-center mb-6">
-            <FileImage size={32} className="text-slate-500" />
+        <div className="bg-[#FFFFFF] rounded-2xl p-8 border border-[#E2E8F0] shadow-xs flex flex-col items-center justify-center text-center">
+          <div className="w-16 h-16 rounded-full bg-[#F8FAFC] border border-[#E2E8F0] flex items-center justify-center mb-4 text-[#94A3B8]">
+            <FileImage size={28} />
           </div>
           
-          <h2 className="text-lg font-bold text-white mb-2">Upload Blank Certificate Template</h2>
-          <p className="text-xs text-slate-400 max-w-sm mb-8">
-            Upload your high-resolution JPG or PNG blank certificate template. Ensure the template is empty where student names should appear.
+          <h2 className="text-base font-bold text-[#172033] mb-1">Upload Blank Certificate Template</h2>
+          <p className="text-xs text-[#64748B] max-w-sm mb-6 leading-relaxed">
+            Upload your high-resolution JPG or PNG certificate template. Ensure the template is empty where student names should appear.
           </p>
 
           <input 
@@ -170,130 +162,129 @@ export const Certificates = () => {
           
           <button 
             onClick={() => fileInputRef.current.click()}
-            className="px-6 py-3 rounded-xl bg-purple-650 hover:bg-purple-600 text-white text-xs font-bold shadow-[0_0_15px_rgba(168,85,247,0.2)] flex items-center gap-2 transition-all cursor-pointer hover:scale-105"
+            className="px-5 py-2.5 rounded-lg bg-[#4F46E5] hover:bg-[#4338CA] text-white text-xs font-semibold shadow-xs flex items-center gap-2 transition-colors cursor-pointer"
           >
-            <UploadCloud size={16} />
-            Browse Files
+            <UploadCloud size={15} />
+            <span>Browse Template File</span>
           </button>
         </div>
       )}
 
       {/* Step 3: Interactive Editor & Dispatch */}
       {step === 3 && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 animate-fade-in"
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6"
              onMouseMove={handleMouseMove}
              onMouseUp={handleMouseUp}
              onMouseLeave={handleMouseUp}
         >
           
           {/* Interactive Editor Container */}
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             <div className="flex items-center justify-between">
-              <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider flex items-center gap-1.5">
-                <Sparkles size={12} className="text-purple-400" /> Interactive Field Editor
+              <span className="text-[10px] text-[#64748B] font-bold uppercase tracking-wider flex items-center gap-1">
+                <Sparkles size={11} className="text-[#4F46E5]" /> Interactive Field Placement
               </span>
-              <span className="text-[10px] text-slate-400 italic">Drag fields to position</span>
+              <span className="text-[10px] text-[#94A3B8]">Drag items to reposition</span>
             </div>
 
             <div 
               ref={containerRef}
-              className="relative w-full aspect-[1.414] bg-white rounded-xl overflow-hidden border-2 border-slate-800 shadow-2xl select-none"
+              className="relative w-full aspect-[1.414] bg-white rounded-xl overflow-hidden border border-[#E2E8F0] shadow-xs select-none"
             >
               <img src={templatePreview} alt="Certificate Template" className="w-full h-full object-cover pointer-events-none" />
               
               {/* Draggable Overlays */}
-              
-              {/* Name Field */}
               <div 
                 onMouseDown={() => handleMouseDown('name')}
-                className={`absolute -translate-x-1/2 -translate-y-1/2 p-4 text-center cursor-move transition-all duration-75
-                  ${activeDrag === 'name' ? 'bg-purple-500/20 border-2 border-purple-400 scale-105' : 'bg-purple-500/10 border border-dashed border-purple-500/50 hover:bg-purple-500/20 hover:border-purple-400'}`}
-                style={{ left: `${positions.name.x}%`, top: `${positions.name.y}%`, width: '80%' }}
+                className={`absolute -translate-x-1/2 -translate-y-1/2 p-3 text-center cursor-move transition-all ${
+                  activeDrag === 'name' ? 'bg-[#EEECFF] border-2 border-[#4F46E5]' : 'bg-[#EEECFF]/70 border border-dashed border-[#4F46E5] hover:bg-[#EEECFF]'
+                }`}
+                style={{ left: `${positions.name.x}%`, top: `${positions.name.y}%`, width: '75%' }}
               >
-                <span className="absolute -top-3 -left-1 bg-purple-600 text-white text-[8px] px-1.5 py-0.5 rounded font-bold uppercase tracking-widest shadow-lg">
-                  Drag: Student Name
+                <span className="absolute -top-2.5 -left-1 bg-[#4F46E5] text-white text-[8px] px-1 py-0.5 rounded font-bold uppercase tracking-wider">
+                  Student Name
                 </span>
-                <h2 className="text-3xl font-serif text-slate-800 italic">John Doe (Student Demo)</h2>
+                <h2 className="text-xl font-serif text-[#172033] italic">Alex Johnson (Student Name)</h2>
               </div>
               
-              {/* Event Title Field */}
               <div 
                 onMouseDown={() => handleMouseDown('title')}
-                className={`absolute -translate-x-1/2 -translate-y-1/2 p-2 text-center cursor-move transition-all duration-75
-                  ${activeDrag === 'title' ? 'bg-indigo-500/20 border-2 border-indigo-400 scale-105' : 'bg-indigo-500/10 border border-dashed border-indigo-500/50 hover:bg-indigo-500/20 hover:border-indigo-400'}`}
+                className={`absolute -translate-x-1/2 -translate-y-1/2 p-2 text-center cursor-move transition-all ${
+                  activeDrag === 'title' ? 'bg-[#EEECFF] border-2 border-[#4F46E5]' : 'bg-[#EEECFF]/70 border border-dashed border-[#4F46E5] hover:bg-[#EEECFF]'
+                }`}
                 style={{ left: `${positions.title.x}%`, top: `${positions.title.y}%` }}
               >
-                <span className="absolute -top-3 -left-1 bg-indigo-600 text-white text-[8px] px-1.5 py-0.5 rounded font-bold uppercase tracking-widest shadow-lg">
-                  Drag: Event Title
+                <span className="absolute -top-2.5 -left-1 bg-[#4F46E5] text-white text-[8px] px-1 py-0.5 rounded font-bold uppercase tracking-wider">
+                  Event Title
                 </span>
-                <p className="text-sm font-semibold text-slate-700 uppercase tracking-widest whitespace-nowrap">{event?.title}</p>
+                <p className="text-xs font-semibold text-[#172033] uppercase tracking-wider whitespace-nowrap">{event?.title}</p>
               </div>
 
-              {/* College Name Field */}
               <div 
                 onMouseDown={() => handleMouseDown('college')}
-                className={`absolute -translate-x-1/2 -translate-y-1/2 p-2 text-center cursor-move transition-all duration-75
-                  ${activeDrag === 'college' ? 'bg-emerald-500/20 border-2 border-emerald-400 scale-105' : 'bg-emerald-500/10 border border-dashed border-emerald-500/50 hover:bg-emerald-500/20 hover:border-emerald-400'}`}
+                className={`absolute -translate-x-1/2 -translate-y-1/2 p-2 text-center cursor-move transition-all ${
+                  activeDrag === 'college' ? 'bg-[#DCFCE7] border-2 border-[#16A34A]' : 'bg-[#DCFCE7]/70 border border-dashed border-[#16A34A] hover:bg-[#DCFCE7]'
+                }`}
                 style={{ left: `${positions.college.x}%`, top: `${positions.college.y}%` }}
               >
-                <span className="absolute -top-3 -left-1 bg-emerald-600 text-white text-[8px] px-1.5 py-0.5 rounded font-bold uppercase tracking-widest shadow-lg">
-                  Drag: College Name
+                <span className="absolute -top-2.5 -left-1 bg-[#16A34A] text-white text-[8px] px-1 py-0.5 rounded font-bold uppercase tracking-wider">
+                  Institution
                 </span>
-                <p className="text-sm font-serif text-slate-600 uppercase tracking-widest whitespace-nowrap">EventIntel University</p>
+                <p className="text-xs font-serif text-[#172033] uppercase tracking-wider whitespace-nowrap">EventIntel University</p>
               </div>
 
             </div>
-            <p className="text-[10px] text-slate-500 text-center leading-normal">
-              *All {eligibleCount} certificates will be generated using these relative coordinates.
+            <p className="text-[10px] text-[#94A3B8] text-center">
+              *All {eligibleCount} certificates will be generated with these relative coordinates.
             </p>
           </div>
 
           {/* Dispatch Console */}
-          <div className="space-y-6">
-            <div className="glass-card p-6 rounded-2xl border border-slate-900 space-y-6">
+          <div className="space-y-4">
+            <div className="bg-[#FFFFFF] p-6 rounded-2xl border border-[#E2E8F0] shadow-xs space-y-4">
               
               <div>
-                <h3 className="text-sm font-bold text-white mb-4 border-b border-slate-900 pb-2">Dispatch Parameters</h3>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center text-xs">
-                    <span className="text-slate-400">Target Event</span>
-                    <span className="font-semibold text-white truncate max-w-[200px]">{event?.title}</span>
+                <h3 className="text-xs font-bold text-[#172033] mb-3 border-b border-[#E2E8F0] pb-2 uppercase tracking-wider">Dispatch Summary</h3>
+                <div className="space-y-2.5 text-xs">
+                  <div className="flex justify-between items-center">
+                    <span className="text-[#64748B]">Target Event</span>
+                    <span className="font-semibold text-[#172033] truncate max-w-[180px]">{event?.title}</span>
                   </div>
-                  <div className="flex justify-between items-center text-xs">
-                    <span className="text-slate-400">Total Registrations</span>
-                    <span className="font-semibold text-slate-300">{event?.registrationCount}</span>
+                  <div className="flex justify-between items-center">
+                    <span className="text-[#64748B]">Total Registrations</span>
+                    <span className="font-semibold text-[#172033]">{event?.registrationCount}</span>
                   </div>
-                  <div className="flex justify-between items-center text-xs">
-                    <span className="text-slate-400">Eligible (Checked-In)</span>
-                    <span className="font-bold text-emerald-400">{eligibleCount} Students</span>
+                  <div className="flex justify-between items-center">
+                    <span className="text-[#64748B]">Eligible (Checked-In)</span>
+                    <span className="font-bold text-[#16A34A]">{eligibleCount} Students</span>
                   </div>
-                  <div className="flex justify-between items-center text-xs">
-                    <span className="text-slate-400">Delivery Method</span>
-                    <span className="font-semibold text-indigo-400 flex items-center gap-1">
+                  <div className="flex justify-between items-center">
+                    <span className="text-[#64748B]">Delivery Method</span>
+                    <span className="font-semibold text-[#4F46E5] flex items-center gap-1">
                       <Mail size={12} /> Direct Email
                     </span>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 text-xs text-amber-200 leading-relaxed">
-                <span className="font-bold text-amber-400 block mb-1">Confirm Batch Run</span>
-                Please review the placeholder preview carefully. Once dispatched, personalized high-resolution PDFs will be generated and emailed directly to all {eligibleCount} eligible attendees.
+              <div className="bg-[#FEF3C7] border border-[#FDE68A] rounded-xl p-3 text-xs text-[#92400E] leading-relaxed">
+                <span className="font-bold block mb-0.5">Confirm Batch Generation</span>
+                High-resolution PDFs will be compiled and dispatched directly to all {eligibleCount} eligible student mailboxes.
               </div>
 
               <button
                 onClick={handleDispatch}
                 disabled={dispatching}
-                className="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-xs font-bold transition-all shadow-[0_0_20px_rgba(79,70,229,0.3)] flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.02]"
+                className="w-full py-2.5 rounded-lg bg-[#4F46E5] hover:bg-[#4338CA] disabled:opacity-50 text-white text-xs font-semibold transition-colors shadow-xs flex items-center justify-center gap-2 cursor-pointer"
               >
                 {dispatching ? (
                   <>
-                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                    <span>Dispatching {eligibleCount} emails...</span>
+                    <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                    <span>Dispatching {eligibleCount} certificates...</span>
                   </>
                 ) : (
                   <>
-                    <Send size={16} />
+                    <Send size={14} />
                     <span>Dispatch Certificates Now</span>
                   </>
                 )}
@@ -306,19 +297,19 @@ export const Certificates = () => {
 
       {/* Step 4: Success */}
       {step === 4 && (
-        <div className="glass-card rounded-2xl p-12 border border-emerald-500/30 flex flex-col items-center justify-center text-center space-y-4 animate-fade-in bg-emerald-500/5">
-          <div className="w-20 h-20 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 mb-2">
-            <ShieldCheck size={40} />
+        <div className="bg-[#FFFFFF] rounded-2xl p-10 border border-[#BBF7D0] shadow-xs flex flex-col items-center justify-center text-center space-y-3">
+          <div className="w-16 h-16 rounded-full bg-[#DCFCE7] text-[#16A34A] flex items-center justify-center mb-1">
+            <ShieldCheck size={32} />
           </div>
           
-          <h2 className="text-2xl font-display font-bold text-white">Batch Dispatched Successfully</h2>
-          <p className="text-xs text-emerald-200/70 max-w-md leading-relaxed pb-6">
-            The AI engine successfully generated and mailed {eligibleCount} certificates to verified attendees of "{event?.title}". 
+          <h2 className="text-xl font-bold text-[#172033]">Batch Dispatched Successfully</h2>
+          <p className="text-xs text-[#64748B] max-w-md leading-relaxed pb-4">
+            The AI engine generated and emailed {eligibleCount} certificates to verified attendees of "{event?.title}". 
           </p>
 
           <button 
             onClick={() => navigate(`/organizer/events/${id}/analytics`)}
-            className="px-6 py-2.5 rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-850 text-white text-xs font-bold transition-all cursor-pointer"
+            className="px-4 py-2 rounded-lg bg-[#4F46E5] hover:bg-[#4338CA] text-white text-xs font-semibold shadow-xs transition-colors cursor-pointer"
           >
             Return to Analytics
           </button>

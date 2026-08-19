@@ -29,4 +29,13 @@ dist-ssr
 .venv/
 __pycache__/
 *.joblib
+*.pkl
+*.safetensors
+*.bin
+*.pt
+*.pth
+ml_service/models/sentiment_model/model.safetensors
+ml_service/static/posters/*.png
+ml_service/static/posters/*.jpg
+
 

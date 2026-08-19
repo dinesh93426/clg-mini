@@ -1,0 +1,1001 @@
+feedback_id,event_id,student_id,rating,feedback_text,sentiment
+FB00001,E019,S0469,2,"Overall, The workshop covered the expected topics.",NEUTRAL
+FB00002,E032,S0217,5,"In my opinion, The session was well organized and useful.",POSITIVE
+FB00003,E052,S0045,5,The content was interesting and engaging.,POSITIVE
+FB00004,E075,S0486,3,"For this event, The session was satisfactory.",NEUTRAL
+FB00005,E026,S0444,3,"From my experience, The workshop covered the expected topics.",NEUTRAL
+FB00006,E100,S0114,4,"In my opinion, The event was very helpful for my studies.",POSITIVE
+FB00007,E098,S0363,2,"Overall, The event started very late.",NEGATIVE
+FB00008,E019,S0368,3,"Overall, The session was average.",NEUTRAL
+FB00009,E069,S0200,4,"Overall, The session was well organized and useful.",POSITIVE
+FB00010,E080,S0394,5,"In my opinion, The workshop was excellent and very informative.",POSITIVE
+FB00011,E067,S0473,5,"Overall, The content was interesting and engaging.",POSITIVE
+FB00012,E088,S0145,2,The content was as expected.,NEUTRAL
+FB00013,E095,S0217,5,The workshop was excellent and very informative.,POSITIVE
+FB00014,E040,S0363,4,"For this event, Excellent organization and a knowledgeable speaker.",POSITIVE
+FB00015,E067,S0318,4,"For this event, The speaker explained the concepts clearly.",POSITIVE
+FB00016,E053,S0428,3,The event was neither good nor bad.,NEUTRAL
+FB00017,E023,S0020,4,"In my opinion, The session was well organized and useful.",POSITIVE
+FB00018,E003,S0468,5,"For this event, The event was very helpful for my studies.",POSITIVE
+FB00019,E091,S0281,2,"For this event, The session was average.",NEUTRAL
+FB00020,E093,S0024,3,"In my opinion, The workshop covered the expected topics.",NEUTRAL
+FB00021,E093,S0066,3,"For this event, The session was average.",NEUTRAL
+FB00022,E072,S0320,2,"From my experience, The event started very late.",NEGATIVE
+FB00023,E010,S0226,2,"From my experience, The event was fine.",NEUTRAL
+FB00024,E021,S0005,2,The event was neither good nor bad.,NEUTRAL
+FB00025,E078,S0311,2,"From my experience, The content was as expected.",NEUTRAL
+FB00026,E025,S0258,4,"From my experience, The speaker explained the concepts clearly.",POSITIVE
+FB00027,E065,S0321,5,"In my opinion, I really enjoyed this event and learned a lot.",POSITIVE
+FB00028,E070,S0309,5,"For this event, The speaker explained the concepts clearly.",POSITIVE
+FB00029,E007,S0335,5,I really enjoyed this event and learned a lot.,POSITIVE
+FB00030,E080,S0013,2,"Overall, The session was satisfactory.",NEUTRAL
+FB00031,E050,S0151,5,"Overall, I really enjoyed this event and learned a lot.",POSITIVE
+FB00032,E090,S0279,5,"In my opinion, Excellent organization and a knowledgeable speaker.",POSITIVE
+FB00033,E037,S0069,5,The event was very helpful for my studies.,POSITIVE
+FB00034,E038,S0426,4,"From my experience, Great event with practical examples.",POSITIVE
+FB00035,E057,S0196,5,"From my experience, The session was well organized and useful.",POSITIVE
+FB00036,E022,S0182,4,"Overall, The session was well organized and useful.",POSITIVE
+FB00037,E008,S0387,4,"From my experience, The event was very helpful for my studies.",POSITIVE
+FB00038,E040,S0004,1,The organization was poor.,NEGATIVE
+FB00039,E094,S0090,1,"From my experience, The event started very late.",NEGATIVE
+FB00040,E028,S0148,2,"Overall, The event was neither good nor bad.",NEUTRAL
+FB00041,E014,S0392,2,"From my experience, The content was as expected.",NEUTRAL
+FB00042,E049,S0162,5,Great event with practical examples.,POSITIVE
+FB00043,E064,S0073,5,The content was interesting and engaging.,POSITIVE
+FB00044,E023,S0261,4,"From my experience, Great event with practical examples.",POSITIVE
+FB00045,E070,S0031,1,"For this event, The venue was uncomfortable and crowded.",NEGATIVE
+FB00046,E067,S0175,4,"In my opinion, The speaker explained the concepts clearly.",POSITIVE
+FB00047,E065,S0483,5,The session was well organized and useful.,POSITIVE
+FB00048,E093,S0228,1,The session was not useful.,NEGATIVE
+FB00049,E017,S0376,3,"Overall, The event was conducted normally.",NEUTRAL
+FB00050,E051,S0374,2,"For this event, The workshop covered the expected topics.",NEUTRAL
+FB00051,E046,S0044,5,"Overall, The content was interesting and engaging.",POSITIVE
+FB00052,E038,S0292,2,"Overall, The venue was uncomfortable and crowded.",NEGATIVE
+FB00053,E063,S0197,2,"Overall, The workshop covered the expected topics.",NEUTRAL
+FB00054,E034,S0075,3,"For this event, The session was average.",NEUTRAL
+FB00055,E070,S0151,4,"Overall, Excellent organization and a knowledgeable speaker.",POSITIVE
+FB00056,E011,S0492,4,"From my experience, The workshop was excellent and very informative.",POSITIVE
+FB00057,E056,S0368,4,The session was well organized and useful.,POSITIVE
+FB00058,E019,S0439,3,"In my opinion, The event was neither good nor bad.",NEUTRAL
+FB00059,E067,S0342,1,"In my opinion, There were problems with the arrangements.",NEGATIVE
+FB00060,E049,S0033,2,"For this event, The session was average.",NEUTRAL
+FB00061,E051,S0187,2,"For this event, The event was conducted normally.",NEUTRAL
+FB00062,E013,S0158,3,"In my opinion, The session was average.",NEUTRAL
+FB00063,E067,S0113,3,"From my experience, The session was average.",NEUTRAL
+FB00064,E049,S0497,2,The content was as expected.,NEUTRAL
+FB00065,E097,S0244,1,"From my experience, The session was not useful.",NEGATIVE
+FB00066,E009,S0165,4,"In my opinion, Excellent organization and a knowledgeable speaker.",POSITIVE
+FB00067,E080,S0235,1,"In my opinion, The venue was uncomfortable and crowded.",NEGATIVE
+FB00068,E059,S0330,5,The content was interesting and engaging.,POSITIVE
+FB00069,E042,S0037,4,I really enjoyed this event and learned a lot.,POSITIVE
+FB00070,E094,S0418,3,"For this event, The session was average.",NEUTRAL
+FB00071,E012,S0190,5,"For this event, The session was well organized and useful.",POSITIVE
+FB00072,E023,S0498,2,"From my experience, The event started very late.",NEGATIVE
+FB00073,E036,S0025,2,"In my opinion, The content was as expected.",NEUTRAL
+FB00074,E036,S0150,2,"From my experience, The session was satisfactory.",NEUTRAL
+FB00075,E083,S0182,4,"For this event, The event was very helpful for my studies.",POSITIVE
+FB00076,E072,S0455,3,"Overall, The content was as expected.",NEUTRAL
+FB00077,E051,S0309,2,The session was satisfactory.,NEUTRAL
+FB00078,E086,S0094,5,"In my opinion, Excellent organization and a knowledgeable speaker.",POSITIVE
+FB00079,E099,S0384,4,"In my opinion, I really enjoyed this event and learned a lot.",POSITIVE
+FB00080,E081,S0179,3,"Overall, The workshop covered the expected topics.",NEUTRAL
+FB00081,E077,S0074,5,"In my opinion, The event was very helpful for my studies.",POSITIVE
+FB00082,E064,S0131,2,"In my opinion, The workshop covered the expected topics.",NEUTRAL
+FB00083,E056,S0081,2,"Overall, The workshop covered the expected topics.",NEUTRAL
+FB00084,E031,S0420,5,"For this event, The speaker explained the concepts clearly.",POSITIVE
+FB00085,E071,S0330,2,The event started very late.,NEGATIVE
+FB00086,E077,S0022,2,"For this event, The speaker did not explain the topic clearly.",NEGATIVE
+FB00087,E007,S0388,5,"Overall, The content was interesting and engaging.",POSITIVE
+FB00088,E058,S0169,5,"From my experience, I really enjoyed this event and learned a lot.",POSITIVE
+FB00089,E078,S0005,5,Excellent organization and a knowledgeable speaker.,POSITIVE
+FB00090,E089,S0023,4,"From my experience, The workshop was excellent and very informative.",POSITIVE
+FB00091,E080,S0299,2,"In my opinion, The workshop covered the expected topics.",NEUTRAL
+FB00092,E076,S0194,1,The organization was poor.,NEGATIVE
+FB00093,E047,S0384,4,"From my experience, I really enjoyed this event and learned a lot.",POSITIVE
+FB00094,E051,S0334,1,"From my experience, The event was disappointing.",NEGATIVE
+FB00095,E098,S0066,3,"From my experience, The event was fine.",NEUTRAL
+FB00096,E015,S0439,3,"In my opinion, The workshop covered the expected topics.",NEUTRAL
+FB00097,E036,S0296,5,The content was interesting and engaging.,POSITIVE
+FB00098,E068,S0285,4,"For this event, The event was very helpful for my studies.",POSITIVE
+FB00099,E013,S0056,5,"In my opinion, Excellent organization and a knowledgeable speaker.",POSITIVE
+FB00100,E063,S0008,4,Excellent organization and a knowledgeable speaker.,POSITIVE
+FB00101,E088,S0464,3,"From my experience, The workshop covered the expected topics.",NEUTRAL
+FB00102,E056,S0284,3,"Overall, The content was as expected.",NEUTRAL
+FB00103,E001,S0412,5,"Overall, The workshop was excellent and very informative.",POSITIVE
+FB00104,E022,S0131,4,"In my opinion, I really enjoyed this event and learned a lot.",POSITIVE
+FB00105,E001,S0483,4,"For this event, Excellent organization and a knowledgeable speaker.",POSITIVE
+FB00106,E034,S0028,2,"For this event, The content was as expected.",NEUTRAL
+FB00107,E078,S0297,1,The event started very late.,NEGATIVE
+FB00108,E006,S0368,2,"Overall, The event was neither good nor bad.",NEUTRAL
+FB00109,E097,S0410,1,"From my experience, The session was not useful.",NEGATIVE
+FB00110,E094,S0026,4,"For this event, I really enjoyed this event and learned a lot.",POSITIVE
+FB00111,E022,S0469,5,"For this event, Great event with practical examples.",POSITIVE
+FB00112,E045,S0021,4,"Overall, Great event with practical examples.",POSITIVE
+FB00113,E009,S0239,4,"From my experience, The session was well organized and useful.",POSITIVE
+FB00114,E054,S0185,1,The speaker did not explain the topic clearly.,NEGATIVE
+FB00115,E001,S0106,4,The workshop was excellent and very informative.,POSITIVE
+FB00116,E029,S0053,2,The event was fine.,NEUTRAL
+FB00117,E063,S0045,3,The event was neither good nor bad.,NEUTRAL
+FB00118,E009,S0345,3,"Overall, The event was conducted normally.",NEUTRAL
+FB00119,E087,S0400,4,The session was well organized and useful.,POSITIVE
+FB00120,E085,S0106,2,"Overall, The session was not useful.",NEGATIVE
+FB00121,E087,S0072,2,"For this event, The session was not useful.",NEGATIVE
+FB00122,E006,S0481,5,"Overall, The speaker explained the concepts clearly.",POSITIVE
+FB00123,E080,S0442,4,"In my opinion, The content was interesting and engaging.",POSITIVE
+FB00124,E040,S0346,3,"In my opinion, The event was fine.",NEUTRAL
+FB00125,E062,S0261,2,"For this event, The speaker did not explain the topic clearly.",NEGATIVE
+FB00126,E015,S0216,2,"From my experience, The speaker did not explain the topic clearly.",NEGATIVE
+FB00127,E075,S0182,5,"In my opinion, Excellent organization and a knowledgeable speaker.",POSITIVE
+FB00128,E013,S0423,3,"Overall, The session was average.",NEUTRAL
+FB00129,E040,S0309,1,"For this event, The event was disappointing.",NEGATIVE
+FB00130,E031,S0131,4,"From my experience, The session was well organized and useful.",POSITIVE
+FB00131,E070,S0433,2,"In my opinion, The session was average.",NEUTRAL
+FB00132,E059,S0252,5,"From my experience, I really enjoyed this event and learned a lot.",POSITIVE
+FB00133,E034,S0087,2,The workshop was okay.,NEUTRAL
+FB00134,E030,S0172,1,The session was not useful.,NEGATIVE
+FB00135,E045,S0235,1,The venue was too crowded.,NEGATIVE
+FB00136,E049,S0297,5,"In my opinion, The speaker explained the concepts clearly.",POSITIVE
+FB00137,E063,S0158,5,"From my experience, Great event with practical examples.",POSITIVE
+FB00138,E076,S0074,4,"In my opinion, Great event with practical examples.",POSITIVE
+FB00139,E075,S0197,5,"From my experience, I really enjoyed this event and learned a lot.",POSITIVE
+FB00140,E059,S0009,3,"Overall, The event was neither good nor bad.",NEUTRAL
+FB00141,E006,S0488,5,"Overall, Great event with practical examples.",POSITIVE
+FB00142,E059,S0165,4,"In my opinion, The speaker explained the concepts clearly.",POSITIVE
+FB00143,E010,S0106,2,"From my experience, The event started very late.",NEGATIVE
+FB00144,E066,S0061,3,"Overall, The session was average.",NEUTRAL
+FB00145,E039,S0164,5,"From my experience, Great event with practical examples.",POSITIVE
+FB00146,E033,S0025,2,"Overall, The organization was poor.",NEGATIVE
+FB00147,E054,S0429,2,"From my experience, The event was conducted normally.",NEUTRAL
+FB00148,E072,S0283,4,"In my opinion, The speaker explained the concepts clearly.",POSITIVE
+FB00149,E045,S0009,3,"In my opinion, The content was as expected.",NEUTRAL
+FB00150,E034,S0372,1,"For this event, The session was not useful.",NEGATIVE
+FB00151,E079,S0108,5,"Overall, The speaker explained the concepts clearly.",POSITIVE
+FB00152,E031,S0284,1,The event was disappointing.,NEGATIVE
+FB00153,E054,S0233,5,"For this event, Excellent organization and a knowledgeable speaker.",POSITIVE
+FB00154,E076,S0166,4,I really enjoyed this event and learned a lot.,POSITIVE
+FB00155,E098,S0365,3,"Overall, The event was neither good nor bad.",NEUTRAL
+FB00156,E005,S0134,5,"In my opinion, The speaker explained the concepts clearly.",POSITIVE
+FB00157,E048,S0173,3,The event was fine.,NEUTRAL
+FB00158,E091,S0115,1,"In my opinion, The event was disappointing.",NEGATIVE
+FB00159,E067,S0470,2,"For this event, The content was as expected.",NEUTRAL
+FB00160,E081,S0431,4,"For this event, The speaker explained the concepts clearly.",POSITIVE
+FB00161,E058,S0048,4,"In my opinion, The event was very helpful for my studies.",POSITIVE
+FB00162,E021,S0410,2,"From my experience, The venue was too crowded.",NEGATIVE
+FB00163,E005,S0430,2,"Overall, The event was neither good nor bad.",NEUTRAL
+FB00164,E060,S0392,5,"From my experience, Excellent organization and a knowledgeable speaker.",POSITIVE
+FB00165,E071,S0091,3,"For this event, The event was conducted normally.",NEUTRAL
+FB00166,E006,S0097,1,"Overall, The speaker did not explain the topic clearly.",NEGATIVE
+FB00167,E049,S0390,5,"From my experience, The content was interesting and engaging.",POSITIVE
+FB00168,E031,S0231,2,The session was not useful.,NEGATIVE
+FB00169,E039,S0403,1,"From my experience, The venue was too crowded.",NEGATIVE
+FB00170,E082,S0437,3,"In my opinion, The workshop covered the expected topics.",NEUTRAL
+FB00171,E064,S0270,1,The speaker did not explain the topic clearly.,NEGATIVE
+FB00172,E025,S0141,4,"In my opinion, The event was very helpful for my studies.",POSITIVE
+FB00173,E057,S0313,1,The venue was uncomfortable and crowded.,NEGATIVE
+FB00174,E084,S0325,2,"For this event, The event started very late.",NEGATIVE
+FB00175,E099,S0298,1,"Overall, The speaker did not explain the topic clearly.",NEGATIVE
+FB00176,E011,S0454,5,Great event with practical examples.,POSITIVE
+FB00177,E047,S0284,4,"For this event, The content was interesting and engaging.",POSITIVE
+FB00178,E052,S0151,4,"For this event, The event was very helpful for my studies.",POSITIVE
+FB00179,E019,S0023,5,"Overall, The content was interesting and engaging.",POSITIVE
+FB00180,E051,S0179,4,"Overall, The event was very helpful for my studies.",POSITIVE
+FB00181,E046,S0417,2,The event was fine.,NEUTRAL
+FB00182,E083,S0251,4,"For this event, The workshop was excellent and very informative.",POSITIVE
+FB00183,E001,S0167,4,"For this event, The speaker explained the concepts clearly.",POSITIVE
+FB00184,E021,S0188,2,"Overall, The organization was poor.",NEGATIVE
+FB00185,E050,S0398,5,"In my opinion, The content was interesting and engaging.",POSITIVE
+FB00186,E087,S0481,1,"Overall, The event was disappointing.",NEGATIVE
+FB00187,E100,S0048,4,"In my opinion, The session was well organized and useful.",POSITIVE
+FB00188,E082,S0040,2,"In my opinion, The event was conducted normally.",NEUTRAL
+FB00189,E072,S0320,1,"From my experience, The event started very late.",NEGATIVE
+FB00190,E065,S0309,2,"In my opinion, The session was average.",NEUTRAL
+FB00191,E011,S0300,4,"Overall, The event was very helpful for my studies.",POSITIVE
+FB00192,E082,S0045,3,The content was as expected.,NEUTRAL
+FB00193,E073,S0485,5,"For this event, The event was very helpful for my studies.",POSITIVE
+FB00194,E098,S0359,3,"Overall, The workshop was okay.",NEUTRAL
+FB00195,E039,S0400,5,The workshop was excellent and very informative.,POSITIVE
+FB00196,E034,S0063,2,"In my opinion, The session was average.",NEUTRAL
+FB00197,E097,S0371,4,"From my experience, The speaker explained the concepts clearly.",POSITIVE
+FB00198,E011,S0248,3,"Overall, The workshop covered the expected topics.",NEUTRAL
+FB00199,E077,S0098,4,"For this event, The session was well organized and useful.",POSITIVE
+FB00200,E065,S0134,5,"In my opinion, The content was interesting and engaging.",POSITIVE
+FB00201,E082,S0256,2,"From my experience, The content was as expected.",NEUTRAL
+FB00202,E015,S0244,4,"From my experience, Great event with practical examples.",POSITIVE
+FB00203,E093,S0325,2,"In my opinion, The session was satisfactory.",NEUTRAL
+FB00204,E059,S0221,2,"Overall, The event started very late.",NEGATIVE
+FB00205,E006,S0025,1,"In my opinion, The venue was uncomfortable and crowded.",NEGATIVE
+FB00206,E089,S0189,2,"In my opinion, The session was satisfactory.",NEUTRAL
+FB00207,E087,S0474,4,"Overall, The session was well organized and useful.",POSITIVE
+FB00208,E099,S0044,3,The workshop was okay.,NEUTRAL
+FB00209,E057,S0101,2,"In my opinion, The session was satisfactory.",NEUTRAL
+FB00210,E094,S0184,4,"Overall, Great event with practical examples.",POSITIVE
+FB00211,E084,S0201,2,"In my opinion, The venue was uncomfortable and crowded.",NEGATIVE
+FB00212,E042,S0136,2,"In my opinion, The content was as expected.",NEUTRAL
+FB00213,E051,S0166,5,"For this event, I really enjoyed this event and learned a lot.",POSITIVE
+FB00214,E073,S0214,1,"For this event, The session was not useful.",NEGATIVE
+FB00215,E083,S0313,4,"In my opinion, The event was very helpful for my studies.",POSITIVE
+FB00216,E063,S0448,4,"For this event, The workshop was excellent and very informative.",POSITIVE
+FB00217,E017,S0424,5,"In my opinion, The event was very helpful for my studies.",POSITIVE
+FB00218,E013,S0035,4,"Overall, The speaker explained the concepts clearly.",POSITIVE
+FB00219,E026,S0076,2,"In my opinion, The venue was uncomfortable and crowded.",NEGATIVE
+FB00220,E059,S0165,4,"In my opinion, I really enjoyed this event and learned a lot.",POSITIVE
+FB00221,E051,S0246,4,"Overall, Great event with practical examples.",POSITIVE
+FB00222,E035,S0408,1,The speaker did not explain the topic clearly.,NEGATIVE
+FB00223,E059,S0021,5,"In my opinion, The speaker explained the concepts clearly.",POSITIVE
+FB00224,E085,S0108,2,"In my opinion, The event started very late.",NEGATIVE
+FB00225,E073,S0071,1,"From my experience, The session was not useful.",NEGATIVE
+FB00226,E099,S0360,5,"Overall, I really enjoyed this event and learned a lot.",POSITIVE
+FB00227,E063,S0200,4,I really enjoyed this event and learned a lot.,POSITIVE
+FB00228,E035,S0118,2,"In my opinion, The workshop covered the expected topics.",NEUTRAL
+FB00229,E020,S0258,5,"In my opinion, The workshop was excellent and very informative.",POSITIVE
+FB00230,E007,S0340,4,"Overall, The workshop was excellent and very informative.",POSITIVE
+FB00231,E047,S0086,5,Excellent organization and a knowledgeable speaker.,POSITIVE
+FB00232,E068,S0095,5,The session was well organized and useful.,POSITIVE
+FB00233,E041,S0088,5,"From my experience, I really enjoyed this event and learned a lot.",POSITIVE
+FB00234,E051,S0195,1,"Overall, The speaker did not explain the topic clearly.",NEGATIVE
+FB00235,E087,S0267,2,"In my opinion, The session was not useful.",NEGATIVE
+FB00236,E074,S0363,4,"For this event, The content was interesting and engaging.",POSITIVE
+FB00237,E041,S0368,5,"Overall, The content was interesting and engaging.",POSITIVE
+FB00238,E036,S0187,1,"From my experience, There were problems with the arrangements.",NEGATIVE
+FB00239,E064,S0421,3,The session was average.,NEUTRAL
+FB00240,E075,S0179,3,"From my experience, The event was neither good nor bad.",NEUTRAL
+FB00241,E060,S0273,5,"In my opinion, The content was interesting and engaging.",POSITIVE
+FB00242,E032,S0220,5,"In my opinion, Great event with practical examples.",POSITIVE
+FB00243,E032,S0429,1,The organization was poor.,NEGATIVE
+FB00244,E096,S0363,4,The speaker explained the concepts clearly.,POSITIVE
+FB00245,E099,S0109,4,"In my opinion, The workshop was excellent and very informative.",POSITIVE
+FB00246,E058,S0049,4,"For this event, I really enjoyed this event and learned a lot.",POSITIVE
+FB00247,E055,S0157,2,The organization was poor.,NEGATIVE
+FB00248,E076,S0092,5,"Overall, The event was very helpful for my studies.",POSITIVE
+FB00249,E006,S0268,1,"From my experience, There were problems with the arrangements.",NEGATIVE
+FB00250,E080,S0209,2,"From my experience, The venue was uncomfortable and crowded.",NEGATIVE
+FB00251,E019,S0266,5,"Overall, Great event with practical examples.",POSITIVE
+FB00252,E039,S0024,4,The speaker explained the concepts clearly.,POSITIVE
+FB00253,E040,S0071,3,"For this event, The event was neither good nor bad.",NEUTRAL
+FB00254,E036,S0019,5,"For this event, Great event with practical examples.",POSITIVE
+FB00255,E009,S0366,4,"Overall, Excellent organization and a knowledgeable speaker.",POSITIVE
+FB00256,E040,S0166,2,"In my opinion, There were problems with the arrangements.",NEGATIVE
+FB00257,E023,S0234,2,The event was conducted normally.,NEUTRAL
+FB00258,E037,S0321,2,The event was disappointing.,NEGATIVE
+FB00259,E046,S0150,4,"In my opinion, The speaker explained the concepts clearly.",POSITIVE
+FB00260,E024,S0337,4,"In my opinion, The event was very helpful for my studies.",POSITIVE
+FB00261,E029,S0165,2,"In my opinion, The event was conducted normally.",NEUTRAL
+FB00262,E056,S0357,5,"From my experience, I really enjoyed this event and learned a lot.",POSITIVE
+FB00263,E084,S0178,1,"Overall, The venue was too crowded.",NEGATIVE
+FB00264,E044,S0053,4,"For this event, Excellent organization and a knowledgeable speaker.",POSITIVE
+FB00265,E073,S0116,5,"From my experience, I really enjoyed this event and learned a lot.",POSITIVE
+FB00266,E081,S0090,4,"For this event, I really enjoyed this event and learned a lot.",POSITIVE
+FB00267,E062,S0365,5,The event was very helpful for my studies.,POSITIVE
+FB00268,E094,S0164,4,I really enjoyed this event and learned a lot.,POSITIVE
+FB00269,E085,S0359,5,The speaker explained the concepts clearly.,POSITIVE
+FB00270,E006,S0080,3,"From my experience, The event was fine.",NEUTRAL
+FB00271,E010,S0008,4,The event was very helpful for my studies.,POSITIVE
+FB00272,E013,S0375,5,"For this event, The speaker explained the concepts clearly.",POSITIVE
+FB00273,E013,S0395,5,"For this event, The event was very helpful for my studies.",POSITIVE
+FB00274,E061,S0354,4,"In my opinion, The event was very helpful for my studies.",POSITIVE
+FB00275,E037,S0022,2,The content was as expected.,NEUTRAL
+FB00276,E077,S0060,4,"For this event, The speaker explained the concepts clearly.",POSITIVE
+FB00277,E075,S0018,3,The workshop was okay.,NEUTRAL
+FB00278,E012,S0015,4,"Overall, Great event with practical examples.",POSITIVE
+FB00279,E055,S0402,2,"From my experience, The session was average.",NEUTRAL
+FB00280,E044,S0052,5,"Overall, The workshop was excellent and very informative.",POSITIVE
+FB00281,E077,S0111,1,"In my opinion, The session was not useful.",NEGATIVE
+FB00282,E082,S0481,4,"Overall, The speaker explained the concepts clearly.",POSITIVE
+FB00283,E059,S0195,5,The session was well organized and useful.,POSITIVE
+FB00284,E071,S0463,1,"For this event, There were problems with the arrangements.",NEGATIVE
+FB00285,E013,S0081,5,"From my experience, Great event with practical examples.",POSITIVE
+FB00286,E100,S0380,2,"In my opinion, The event was neither good nor bad.",NEUTRAL
+FB00287,E008,S0485,2,"In my opinion, The organization was poor.",NEGATIVE
+FB00288,E062,S0015,1,"From my experience, The venue was uncomfortable and crowded.",NEGATIVE
+FB00289,E010,S0432,2,"For this event, The event was neither good nor bad.",NEUTRAL
+FB00290,E008,S0122,1,"In my opinion, The event was disappointing.",NEGATIVE
+FB00291,E038,S0146,4,"For this event, The session was well organized and useful.",POSITIVE
+FB00292,E049,S0374,2,"In my opinion, The venue was too crowded.",NEGATIVE
+FB00293,E009,S0284,5,"For this event, Excellent organization and a knowledgeable speaker.",POSITIVE
+FB00294,E089,S0118,2,The organization was poor.,NEGATIVE
+FB00295,E033,S0036,4,"In my opinion, The workshop was excellent and very informative.",POSITIVE
+FB00296,E057,S0188,2,"Overall, There were problems with the arrangements.",NEGATIVE
+FB00297,E063,S0276,2,"In my opinion, The event started very late.",NEGATIVE
+FB00298,E049,S0426,2,"For this event, The session was not useful.",NEGATIVE
+FB00299,E012,S0019,5,"From my experience, The workshop was excellent and very informative.",POSITIVE
+FB00300,E018,S0236,3,"From my experience, The content was as expected.",NEUTRAL
+FB00301,E086,S0265,4,"For this event, I really enjoyed this event and learned a lot.",POSITIVE
+FB00302,E055,S0391,3,The content was as expected.,NEUTRAL
+FB00303,E048,S0284,5,"Overall, The workshop was excellent and very informative.",POSITIVE
+FB00304,E072,S0306,4,"In my opinion, Excellent organization and a knowledgeable speaker.",POSITIVE
+FB00305,E001,S0332,5,"In my opinion, Excellent organization and a knowledgeable speaker.",POSITIVE
+FB00306,E073,S0251,2,"For this event, The venue was too crowded.",NEGATIVE
+FB00307,E004,S0402,5,"In my opinion, Excellent organization and a knowledgeable speaker.",POSITIVE
+FB00308,E020,S0437,2,"For this event, The session was satisfactory.",NEUTRAL
+FB00309,E074,S0494,3,"For this event, The workshop was okay.",NEUTRAL
+FB00310,E076,S0362,4,"For this event, The speaker explained the concepts clearly.",POSITIVE
+FB00311,E028,S0367,2,"From my experience, The session was satisfactory.",NEUTRAL
+FB00312,E091,S0494,3,"In my opinion, The session was satisfactory.",NEUTRAL
+FB00313,E086,S0217,5,"From my experience, I really enjoyed this event and learned a lot.",POSITIVE
+FB00314,E034,S0208,5,"For this event, The speaker explained the concepts clearly.",POSITIVE
+FB00315,E092,S0415,5,"For this event, I really enjoyed this event and learned a lot.",POSITIVE
+FB00316,E043,S0167,1,"For this event, The session was not useful.",NEGATIVE
+FB00317,E012,S0121,2,"In my opinion, The content was as expected.",NEUTRAL
+FB00318,E063,S0373,1,"From my experience, The speaker did not explain the topic clearly.",NEGATIVE
+FB00319,E077,S0345,2,"In my opinion, The session was average.",NEUTRAL
+FB00320,E096,S0136,2,"Overall, The session was satisfactory.",NEUTRAL
+FB00321,E094,S0483,5,"Overall, Excellent organization and a knowledgeable speaker.",POSITIVE
+FB00322,E030,S0469,4,"Overall, The event was very helpful for my studies.",POSITIVE
+FB00323,E022,S0013,2,"Overall, The event started very late.",NEGATIVE
+FB00324,E099,S0213,5,"For this event, The event was very helpful for my studies.",POSITIVE
+FB00325,E037,S0305,5,"From my experience, The session was well organized and useful.",POSITIVE
+FB00326,E035,S0342,4,The content was interesting and engaging.,POSITIVE
+FB00327,E044,S0104,4,The session was well organized and useful.,POSITIVE
+FB00328,E052,S0454,2,"Overall, The organization was poor.",NEGATIVE
+FB00329,E061,S0493,4,"From my experience, I really enjoyed this event and learned a lot.",POSITIVE
+FB00330,E083,S0174,2,"In my opinion, The event was disappointing.",NEGATIVE
+FB00331,E077,S0303,3,"In my opinion, The workshop was okay.",NEUTRAL
+FB00332,E081,S0021,1,"Overall, The venue was uncomfortable and crowded.",NEGATIVE
+FB00333,E067,S0326,3,"Overall, The content was as expected.",NEUTRAL
+FB00334,E020,S0425,2,"In my opinion, The event was disappointing.",NEGATIVE
+FB00335,E065,S0171,5,The workshop was excellent and very informative.,POSITIVE
+FB00336,E090,S0282,5,Great event with practical examples.,POSITIVE
+FB00337,E027,S0261,5,"For this event, The session was well organized and useful.",POSITIVE
+FB00338,E041,S0039,2,The speaker did not explain the topic clearly.,NEGATIVE
+FB00339,E066,S0033,5,"In my opinion, The event was very helpful for my studies.",POSITIVE
+FB00340,E087,S0296,5,"Overall, Excellent organization and a knowledgeable speaker.",POSITIVE
+FB00341,E082,S0148,2,"In my opinion, The session was not useful.",NEGATIVE
+FB00342,E063,S0163,1,"In my opinion, There were problems with the arrangements.",NEGATIVE
+FB00343,E019,S0429,5,"For this event, I really enjoyed this event and learned a lot.",POSITIVE
+FB00344,E022,S0285,3,The workshop was okay.,NEUTRAL
+FB00345,E061,S0302,4,The workshop was excellent and very informative.,POSITIVE
+FB00346,E069,S0061,5,"In my opinion, I really enjoyed this event and learned a lot.",POSITIVE
+FB00347,E023,S0068,5,"For this event, The session was well organized and useful.",POSITIVE
+FB00348,E044,S0180,4,"In my opinion, The event was very helpful for my studies.",POSITIVE
+FB00349,E095,S0431,2,"From my experience, The venue was too crowded.",NEGATIVE
+FB00350,E079,S0047,2,"From my experience, The speaker did not explain the topic clearly.",NEGATIVE
+FB00351,E028,S0103,3,The event was neither good nor bad.,NEUTRAL
+FB00352,E025,S0390,2,"In my opinion, The event was disappointing.",NEGATIVE
+FB00353,E094,S0310,4,The event was very helpful for my studies.,POSITIVE
+FB00354,E048,S0176,5,"From my experience, Excellent organization and a knowledgeable speaker.",POSITIVE
+FB00355,E069,S0491,4,"From my experience, Excellent organization and a knowledgeable speaker.",POSITIVE
+FB00356,E012,S0450,5,"In my opinion, The workshop was excellent and very informative.",POSITIVE
+FB00357,E026,S0204,4,"For this event, The content was interesting and engaging.",POSITIVE
+FB00358,E055,S0077,5,Great event with practical examples.,POSITIVE
+FB00359,E040,S0471,3,"In my opinion, The workshop covered the expected topics.",NEUTRAL
+FB00360,E026,S0055,4,"From my experience, The event was very helpful for my studies.",POSITIVE
+FB00361,E100,S0409,2,The workshop covered the expected topics.,NEUTRAL
+FB00362,E072,S0293,5,"Overall, The content was interesting and engaging.",POSITIVE
+FB00363,E088,S0133,3,The session was satisfactory.,NEUTRAL
+FB00364,E017,S0475,5,"For this event, Great event with practical examples.",POSITIVE
+FB00365,E057,S0362,5,"In my opinion, The session was well organized and useful.",POSITIVE
+FB00366,E042,S0262,2,"In my opinion, The content was as expected.",NEUTRAL
+FB00367,E040,S0244,3,"For this event, The session was average.",NEUTRAL
+FB00368,E100,S0368,4,The workshop was excellent and very informative.,POSITIVE
+FB00369,E050,S0256,2,The workshop covered the expected topics.,NEUTRAL
+FB00370,E035,S0472,3,"From my experience, The content was as expected.",NEUTRAL
+FB00371,E023,S0305,1,The organization was poor.,NEGATIVE
+FB00372,E025,S0027,2,"Overall, The event was fine.",NEUTRAL
+FB00373,E012,S0307,5,"For this event, Great event with practical examples.",POSITIVE
+FB00374,E067,S0479,3,"From my experience, The event was fine.",NEUTRAL
+FB00375,E039,S0174,2,"In my opinion, The venue was uncomfortable and crowded.",NEGATIVE
+FB00376,E010,S0214,5,"For this event, The session was well organized and useful.",POSITIVE
+FB00377,E097,S0040,1,"In my opinion, The speaker did not explain the topic clearly.",NEGATIVE
+FB00378,E030,S0275,4,"For this event, The content was interesting and engaging.",POSITIVE
+FB00379,E028,S0040,1,"In my opinion, The session was not useful.",NEGATIVE
+FB00380,E099,S0067,4,"In my opinion, The workshop was excellent and very informative.",POSITIVE
+FB00381,E018,S0387,4,"From my experience, The workshop was excellent and very informative.",POSITIVE
+FB00382,E009,S0142,1,The venue was too crowded.,NEGATIVE
+FB00383,E013,S0470,2,The workshop covered the expected topics.,NEUTRAL
+FB00384,E019,S0319,2,"For this event, The organization was poor.",NEGATIVE
+FB00385,E078,S0262,3,"From my experience, The event was conducted normally.",NEUTRAL
+FB00386,E029,S0215,5,Great event with practical examples.,POSITIVE
+FB00387,E096,S0230,4,"In my opinion, The speaker explained the concepts clearly.",POSITIVE
+FB00388,E047,S0355,2,"For this event, There were problems with the arrangements.",NEGATIVE
+FB00389,E089,S0314,2,The workshop covered the expected topics.,NEUTRAL
+FB00390,E088,S0330,4,"Overall, The content was interesting and engaging.",POSITIVE
+FB00391,E099,S0297,4,The content was interesting and engaging.,POSITIVE
+FB00392,E089,S0019,5,"In my opinion, The session was well organized and useful.",POSITIVE
+FB00393,E044,S0468,1,"From my experience, There were problems with the arrangements.",NEGATIVE
+FB00394,E081,S0187,4,"For this event, Great event with practical examples.",POSITIVE
+FB00395,E068,S0425,4,"In my opinion, I really enjoyed this event and learned a lot.",POSITIVE
+FB00396,E061,S0494,5,"In my opinion, The speaker explained the concepts clearly.",POSITIVE
+FB00397,E076,S0057,5,"Overall, I really enjoyed this event and learned a lot.",POSITIVE
+FB00398,E042,S0377,5,"In my opinion, The content was interesting and engaging.",POSITIVE
+FB00399,E097,S0431,5,"Overall, The content was interesting and engaging.",POSITIVE
+FB00400,E084,S0001,1,"In my opinion, The event started very late.",NEGATIVE
+FB00401,E096,S0350,5,I really enjoyed this event and learned a lot.,POSITIVE
+FB00402,E072,S0068,4,"For this event, The workshop was excellent and very informative.",POSITIVE
+FB00403,E090,S0183,1,"From my experience, There were problems with the arrangements.",NEGATIVE
+FB00404,E022,S0045,4,"Overall, The workshop was excellent and very informative.",POSITIVE
+FB00405,E036,S0106,2,"From my experience, The event started very late.",NEGATIVE
+FB00406,E052,S0097,5,"For this event, The session was well organized and useful.",POSITIVE
+FB00407,E086,S0232,3,"Overall, The workshop was okay.",NEUTRAL
+FB00408,E065,S0388,4,"In my opinion, Great event with practical examples.",POSITIVE
+FB00409,E021,S0202,5,"Overall, The content was interesting and engaging.",POSITIVE
+FB00410,E052,S0217,4,"From my experience, Great event with practical examples.",POSITIVE
+FB00411,E042,S0319,4,"For this event, I really enjoyed this event and learned a lot.",POSITIVE
+FB00412,E060,S0039,4,"In my opinion, The workshop was excellent and very informative.",POSITIVE
+FB00413,E025,S0470,2,The speaker did not explain the topic clearly.,NEGATIVE
+FB00414,E066,S0347,2,"In my opinion, The event was fine.",NEUTRAL
+FB00415,E034,S0350,4,"In my opinion, Great event with practical examples.",POSITIVE
+FB00416,E060,S0281,3,The event was fine.,NEUTRAL
+FB00417,E028,S0447,4,"In my opinion, The speaker explained the concepts clearly.",POSITIVE
+FB00418,E088,S0139,4,"In my opinion, I really enjoyed this event and learned a lot.",POSITIVE
+FB00419,E047,S0057,5,"From my experience, Excellent organization and a knowledgeable speaker.",POSITIVE
+FB00420,E097,S0394,1,The organization was poor.,NEGATIVE
+FB00421,E067,S0159,3,"Overall, The workshop covered the expected topics.",NEUTRAL
+FB00422,E094,S0309,4,"In my opinion, The workshop was excellent and very informative.",POSITIVE
+FB00423,E007,S0376,2,"In my opinion, The session was not useful.",NEGATIVE
+FB00424,E053,S0212,1,"From my experience, There were problems with the arrangements.",NEGATIVE
+FB00425,E002,S0131,5,"In my opinion, Excellent organization and a knowledgeable speaker.",POSITIVE
+FB00426,E049,S0053,2,"From my experience, The organization was poor.",NEGATIVE
+FB00427,E099,S0340,2,"From my experience, The venue was too crowded.",NEGATIVE
+FB00428,E096,S0200,5,"In my opinion, Great event with practical examples.",POSITIVE
+FB00429,E023,S0424,3,"In my opinion, The workshop covered the expected topics.",NEUTRAL
+FB00430,E088,S0227,4,"In my opinion, I really enjoyed this event and learned a lot.",POSITIVE
+FB00431,E088,S0420,5,The event was very helpful for my studies.,POSITIVE
+FB00432,E018,S0456,4,"For this event, The content was interesting and engaging.",POSITIVE
+FB00433,E006,S0475,5,"For this event, The workshop was excellent and very informative.",POSITIVE
+FB00434,E034,S0224,5,"From my experience, The event was very helpful for my studies.",POSITIVE
+FB00435,E036,S0262,4,Excellent organization and a knowledgeable speaker.,POSITIVE
+FB00436,E009,S0225,4,The content was interesting and engaging.,POSITIVE
+FB00437,E092,S0104,1,"Overall, The event was disappointing.",NEGATIVE
+FB00438,E073,S0260,4,"Overall, Excellent organization and a knowledgeable speaker.",POSITIVE
+FB00439,E076,S0082,3,"For this event, The event was conducted normally.",NEUTRAL
+FB00440,E051,S0351,5,I really enjoyed this event and learned a lot.,POSITIVE
+FB00441,E073,S0297,4,"In my opinion, The speaker explained the concepts clearly.",POSITIVE
+FB00442,E038,S0371,4,"From my experience, The event was very helpful for my studies.",POSITIVE
+FB00443,E061,S0022,1,"Overall, The venue was uncomfortable and crowded.",NEGATIVE
+FB00444,E024,S0189,5,"In my opinion, The workshop was excellent and very informative.",POSITIVE
+FB00445,E099,S0166,5,"From my experience, The content was interesting and engaging.",POSITIVE
+FB00446,E019,S0356,1,There were problems with the arrangements.,NEGATIVE
+FB00447,E031,S0200,1,"Overall, The organization was poor.",NEGATIVE
+FB00448,E041,S0375,5,"Overall, The content was interesting and engaging.",POSITIVE
+FB00449,E019,S0374,2,"For this event, The content was as expected.",NEUTRAL
+FB00450,E004,S0367,5,"Overall, The speaker explained the concepts clearly.",POSITIVE
+FB00451,E047,S0117,5,The content was interesting and engaging.,POSITIVE
+FB00452,E055,S0257,1,"For this event, The organization was poor.",NEGATIVE
+FB00453,E073,S0068,5,"From my experience, I really enjoyed this event and learned a lot.",POSITIVE
+FB00454,E060,S0033,2,"Overall, The session was satisfactory.",NEUTRAL
+FB00455,E083,S0330,1,"For this event, The organization was poor.",NEGATIVE
+FB00456,E097,S0188,4,Great event with practical examples.,POSITIVE
+FB00457,E082,S0350,5,The event was very helpful for my studies.,POSITIVE
+FB00458,E026,S0320,5,"In my opinion, I really enjoyed this event and learned a lot.",POSITIVE
+FB00459,E062,S0454,2,"For this event, The event was neither good nor bad.",NEUTRAL
+FB00460,E039,S0205,2,"From my experience, The organization was poor.",NEGATIVE
+FB00461,E033,S0171,4,Great event with practical examples.,POSITIVE
+FB00462,E078,S0480,4,I really enjoyed this event and learned a lot.,POSITIVE
+FB00463,E052,S0025,3,"In my opinion, The session was average.",NEUTRAL
+FB00464,E034,S0367,2,"For this event, The speaker did not explain the topic clearly.",NEGATIVE
+FB00465,E023,S0322,2,"From my experience, The workshop covered the expected topics.",NEUTRAL
+FB00466,E032,S0489,4,"Overall, The workshop was excellent and very informative.",POSITIVE
+FB00467,E071,S0085,1,"In my opinion, The venue was uncomfortable and crowded.",NEGATIVE
+FB00468,E039,S0341,5,Excellent organization and a knowledgeable speaker.,POSITIVE
+FB00469,E076,S0020,4,"Overall, I really enjoyed this event and learned a lot.",POSITIVE
+FB00470,E070,S0453,3,"For this event, The event was conducted normally.",NEUTRAL
+FB00471,E005,S0185,4,"In my opinion, The workshop was excellent and very informative.",POSITIVE
+FB00472,E003,S0377,2,"From my experience, The session was average.",NEUTRAL
+FB00473,E008,S0160,4,Excellent organization and a knowledgeable speaker.,POSITIVE
+FB00474,E039,S0012,5,Great event with practical examples.,POSITIVE
+FB00475,E002,S0178,1,"From my experience, There were problems with the arrangements.",NEGATIVE
+FB00476,E082,S0486,4,I really enjoyed this event and learned a lot.,POSITIVE
+FB00477,E051,S0306,2,"Overall, The session was average.",NEUTRAL
+FB00478,E007,S0421,5,"For this event, The workshop was excellent and very informative.",POSITIVE
+FB00479,E030,S0174,2,The venue was uncomfortable and crowded.,NEGATIVE
+FB00480,E096,S0432,5,"In my opinion, I really enjoyed this event and learned a lot.",POSITIVE
+FB00481,E066,S0219,5,"Overall, The event was very helpful for my studies.",POSITIVE
+FB00482,E001,S0202,3,"In my opinion, The content was as expected.",NEUTRAL
+FB00483,E015,S0283,3,"For this event, The workshop covered the expected topics.",NEUTRAL
+FB00484,E086,S0375,2,"For this event, The session was average.",NEUTRAL
+FB00485,E053,S0246,4,I really enjoyed this event and learned a lot.,POSITIVE
+FB00486,E052,S0370,5,The content was interesting and engaging.,POSITIVE
+FB00487,E048,S0183,4,The content was interesting and engaging.,POSITIVE
+FB00488,E034,S0151,4,"Overall, The speaker explained the concepts clearly.",POSITIVE
+FB00489,E091,S0035,1,"In my opinion, The organization was poor.",NEGATIVE
+FB00490,E021,S0159,4,"From my experience, The workshop was excellent and very informative.",POSITIVE
+FB00491,E084,S0177,2,"Overall, The content was as expected.",NEUTRAL
+FB00492,E058,S0317,1,"From my experience, The event was disappointing.",NEGATIVE
+FB00493,E060,S0168,2,"From my experience, The event was disappointing.",NEGATIVE
+FB00494,E068,S0408,5,"From my experience, I really enjoyed this event and learned a lot.",POSITIVE
+FB00495,E059,S0029,5,The session was well organized and useful.,POSITIVE
+FB00496,E082,S0483,2,"From my experience, The event started very late.",NEGATIVE
+FB00497,E034,S0144,1,"In my opinion, The venue was too crowded.",NEGATIVE
+FB00498,E073,S0215,1,The event was disappointing.,NEGATIVE
+FB00499,E041,S0461,4,"In my opinion, The event was very helpful for my studies.",POSITIVE
+FB00500,E037,S0154,2,"For this event, The session was average.",NEUTRAL
+FB00501,E041,S0310,5,"In my opinion, The content was interesting and engaging.",POSITIVE
+FB00502,E074,S0386,4,"From my experience, The speaker explained the concepts clearly.",POSITIVE
+FB00503,E039,S0500,1,"For this event, The venue was too crowded.",NEGATIVE
+FB00504,E053,S0456,4,"From my experience, The content was interesting and engaging.",POSITIVE
+FB00505,E077,S0260,2,"Overall, The session was not useful.",NEGATIVE
+FB00506,E037,S0201,5,"From my experience, I really enjoyed this event and learned a lot.",POSITIVE
+FB00507,E071,S0259,4,"For this event, The content was interesting and engaging.",POSITIVE
+FB00508,E070,S0372,5,"From my experience, I really enjoyed this event and learned a lot.",POSITIVE
+FB00509,E019,S0415,1,"For this event, The speaker did not explain the topic clearly.",NEGATIVE
+FB00510,E025,S0458,2,"Overall, The event was conducted normally.",NEUTRAL
+FB00511,E074,S0049,2,"From my experience, The organization was poor.",NEGATIVE
+FB00512,E086,S0195,2,"For this event, The event was disappointing.",NEGATIVE
+FB00513,E064,S0310,1,"For this event, The venue was uncomfortable and crowded.",NEGATIVE
+FB00514,E063,S0198,4,"For this event, The event was very helpful for my studies.",POSITIVE
+FB00515,E091,S0232,4,"For this event, The session was well organized and useful.",POSITIVE
+FB00516,E087,S0279,3,"From my experience, The session was satisfactory.",NEUTRAL
+FB00517,E018,S0115,5,Great event with practical examples.,POSITIVE
+FB00518,E050,S0483,1,"In my opinion, There were problems with the arrangements.",NEGATIVE
+FB00519,E046,S0311,5,"For this event, The content was interesting and engaging.",POSITIVE
+FB00520,E066,S0070,5,The content was interesting and engaging.,POSITIVE
+FB00521,E032,S0045,2,"From my experience, The event was fine.",NEUTRAL
+FB00522,E074,S0076,4,"Overall, The content was interesting and engaging.",POSITIVE
+FB00523,E026,S0351,2,"For this event, The event was disappointing.",NEGATIVE
+FB00524,E053,S0036,4,I really enjoyed this event and learned a lot.,POSITIVE
+FB00525,E096,S0269,4,The workshop was excellent and very informative.,POSITIVE
+FB00526,E095,S0141,5,"Overall, The event was very helpful for my studies.",POSITIVE
+FB00527,E074,S0282,4,The event was very helpful for my studies.,POSITIVE
+FB00528,E097,S0066,5,The session was well organized and useful.,POSITIVE
+FB00529,E036,S0115,1,"In my opinion, The venue was uncomfortable and crowded.",NEGATIVE
+FB00530,E011,S0429,3,"From my experience, The workshop covered the expected topics.",NEUTRAL
+FB00531,E097,S0115,5,"Overall, The workshop was excellent and very informative.",POSITIVE
+FB00532,E092,S0278,2,"For this event, The venue was uncomfortable and crowded.",NEGATIVE
+FB00533,E014,S0265,2,"In my opinion, The content was as expected.",NEUTRAL
+FB00534,E020,S0092,5,"For this event, The content was interesting and engaging.",POSITIVE
+FB00535,E040,S0240,3,"In my opinion, The event was fine.",NEUTRAL
+FB00536,E012,S0105,5,The speaker explained the concepts clearly.,POSITIVE
+FB00537,E033,S0202,4,"Overall, Excellent organization and a knowledgeable speaker.",POSITIVE
+FB00538,E007,S0318,2,"In my opinion, The event was fine.",NEUTRAL
+FB00539,E086,S0370,2,The content was as expected.,NEUTRAL
+FB00540,E080,S0470,3,"In my opinion, The session was satisfactory.",NEUTRAL
+FB00541,E017,S0082,4,"From my experience, The workshop was excellent and very informative.",POSITIVE
+FB00542,E095,S0124,2,"Overall, The event was fine.",NEUTRAL
+FB00543,E062,S0018,2,"From my experience, The event was fine.",NEUTRAL
+FB00544,E067,S0189,3,"For this event, The workshop was okay.",NEUTRAL
+FB00545,E057,S0348,5,"From my experience, Great event with practical examples.",POSITIVE
+FB00546,E087,S0349,1,The session was not useful.,NEGATIVE
+FB00547,E067,S0475,2,"For this event, The event was conducted normally.",NEUTRAL
+FB00548,E060,S0203,5,"For this event, The event was very helpful for my studies.",POSITIVE
+FB00549,E060,S0317,3,"For this event, The event was conducted normally.",NEUTRAL
+FB00550,E009,S0178,2,"Overall, There were problems with the arrangements.",NEGATIVE
+FB00551,E047,S0196,3,"For this event, The content was as expected.",NEUTRAL
+FB00552,E090,S0293,5,"From my experience, Excellent organization and a knowledgeable speaker.",POSITIVE
+FB00553,E089,S0044,3,"For this event, The session was satisfactory.",NEUTRAL
+FB00554,E019,S0347,2,"Overall, The venue was too crowded.",NEGATIVE
+FB00555,E037,S0104,5,"In my opinion, The event was very helpful for my studies.",POSITIVE
+FB00556,E049,S0003,2,"Overall, The speaker did not explain the topic clearly.",NEGATIVE
+FB00557,E007,S0411,5,"Overall, I really enjoyed this event and learned a lot.",POSITIVE
+FB00558,E016,S0407,3,"From my experience, The event was fine.",NEUTRAL
+FB00559,E057,S0498,4,"In my opinion, The event was very helpful for my studies.",POSITIVE
+FB00560,E070,S0117,4,Great event with practical examples.,POSITIVE
+FB00561,E040,S0066,2,"For this event, The workshop covered the expected topics.",NEUTRAL
+FB00562,E018,S0427,4,"For this event, The session was well organized and useful.",POSITIVE
+FB00563,E027,S0195,1,"From my experience, The session was not useful.",NEGATIVE
+FB00564,E027,S0104,3,The event was neither good nor bad.,NEUTRAL
+FB00565,E075,S0313,2,"In my opinion, The venue was uncomfortable and crowded.",NEGATIVE
+FB00566,E017,S0350,2,"Overall, The event was fine.",NEUTRAL
+FB00567,E005,S0077,5,"For this event, The event was very helpful for my studies.",POSITIVE
+FB00568,E040,S0392,4,"In my opinion, Excellent organization and a knowledgeable speaker.",POSITIVE
+FB00569,E047,S0467,1,"From my experience, There were problems with the arrangements.",NEGATIVE
+FB00570,E032,S0493,5,"Overall, The content was interesting and engaging.",POSITIVE
+FB00571,E063,S0435,4,"From my experience, The content was interesting and engaging.",POSITIVE
+FB00572,E095,S0217,4,"Overall, The event was very helpful for my studies.",POSITIVE
+FB00573,E030,S0072,5,"Overall, The event was very helpful for my studies.",POSITIVE
+FB00574,E018,S0493,1,"For this event, There were problems with the arrangements.",NEGATIVE
+FB00575,E003,S0420,5,"From my experience, The content was interesting and engaging.",POSITIVE
+FB00576,E049,S0493,1,"In my opinion, The event started very late.",NEGATIVE
+FB00577,E072,S0319,2,"In my opinion, The workshop was okay.",NEUTRAL
+FB00578,E055,S0413,2,"For this event, There were problems with the arrangements.",NEGATIVE
+FB00579,E030,S0353,1,The event was disappointing.,NEGATIVE
+FB00580,E020,S0218,2,"Overall, The organization was poor.",NEGATIVE
+FB00581,E016,S0108,2,"Overall, The session was satisfactory.",NEUTRAL
+FB00582,E020,S0315,2,"In my opinion, The organization was poor.",NEGATIVE
+FB00583,E022,S0278,3,"In my opinion, The content was as expected.",NEUTRAL
+FB00584,E074,S0069,3,The event was fine.,NEUTRAL
+FB00585,E022,S0419,2,"From my experience, The session was average.",NEUTRAL
+FB00586,E038,S0129,2,The content was as expected.,NEUTRAL
+FB00587,E037,S0497,4,"From my experience, The workshop was excellent and very informative.",POSITIVE
+FB00588,E085,S0484,3,"From my experience, The session was satisfactory.",NEUTRAL
+FB00589,E072,S0475,2,"For this event, The venue was uncomfortable and crowded.",NEGATIVE
+FB00590,E003,S0433,5,"For this event, The content was interesting and engaging.",POSITIVE
+FB00591,E092,S0149,5,"From my experience, I really enjoyed this event and learned a lot.",POSITIVE
+FB00592,E026,S0011,5,"From my experience, The content was interesting and engaging.",POSITIVE
+FB00593,E043,S0066,4,"From my experience, I really enjoyed this event and learned a lot.",POSITIVE
+FB00594,E059,S0322,4,Great event with practical examples.,POSITIVE
+FB00595,E069,S0192,3,"For this event, The event was neither good nor bad.",NEUTRAL
+FB00596,E095,S0267,4,I really enjoyed this event and learned a lot.,POSITIVE
+FB00597,E084,S0393,3,"For this event, The event was conducted normally.",NEUTRAL
+FB00598,E008,S0130,3,"Overall, The content was as expected.",NEUTRAL
+FB00599,E086,S0484,5,"Overall, Excellent organization and a knowledgeable speaker.",POSITIVE
+FB00600,E057,S0260,4,"In my opinion, I really enjoyed this event and learned a lot.",POSITIVE
+FB00601,E040,S0335,3,"For this event, The workshop covered the expected topics.",NEUTRAL
+FB00602,E026,S0210,3,"For this event, The event was neither good nor bad.",NEUTRAL
+FB00603,E052,S0091,1,"From my experience, The speaker did not explain the topic clearly.",NEGATIVE
+FB00604,E078,S0376,2,"In my opinion, The event was disappointing.",NEGATIVE
+FB00605,E013,S0377,5,"Overall, The workshop was excellent and very informative.",POSITIVE
+FB00606,E075,S0094,2,"Overall, The session was average.",NEUTRAL
+FB00607,E027,S0235,5,The event was very helpful for my studies.,POSITIVE
+FB00608,E077,S0072,4,"Overall, Excellent organization and a knowledgeable speaker.",POSITIVE
+FB00609,E019,S0119,4,The session was well organized and useful.,POSITIVE
+FB00610,E063,S0339,4,The workshop was excellent and very informative.,POSITIVE
+FB00611,E014,S0084,2,The workshop covered the expected topics.,NEUTRAL
+FB00612,E078,S0050,4,"Overall, The workshop was excellent and very informative.",POSITIVE
+FB00613,E007,S0428,5,"For this event, The session was well organized and useful.",POSITIVE
+FB00614,E061,S0287,2,"From my experience, The event started very late.",NEGATIVE
+FB00615,E063,S0221,4,"From my experience, The workshop was excellent and very informative.",POSITIVE
+FB00616,E079,S0466,4,I really enjoyed this event and learned a lot.,POSITIVE
+FB00617,E030,S0490,4,"For this event, The session was well organized and useful.",POSITIVE
+FB00618,E081,S0341,1,"In my opinion, The organization was poor.",NEGATIVE
+FB00619,E082,S0033,1,"Overall, The venue was uncomfortable and crowded.",NEGATIVE
+FB00620,E032,S0138,4,"Overall, The workshop was excellent and very informative.",POSITIVE
+FB00621,E019,S0333,2,"From my experience, The session was not useful.",NEGATIVE
+FB00622,E058,S0447,1,The venue was too crowded.,NEGATIVE
+FB00623,E090,S0448,3,"For this event, The session was satisfactory.",NEUTRAL
+FB00624,E081,S0398,1,"For this event, The event was disappointing.",NEGATIVE
+FB00625,E092,S0017,2,"Overall, The venue was uncomfortable and crowded.",NEGATIVE
+FB00626,E085,S0382,4,"For this event, Great event with practical examples.",POSITIVE
+FB00627,E037,S0310,2,"For this event, The content was as expected.",NEUTRAL
+FB00628,E031,S0466,3,"Overall, The session was average.",NEUTRAL
+FB00629,E071,S0289,4,"For this event, Excellent organization and a knowledgeable speaker.",POSITIVE
+FB00630,E028,S0268,5,"For this event, The speaker explained the concepts clearly.",POSITIVE
+FB00631,E041,S0375,5,"From my experience, I really enjoyed this event and learned a lot.",POSITIVE
+FB00632,E040,S0064,5,"Overall, The content was interesting and engaging.",POSITIVE
+FB00633,E076,S0162,5,The session was well organized and useful.,POSITIVE
+FB00634,E070,S0201,1,The venue was uncomfortable and crowded.,NEGATIVE
+FB00635,E065,S0058,4,"From my experience, I really enjoyed this event and learned a lot.",POSITIVE
+FB00636,E045,S0095,3,"Overall, The event was fine.",NEUTRAL
+FB00637,E010,S0352,4,"From my experience, The workshop was excellent and very informative.",POSITIVE
+FB00638,E076,S0126,1,The session was not useful.,NEGATIVE
+FB00639,E083,S0322,3,"Overall, The content was as expected.",NEUTRAL
+FB00640,E068,S0313,5,"Overall, The workshop was excellent and very informative.",POSITIVE
+FB00641,E008,S0263,4,"From my experience, I really enjoyed this event and learned a lot.",POSITIVE
+FB00642,E007,S0180,2,"Overall, The event started very late.",NEGATIVE
+FB00643,E009,S0171,1,"Overall, The venue was uncomfortable and crowded.",NEGATIVE
+FB00644,E080,S0002,3,"For this event, The event was conducted normally.",NEUTRAL
+FB00645,E024,S0445,4,The workshop was excellent and very informative.,POSITIVE
+FB00646,E053,S0349,4,"In my opinion, The event was very helpful for my studies.",POSITIVE
+FB00647,E027,S0402,2,"From my experience, The venue was too crowded.",NEGATIVE
+FB00648,E075,S0025,2,"For this event, The speaker did not explain the topic clearly.",NEGATIVE
+FB00649,E075,S0250,4,"Overall, Great event with practical examples.",POSITIVE
+FB00650,E028,S0039,5,"In my opinion, The event was very helpful for my studies.",POSITIVE
+FB00651,E094,S0158,4,"Overall, The session was well organized and useful.",POSITIVE
+FB00652,E088,S0046,4,"In my opinion, The event was very helpful for my studies.",POSITIVE
+FB00653,E041,S0437,4,"From my experience, The session was well organized and useful.",POSITIVE
+FB00654,E090,S0188,2,"From my experience, The event was disappointing.",NEGATIVE
+FB00655,E019,S0474,1,"Overall, The venue was uncomfortable and crowded.",NEGATIVE
+FB00656,E015,S0188,4,The workshop was excellent and very informative.,POSITIVE
+FB00657,E012,S0379,5,"Overall, The session was well organized and useful.",POSITIVE
+FB00658,E091,S0209,3,"In my opinion, The workshop was okay.",NEUTRAL
+FB00659,E030,S0135,2,"For this event, The organization was poor.",NEGATIVE
+FB00660,E009,S0479,2,The speaker did not explain the topic clearly.,NEGATIVE
+FB00661,E036,S0384,5,"In my opinion, The event was very helpful for my studies.",POSITIVE
+FB00662,E031,S0395,2,The event started very late.,NEGATIVE
+FB00663,E024,S0481,4,The session was well organized and useful.,POSITIVE
+FB00664,E086,S0207,2,"From my experience, The workshop was okay.",NEUTRAL
+FB00665,E062,S0368,3,The session was satisfactory.,NEUTRAL
+FB00666,E081,S0019,1,"From my experience, The venue was too crowded.",NEGATIVE
+FB00667,E004,S0034,2,"For this event, The workshop was okay.",NEUTRAL
+FB00668,E099,S0108,2,The workshop was okay.,NEUTRAL
+FB00669,E091,S0432,3,"For this event, The event was fine.",NEUTRAL
+FB00670,E025,S0498,1,"Overall, The event was disappointing.",NEGATIVE
+FB00671,E098,S0034,5,I really enjoyed this event and learned a lot.,POSITIVE
+FB00672,E043,S0080,5,I really enjoyed this event and learned a lot.,POSITIVE
+FB00673,E088,S0156,2,"In my opinion, The organization was poor.",NEGATIVE
+FB00674,E042,S0414,5,"Overall, The workshop was excellent and very informative.",POSITIVE
+FB00675,E015,S0425,4,The content was interesting and engaging.,POSITIVE
+FB00676,E030,S0295,4,"Overall, The speaker explained the concepts clearly.",POSITIVE
+FB00677,E075,S0321,2,"Overall, There were problems with the arrangements.",NEGATIVE
+FB00678,E010,S0213,5,"From my experience, The speaker explained the concepts clearly.",POSITIVE
+FB00679,E056,S0386,2,The organization was poor.,NEGATIVE
+FB00680,E092,S0298,4,"In my opinion, The session was well organized and useful.",POSITIVE
+FB00681,E071,S0375,2,"For this event, The event started very late.",NEGATIVE
+FB00682,E003,S0107,5,Excellent organization and a knowledgeable speaker.,POSITIVE
+FB00683,E083,S0056,4,"From my experience, The session was well organized and useful.",POSITIVE
+FB00684,E079,S0106,5,"Overall, The session was well organized and useful.",POSITIVE
+FB00685,E077,S0460,5,The session was well organized and useful.,POSITIVE
+FB00686,E096,S0041,2,"In my opinion, The event started very late.",NEGATIVE
+FB00687,E051,S0461,2,"For this event, There were problems with the arrangements.",NEGATIVE
+FB00688,E055,S0437,4,"From my experience, Great event with practical examples.",POSITIVE
+FB00689,E001,S0230,4,Excellent organization and a knowledgeable speaker.,POSITIVE
+FB00690,E008,S0441,5,The speaker explained the concepts clearly.,POSITIVE
+FB00691,E007,S0109,4,Great event with practical examples.,POSITIVE
+FB00692,E008,S0014,4,Great event with practical examples.,POSITIVE
+FB00693,E046,S0266,4,"Overall, The workshop was excellent and very informative.",POSITIVE
+FB00694,E001,S0039,1,There were problems with the arrangements.,NEGATIVE
+FB00695,E066,S0223,5,"Overall, The event was very helpful for my studies.",POSITIVE
+FB00696,E094,S0462,1,"From my experience, The venue was uncomfortable and crowded.",NEGATIVE
+FB00697,E067,S0500,1,"From my experience, The speaker did not explain the topic clearly.",NEGATIVE
+FB00698,E059,S0258,5,The content was interesting and engaging.,POSITIVE
+FB00699,E012,S0170,2,"Overall, The workshop covered the expected topics.",NEUTRAL
+FB00700,E031,S0177,1,"Overall, The venue was uncomfortable and crowded.",NEGATIVE
+FB00701,E100,S0499,2,"Overall, The event was disappointing.",NEGATIVE
+FB00702,E051,S0165,4,"From my experience, The content was interesting and engaging.",POSITIVE
+FB00703,E069,S0075,2,"From my experience, The session was satisfactory.",NEUTRAL
+FB00704,E018,S0037,4,"For this event, I really enjoyed this event and learned a lot.",POSITIVE
+FB00705,E087,S0224,2,"From my experience, The venue was too crowded.",NEGATIVE
+FB00706,E007,S0084,5,"In my opinion, Great event with practical examples.",POSITIVE
+FB00707,E046,S0376,3,The event was neither good nor bad.,NEUTRAL
+FB00708,E015,S0396,2,The event was disappointing.,NEGATIVE
+FB00709,E087,S0455,3,"From my experience, The workshop covered the expected topics.",NEUTRAL
+FB00710,E024,S0390,4,"Overall, Excellent organization and a knowledgeable speaker.",POSITIVE
+FB00711,E033,S0110,2,The session was average.,NEUTRAL
+FB00712,E048,S0374,3,"From my experience, The session was satisfactory.",NEUTRAL
+FB00713,E094,S0255,3,"For this event, The content was as expected.",NEUTRAL
+FB00714,E098,S0230,5,"In my opinion, The session was well organized and useful.",POSITIVE
+FB00715,E009,S0228,1,"In my opinion, The session was not useful.",NEGATIVE
+FB00716,E042,S0199,2,"For this event, The session was satisfactory.",NEUTRAL
+FB00717,E031,S0160,4,"From my experience, The event was very helpful for my studies.",POSITIVE
+FB00718,E064,S0491,2,The workshop covered the expected topics.,NEUTRAL
+FB00719,E063,S0481,5,"From my experience, The event was very helpful for my studies.",POSITIVE
+FB00720,E001,S0178,5,"From my experience, The speaker explained the concepts clearly.",POSITIVE
+FB00721,E097,S0420,2,"In my opinion, The content was as expected.",NEUTRAL
+FB00722,E033,S0284,2,"For this event, The speaker did not explain the topic clearly.",NEGATIVE
+FB00723,E099,S0183,1,"In my opinion, The event was disappointing.",NEGATIVE
+FB00724,E091,S0462,4,"Overall, Great event with practical examples.",POSITIVE
+FB00725,E009,S0132,2,"In my opinion, The event was fine.",NEUTRAL
+FB00726,E005,S0434,3,"From my experience, The event was conducted normally.",NEUTRAL
+FB00727,E054,S0396,5,"For this event, Great event with practical examples.",POSITIVE
+FB00728,E011,S0402,2,"For this event, The speaker did not explain the topic clearly.",NEGATIVE
+FB00729,E058,S0051,4,I really enjoyed this event and learned a lot.,POSITIVE
+FB00730,E031,S0330,4,"Overall, Great event with practical examples.",POSITIVE
+FB00731,E043,S0460,2,"Overall, The session was average.",NEUTRAL
+FB00732,E033,S0108,2,"Overall, The session was average.",NEUTRAL
+FB00733,E029,S0061,4,"From my experience, Great event with practical examples.",POSITIVE
+FB00734,E003,S0450,5,Excellent organization and a knowledgeable speaker.,POSITIVE
+FB00735,E056,S0292,3,"Overall, The session was average.",NEUTRAL
+FB00736,E053,S0318,2,The organization was poor.,NEGATIVE
+FB00737,E090,S0394,2,"In my opinion, The workshop was okay.",NEUTRAL
+FB00738,E065,S0318,4,"Overall, Excellent organization and a knowledgeable speaker.",POSITIVE
+FB00739,E015,S0364,5,"In my opinion, Excellent organization and a knowledgeable speaker.",POSITIVE
+FB00740,E004,S0030,2,The event was neither good nor bad.,NEUTRAL
+FB00741,E076,S0060,2,"For this event, The speaker did not explain the topic clearly.",NEGATIVE
+FB00742,E086,S0337,3,"For this event, The session was satisfactory.",NEUTRAL
+FB00743,E088,S0278,2,"For this event, The event was neither good nor bad.",NEUTRAL
+FB00744,E033,S0101,2,"In my opinion, The session was satisfactory.",NEUTRAL
+FB00745,E081,S0377,1,"From my experience, The venue was uncomfortable and crowded.",NEGATIVE
+FB00746,E023,S0204,3,"For this event, The event was neither good nor bad.",NEUTRAL
+FB00747,E091,S0033,1,"From my experience, The event started very late.",NEGATIVE
+FB00748,E093,S0288,2,"For this event, The event started very late.",NEGATIVE
+FB00749,E079,S0080,2,"In my opinion, The speaker did not explain the topic clearly.",NEGATIVE
+FB00750,E085,S0471,1,"In my opinion, The organization was poor.",NEGATIVE
+FB00751,E047,S0026,4,"Overall, Excellent organization and a knowledgeable speaker.",POSITIVE
+FB00752,E062,S0143,5,"In my opinion, I really enjoyed this event and learned a lot.",POSITIVE
+FB00753,E062,S0095,5,"In my opinion, Great event with practical examples.",POSITIVE
+FB00754,E089,S0165,2,"Overall, The session was average.",NEUTRAL
+FB00755,E081,S0330,5,"For this event, I really enjoyed this event and learned a lot.",POSITIVE
+FB00756,E013,S0252,1,"In my opinion, The venue was too crowded.",NEGATIVE
+FB00757,E072,S0369,4,"In my opinion, The speaker explained the concepts clearly.",POSITIVE
+FB00758,E040,S0213,1,"From my experience, The organization was poor.",NEGATIVE
+FB00759,E035,S0167,2,The session was average.,NEUTRAL
+FB00760,E091,S0063,2,"In my opinion, The organization was poor.",NEGATIVE
+FB00761,E026,S0311,5,The speaker explained the concepts clearly.,POSITIVE
+FB00762,E051,S0420,3,"For this event, The event was neither good nor bad.",NEUTRAL
+FB00763,E004,S0088,2,"Overall, The content was as expected.",NEUTRAL
+FB00764,E044,S0455,1,"For this event, There were problems with the arrangements.",NEGATIVE
+FB00765,E029,S0344,2,"From my experience, The organization was poor.",NEGATIVE
+FB00766,E041,S0020,3,"In my opinion, The event was fine.",NEUTRAL
+FB00767,E061,S0492,5,"For this event, Excellent organization and a knowledgeable speaker.",POSITIVE
+FB00768,E055,S0005,2,"Overall, The event started very late.",NEGATIVE
+FB00769,E002,S0389,4,Great event with practical examples.,POSITIVE
+FB00770,E062,S0437,2,"For this event, The content was as expected.",NEUTRAL
+FB00771,E049,S0498,2,"From my experience, There were problems with the arrangements.",NEGATIVE
+FB00772,E074,S0336,5,"In my opinion, Great event with practical examples.",POSITIVE
+FB00773,E065,S0433,5,"In my opinion, The session was well organized and useful.",POSITIVE
+FB00774,E028,S0404,2,"From my experience, The speaker did not explain the topic clearly.",NEGATIVE
+FB00775,E094,S0280,1,"From my experience, There were problems with the arrangements.",NEGATIVE
+FB00776,E048,S0364,5,The content was interesting and engaging.,POSITIVE
+FB00777,E016,S0260,5,"In my opinion, The event was very helpful for my studies.",POSITIVE
+FB00778,E014,S0261,5,The content was interesting and engaging.,POSITIVE
+FB00779,E051,S0137,2,The venue was uncomfortable and crowded.,NEGATIVE
+FB00780,E079,S0433,2,"For this event, There were problems with the arrangements.",NEGATIVE
+FB00781,E062,S0311,1,"Overall, The venue was too crowded.",NEGATIVE
+FB00782,E024,S0275,3,"Overall, The workshop covered the expected topics.",NEUTRAL
+FB00783,E029,S0163,4,"For this event, I really enjoyed this event and learned a lot.",POSITIVE
+FB00784,E100,S0187,5,The speaker explained the concepts clearly.,POSITIVE
+FB00785,E098,S0236,4,"For this event, The event was very helpful for my studies.",POSITIVE
+FB00786,E068,S0008,2,"Overall, The venue was too crowded.",NEGATIVE
+FB00787,E092,S0092,1,"For this event, The speaker did not explain the topic clearly.",NEGATIVE
+FB00788,E030,S0280,1,"In my opinion, The speaker did not explain the topic clearly.",NEGATIVE
+FB00789,E085,S0417,4,"For this event, The workshop was excellent and very informative.",POSITIVE
+FB00790,E071,S0404,5,The content was interesting and engaging.,POSITIVE
+FB00791,E060,S0347,4,The event was very helpful for my studies.,POSITIVE
+FB00792,E050,S0277,4,The content was interesting and engaging.,POSITIVE
+FB00793,E039,S0345,3,The content was as expected.,NEUTRAL
+FB00794,E051,S0487,4,"From my experience, The event was very helpful for my studies.",POSITIVE
+FB00795,E095,S0204,5,"In my opinion, Excellent organization and a knowledgeable speaker.",POSITIVE
+FB00796,E016,S0121,4,"For this event, Excellent organization and a knowledgeable speaker.",POSITIVE
+FB00797,E093,S0255,2,"For this event, The workshop covered the expected topics.",NEUTRAL
+FB00798,E096,S0041,4,"In my opinion, The session was well organized and useful.",POSITIVE
+FB00799,E014,S0347,4,"For this event, Excellent organization and a knowledgeable speaker.",POSITIVE
+FB00800,E057,S0394,5,"Overall, The session was well organized and useful.",POSITIVE
+FB00801,E078,S0189,4,"For this event, The workshop was excellent and very informative.",POSITIVE
+FB00802,E049,S0129,3,"Overall, The session was satisfactory.",NEUTRAL
+FB00803,E031,S0244,4,"In my opinion, I really enjoyed this event and learned a lot.",POSITIVE
+FB00804,E068,S0175,1,"From my experience, The venue was too crowded.",NEGATIVE
+FB00805,E076,S0447,1,"Overall, The venue was too crowded.",NEGATIVE
+FB00806,E044,S0402,2,"For this event, The workshop covered the expected topics.",NEUTRAL
+FB00807,E047,S0260,5,"For this event, I really enjoyed this event and learned a lot.",POSITIVE
+FB00808,E045,S0052,2,"Overall, The event started very late.",NEGATIVE
+FB00809,E052,S0403,4,"For this event, The content was interesting and engaging.",POSITIVE
+FB00810,E095,S0173,3,"From my experience, The session was satisfactory.",NEUTRAL
+FB00811,E065,S0080,2,"From my experience, The session was satisfactory.",NEUTRAL
+FB00812,E030,S0362,4,"In my opinion, Great event with practical examples.",POSITIVE
+FB00813,E025,S0390,5,The speaker explained the concepts clearly.,POSITIVE
+FB00814,E016,S0260,2,"From my experience, The speaker did not explain the topic clearly.",NEGATIVE
+FB00815,E054,S0230,4,"Overall, The speaker explained the concepts clearly.",POSITIVE
+FB00816,E011,S0002,4,"For this event, The event was very helpful for my studies.",POSITIVE
+FB00817,E052,S0191,4,I really enjoyed this event and learned a lot.,POSITIVE
+FB00818,E043,S0269,5,"Overall, I really enjoyed this event and learned a lot.",POSITIVE
+FB00819,E067,S0132,2,The speaker did not explain the topic clearly.,NEGATIVE
+FB00820,E097,S0013,5,I really enjoyed this event and learned a lot.,POSITIVE
+FB00821,E017,S0126,5,The session was well organized and useful.,POSITIVE
+FB00822,E058,S0361,4,"From my experience, Excellent organization and a knowledgeable speaker.",POSITIVE
+FB00823,E016,S0372,2,"For this event, The speaker did not explain the topic clearly.",NEGATIVE
+FB00824,E099,S0144,1,The venue was too crowded.,NEGATIVE
+FB00825,E018,S0337,5,The content was interesting and engaging.,POSITIVE
+FB00826,E057,S0047,3,"In my opinion, The session was average.",NEUTRAL
+FB00827,E072,S0156,4,"For this event, The workshop was excellent and very informative.",POSITIVE
+FB00828,E064,S0111,3,"From my experience, The workshop covered the expected topics.",NEUTRAL
+FB00829,E083,S0482,5,"For this event, Great event with practical examples.",POSITIVE
+FB00830,E076,S0470,2,"From my experience, The session was not useful.",NEGATIVE
+FB00831,E062,S0474,5,The session was well organized and useful.,POSITIVE
+FB00832,E016,S0062,2,"For this event, The session was not useful.",NEGATIVE
+FB00833,E059,S0492,3,"From my experience, The session was average.",NEUTRAL
+FB00834,E032,S0058,4,"For this event, The workshop was excellent and very informative.",POSITIVE
+FB00835,E073,S0419,2,"Overall, The session was average.",NEUTRAL
+FB00836,E058,S0497,4,"For this event, The event was very helpful for my studies.",POSITIVE
+FB00837,E037,S0280,5,"In my opinion, I really enjoyed this event and learned a lot.",POSITIVE
+FB00838,E019,S0302,5,"In my opinion, The workshop was excellent and very informative.",POSITIVE
+FB00839,E070,S0084,2,"From my experience, There were problems with the arrangements.",NEGATIVE
+FB00840,E024,S0172,5,"In my opinion, The event was very helpful for my studies.",POSITIVE
+FB00841,E053,S0192,1,"From my experience, The event was disappointing.",NEGATIVE
+FB00842,E005,S0399,4,The workshop was excellent and very informative.,POSITIVE
+FB00843,E094,S0204,2,"From my experience, The session was average.",NEUTRAL
+FB00844,E004,S0288,3,"For this event, The workshop was okay.",NEUTRAL
+FB00845,E041,S0346,2,"For this event, There were problems with the arrangements.",NEGATIVE
+FB00846,E089,S0054,2,"Overall, The workshop covered the expected topics.",NEUTRAL
+FB00847,E065,S0454,4,The content was interesting and engaging.,POSITIVE
+FB00848,E014,S0470,4,"In my opinion, The speaker explained the concepts clearly.",POSITIVE
+FB00849,E043,S0312,5,"In my opinion, The content was interesting and engaging.",POSITIVE
+FB00850,E039,S0275,5,Great event with practical examples.,POSITIVE
+FB00851,E057,S0205,5,"For this event, The event was very helpful for my studies.",POSITIVE
+FB00852,E081,S0286,2,"From my experience, The event started very late.",NEGATIVE
+FB00853,E032,S0235,2,"Overall, There were problems with the arrangements.",NEGATIVE
+FB00854,E080,S0023,5,"For this event, The content was interesting and engaging.",POSITIVE
+FB00855,E083,S0125,1,"For this event, The venue was uncomfortable and crowded.",NEGATIVE
+FB00856,E085,S0375,3,"From my experience, The event was neither good nor bad.",NEUTRAL
+FB00857,E029,S0058,3,The session was average.,NEUTRAL
+FB00858,E043,S0149,5,"From my experience, The session was well organized and useful.",POSITIVE
+FB00859,E001,S0061,2,"For this event, The event was fine.",NEUTRAL
+FB00860,E089,S0283,1,"For this event, The venue was uncomfortable and crowded.",NEGATIVE
+FB00861,E087,S0262,2,"For this event, The workshop covered the expected topics.",NEUTRAL
+FB00862,E092,S0473,1,"From my experience, The speaker did not explain the topic clearly.",NEGATIVE
+FB00863,E075,S0146,3,"For this event, The session was satisfactory.",NEUTRAL
+FB00864,E050,S0187,1,"For this event, The event was disappointing.",NEGATIVE
+FB00865,E026,S0497,5,"Overall, I really enjoyed this event and learned a lot.",POSITIVE
+FB00866,E077,S0162,3,"Overall, The event was conducted normally.",NEUTRAL
+FB00867,E044,S0413,3,"For this event, The event was neither good nor bad.",NEUTRAL
+FB00868,E073,S0237,4,"Overall, The session was well organized and useful.",POSITIVE
+FB00869,E076,S0121,1,"Overall, The organization was poor.",NEGATIVE
+FB00870,E052,S0343,3,The session was satisfactory.,NEUTRAL
+FB00871,E089,S0440,5,I really enjoyed this event and learned a lot.,POSITIVE
+FB00872,E069,S0385,3,"In my opinion, The session was average.",NEUTRAL
+FB00873,E005,S0287,5,The event was very helpful for my studies.,POSITIVE
+FB00874,E095,S0321,5,"From my experience, The content was interesting and engaging.",POSITIVE
+FB00875,E030,S0199,5,"Overall, The workshop was excellent and very informative.",POSITIVE
+FB00876,E093,S0421,4,"In my opinion, The speaker explained the concepts clearly.",POSITIVE
+FB00877,E015,S0357,3,"Overall, The event was conducted normally.",NEUTRAL
+FB00878,E037,S0171,5,"In my opinion, The workshop was excellent and very informative.",POSITIVE
+FB00879,E062,S0448,4,"For this event, The content was interesting and engaging.",POSITIVE
+FB00880,E085,S0094,1,The speaker did not explain the topic clearly.,NEGATIVE
+FB00881,E061,S0099,2,"In my opinion, The event was disappointing.",NEGATIVE
+FB00882,E020,S0324,3,"Overall, The session was average.",NEUTRAL
+FB00883,E026,S0133,4,"In my opinion, The session was well organized and useful.",POSITIVE
+FB00884,E034,S0017,3,"Overall, The event was fine.",NEUTRAL
+FB00885,E003,S0178,2,"From my experience, The session was satisfactory.",NEUTRAL
+FB00886,E089,S0024,2,"From my experience, The session was satisfactory.",NEUTRAL
+FB00887,E065,S0129,2,"Overall, The event started very late.",NEGATIVE
+FB00888,E079,S0458,5,"From my experience, Excellent organization and a knowledgeable speaker.",POSITIVE
+FB00889,E083,S0395,5,"In my opinion, Great event with practical examples.",POSITIVE
+FB00890,E044,S0109,3,"In my opinion, The event was fine.",NEUTRAL
+FB00891,E032,S0294,2,"From my experience, The event was neither good nor bad.",NEUTRAL
+FB00892,E065,S0487,3,The event was neither good nor bad.,NEUTRAL
+FB00893,E062,S0312,5,The workshop was excellent and very informative.,POSITIVE
+FB00894,E092,S0096,4,"In my opinion, Great event with practical examples.",POSITIVE
+FB00895,E053,S0387,5,"Overall, The content was interesting and engaging.",POSITIVE
+FB00896,E083,S0148,5,Excellent organization and a knowledgeable speaker.,POSITIVE
+FB00897,E006,S0260,4,"In my opinion, The speaker explained the concepts clearly.",POSITIVE
+FB00898,E067,S0334,1,"From my experience, The venue was uncomfortable and crowded.",NEGATIVE
+FB00899,E093,S0378,5,"From my experience, The session was well organized and useful.",POSITIVE
+FB00900,E069,S0490,4,"Overall, Great event with practical examples.",POSITIVE
+FB00901,E077,S0220,2,"For this event, The venue was too crowded.",NEGATIVE
+FB00902,E044,S0455,5,"In my opinion, Great event with practical examples.",POSITIVE
+FB00903,E064,S0161,4,"From my experience, The session was well organized and useful.",POSITIVE
+FB00904,E076,S0442,5,"For this event, The event was very helpful for my studies.",POSITIVE
+FB00905,E025,S0444,1,"In my opinion, The event was disappointing.",NEGATIVE
+FB00906,E070,S0470,5,"Overall, The speaker explained the concepts clearly.",POSITIVE
+FB00907,E014,S0429,2,The content was as expected.,NEUTRAL
+FB00908,E090,S0132,1,"For this event, The session was not useful.",NEGATIVE
+FB00909,E092,S0369,3,"For this event, The event was conducted normally.",NEUTRAL
+FB00910,E022,S0220,1,"For this event, The organization was poor.",NEGATIVE
+FB00911,E042,S0301,4,The session was well organized and useful.,POSITIVE
+FB00912,E010,S0475,2,The event was neither good nor bad.,NEUTRAL
+FB00913,E092,S0273,2,The content was as expected.,NEUTRAL
+FB00914,E085,S0328,5,"From my experience, The event was very helpful for my studies.",POSITIVE
+FB00915,E005,S0231,2,"Overall, The venue was uncomfortable and crowded.",NEGATIVE
+FB00916,E004,S0370,3,"From my experience, The content was as expected.",NEUTRAL
+FB00917,E075,S0251,1,There were problems with the arrangements.,NEGATIVE
+FB00918,E021,S0162,2,"In my opinion, The event was disappointing.",NEGATIVE
+FB00919,E084,S0280,2,"Overall, The session was satisfactory.",NEUTRAL
+FB00920,E067,S0151,5,"From my experience, The session was well organized and useful.",POSITIVE
+FB00921,E098,S0413,5,"For this event, The session was well organized and useful.",POSITIVE
+FB00922,E094,S0469,5,"Overall, The session was well organized and useful.",POSITIVE
+FB00923,E096,S0447,3,"Overall, The workshop covered the expected topics.",NEUTRAL
+FB00924,E090,S0081,5,"Overall, The content was interesting and engaging.",POSITIVE
+FB00925,E012,S0315,5,"From my experience, The event was very helpful for my studies.",POSITIVE
+FB00926,E014,S0183,4,"For this event, The workshop was excellent and very informative.",POSITIVE
+FB00927,E009,S0321,5,"For this event, The workshop was excellent and very informative.",POSITIVE
+FB00928,E050,S0322,4,"From my experience, The workshop was excellent and very informative.",POSITIVE
+FB00929,E094,S0481,2,"Overall, The speaker did not explain the topic clearly.",NEGATIVE
+FB00930,E081,S0183,5,"For this event, The event was very helpful for my studies.",POSITIVE
+FB00931,E087,S0467,5,"From my experience, The speaker explained the concepts clearly.",POSITIVE
+FB00932,E047,S0432,4,"For this event, I really enjoyed this event and learned a lot.",POSITIVE
+FB00933,E018,S0340,5,"Overall, The content was interesting and engaging.",POSITIVE
+FB00934,E005,S0135,5,"From my experience, The workshop was excellent and very informative.",POSITIVE
+FB00935,E012,S0238,5,"From my experience, The event was very helpful for my studies.",POSITIVE
+FB00936,E033,S0051,4,"From my experience, The session was well organized and useful.",POSITIVE
+FB00937,E088,S0444,2,"In my opinion, The venue was too crowded.",NEGATIVE
+FB00938,E026,S0094,4,"For this event, I really enjoyed this event and learned a lot.",POSITIVE
+FB00939,E054,S0192,5,"For this event, The workshop was excellent and very informative.",POSITIVE
+FB00940,E005,S0024,4,The event was very helpful for my studies.,POSITIVE
+FB00941,E003,S0229,2,"For this event, The event was conducted normally.",NEUTRAL
+FB00942,E084,S0469,2,"From my experience, The session was satisfactory.",NEUTRAL
+FB00943,E100,S0226,1,"From my experience, There were problems with the arrangements.",NEGATIVE
+FB00944,E052,S0110,4,"From my experience, The session was well organized and useful.",POSITIVE
+FB00945,E063,S0313,5,"From my experience, The workshop was excellent and very informative.",POSITIVE
+FB00946,E044,S0251,1,The event started very late.,NEGATIVE
+FB00947,E094,S0248,5,"For this event, The session was well organized and useful.",POSITIVE
+FB00948,E077,S0343,3,"For this event, The content was as expected.",NEUTRAL
+FB00949,E062,S0276,2,"In my opinion, The session was average.",NEUTRAL
+FB00950,E052,S0390,5,"For this event, Great event with practical examples.",POSITIVE
+FB00951,E027,S0392,5,"In my opinion, Great event with practical examples.",POSITIVE
+FB00952,E074,S0039,4,"Overall, Great event with practical examples.",POSITIVE
+FB00953,E063,S0060,2,"From my experience, The organization was poor.",NEGATIVE
+FB00954,E040,S0015,4,"For this event, The workshop was excellent and very informative.",POSITIVE
+FB00955,E060,S0111,1,"In my opinion, The venue was too crowded.",NEGATIVE
+FB00956,E017,S0456,5,"For this event, The session was well organized and useful.",POSITIVE
+FB00957,E025,S0372,5,"For this event, The speaker explained the concepts clearly.",POSITIVE
+FB00958,E088,S0395,4,"Overall, The speaker explained the concepts clearly.",POSITIVE
+FB00959,E094,S0479,4,"For this event, The session was well organized and useful.",POSITIVE
+FB00960,E004,S0303,3,"Overall, The event was conducted normally.",NEUTRAL
+FB00961,E001,S0282,4,"Overall, Great event with practical examples.",POSITIVE
+FB00962,E029,S0079,2,"From my experience, The event was disappointing.",NEGATIVE
+FB00963,E078,S0065,5,"Overall, The speaker explained the concepts clearly.",POSITIVE
+FB00964,E043,S0270,5,"In my opinion, The workshop was excellent and very informative.",POSITIVE
+FB00965,E042,S0374,4,"In my opinion, I really enjoyed this event and learned a lot.",POSITIVE
+FB00966,E059,S0367,5,"Overall, The speaker explained the concepts clearly.",POSITIVE
+FB00967,E053,S0224,5,The workshop was excellent and very informative.,POSITIVE
+FB00968,E024,S0409,5,"Overall, Great event with practical examples.",POSITIVE
+FB00969,E075,S0178,5,Excellent organization and a knowledgeable speaker.,POSITIVE
+FB00970,E017,S0358,5,"For this event, I really enjoyed this event and learned a lot.",POSITIVE
+FB00971,E030,S0248,2,The event was neither good nor bad.,NEUTRAL
+FB00972,E081,S0294,2,"In my opinion, The workshop was okay.",NEUTRAL
+FB00973,E008,S0108,5,"In my opinion, Great event with practical examples.",POSITIVE
+FB00974,E059,S0234,3,"Overall, The session was satisfactory.",NEUTRAL
+FB00975,E047,S0343,2,The workshop covered the expected topics.,NEUTRAL
+FB00976,E067,S0011,5,"Overall, The workshop was excellent and very informative.",POSITIVE
+FB00977,E039,S0477,2,"Overall, The event was neither good nor bad.",NEUTRAL
+FB00978,E014,S0072,4,"Overall, The session was well organized and useful.",POSITIVE
+FB00979,E002,S0471,5,"Overall, The event was very helpful for my studies.",POSITIVE
+FB00980,E037,S0460,1,"In my opinion, The venue was uncomfortable and crowded.",NEGATIVE
+FB00981,E032,S0390,5,"For this event, The session was well organized and useful.",POSITIVE
+FB00982,E096,S0135,5,"In my opinion, Great event with practical examples.",POSITIVE
+FB00983,E033,S0224,5,"In my opinion, Great event with practical examples.",POSITIVE
+FB00984,E077,S0380,4,"In my opinion, The session was well organized and useful.",POSITIVE
+FB00985,E064,S0015,2,"From my experience, The workshop was okay.",NEUTRAL
+FB00986,E031,S0104,5,"Overall, Excellent organization and a knowledgeable speaker.",POSITIVE
+FB00987,E071,S0035,4,"Overall, The workshop was excellent and very informative.",POSITIVE
+FB00988,E019,S0400,4,"From my experience, The content was interesting and engaging.",POSITIVE
+FB00989,E084,S0229,1,"For this event, The session was not useful.",NEGATIVE
+FB00990,E060,S0329,5,"In my opinion, I really enjoyed this event and learned a lot.",POSITIVE
+FB00991,E034,S0396,5,The speaker explained the concepts clearly.,POSITIVE
+FB00992,E063,S0485,4,"Overall, Excellent organization and a knowledgeable speaker.",POSITIVE
+FB00993,E046,S0014,3,The event was neither good nor bad.,NEUTRAL
+FB00994,E035,S0216,4,"In my opinion, The session was well organized and useful.",POSITIVE
+FB00995,E052,S0433,2,The event was fine.,NEUTRAL
+FB00996,E084,S0326,4,"Overall, Excellent organization and a knowledgeable speaker.",POSITIVE
+FB00997,E066,S0466,3,"In my opinion, The event was fine.",NEUTRAL
+FB00998,E021,S0020,4,"Overall, The content was interesting and engaging.",POSITIVE
+FB00999,E092,S0029,4,"In my opinion, The event was very helpful for my studies.",POSITIVE
+FB01000,E059,S0248,5,"In my opinion, The speaker explained the concepts clearly.",POSITIVE

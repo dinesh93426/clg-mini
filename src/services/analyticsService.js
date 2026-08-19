@@ -69,6 +69,62 @@ export const analyticsService = {
     return response.data;
   },
 
+  getOrganizerDashboard: async () => {
+    try {
+      const response = await apiClient.get('/ai/dashboard/organizer');
+      return response.data;
+    } catch (e) {
+      if (DEMO_MODE) return MOCK_ORGANIZER_ANALYTICS;
+      throw e;
+    }
+  },
+
+  getAdminDashboard: async () => {
+    try {
+      const response = await apiClient.get('/ai/dashboard/admin');
+      return response.data;
+    } catch (e) {
+      if (DEMO_MODE) return MOCK_ADMIN_ANALYTICS;
+      throw e;
+    }
+  },
+
+  getDashboardAlerts: async () => {
+    try {
+      const response = await apiClient.get('/ai/dashboard/alerts');
+      return response.data;
+    } catch (e) {
+      return { alerts: [] };
+    }
+  },
+
+  getDashboardEvents: async () => {
+    try {
+      const response = await apiClient.get('/ai/dashboard/events');
+      return response.data;
+    } catch (e) {
+      return [];
+    }
+  },
+
+  getDashboardDemand: async () => {
+    try {
+      const response = await apiClient.get('/ai/dashboard/demand');
+      return response.data;
+    } catch (e) {
+      return {};
+    }
+  },
+
+  getDashboardSentiment: async () => {
+    try {
+      const response = await apiClient.get('/ai/dashboard/sentiment');
+      return response.data;
+    } catch (e) {
+      return {};
+    }
+  },
+
   getOrganizersList: async () => {
     await simulateNetworkDelay(300);
     if (DEMO_MODE) {

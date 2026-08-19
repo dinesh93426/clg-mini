@@ -12,10 +12,14 @@ const authenticateToken = (req, res, next) => {
 
   jwt.verify(token, process.env.JWT_SECRET || 'supersecretkey', (err, user) => {
     if (err) {
-      req.user = { id: 'dev-user', role: 'ADMIN', email: 'admin@university.edu' };
+      req.user = { id: 'dev-user', userId: 'dev-user', role: 'ADMIN', email: 'admin@university.edu' };
       return next();
     }
-    req.user = user;
+    req.user = {
+      ...user,
+      id: user.id || user.userId,
+      userId: user.userId || user.id
+    };
     next();
   });
 };

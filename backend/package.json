@@ -6,6 +6,8 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
+    "seed:test": "python ../scripts/seed-ai-test-data.py --seed",
+    "seed:test:reset": "python ../scripts/seed-ai-test-data.py --reset",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

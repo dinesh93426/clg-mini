@@ -8,7 +8,7 @@ const router = express.Router();
 
 // Helper to generate token
 const generateToken = (id, role) => {
-  return jwt.sign({ id, role }, process.env.JWT_SECRET, { expiresIn: '24h' });
+  return jwt.sign({ id, userId: id, role }, process.env.JWT_SECRET, { expiresIn: '24h' });
 };
 
 // --- STUDENT AUTH ---
@@ -36,11 +36,16 @@ router.post('/student/register', async (req, res) => {
 
 router.post('/student/login', async (req, res) => {
   const { email, password } = req.body;
+  console.log(`Login attempt for email: '${email}', password: '${password}'`);
   try {
     const user = await prisma.student.findUnique({ where: { email } });
-    if (!user) return res.status(401).json({ error: 'Invalid credentials' });
+    if (!user) {
+      console.log('User not found');
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
 
     const validPassword = await bcrypt.compare(password, user.password);
+    console.log('Password valid:', validPassword);
     if (!validPassword) return res.status(401).json({ error: 'Invalid credentials' });
 
     const token = generateToken(user.id, 'STUDENT');

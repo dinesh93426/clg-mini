@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { recommendationService } from '../../services/recommendationService';
-import { Sparkles, BrainCircuit, LineChart, Award } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 import { 
   ResponsiveContainer, BarChart, Bar, XAxis, YAxis, 
   CartesianGrid, Tooltip, Legend 
@@ -28,21 +28,21 @@ export const AdminRecommendations = () => {
   if (loading || !metrics) {
     return (
       <div className="space-y-6 animate-pulse">
-        <div className="h-10 w-48 bg-slate-900 rounded"></div>
-        <div className="h-64 bg-slate-900 rounded-xl"></div>
+        <div className="h-7 w-48 bg-[#E2E8F0] rounded"></div>
+        <div className="h-64 bg-[#FFFFFF] border border-[#E2E8F0] rounded-2xl"></div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 pb-12">
       {/* Header */}
-      <div>
-        <h1 className="font-display font-bold text-3xl text-white flex items-center gap-2">
-          <Sparkles size={26} className="text-purple-400" />
+      <div className="border-b border-[#E2E8F0] pb-5">
+        <h1 className="text-2xl font-bold tracking-tight text-[#172033] flex items-center gap-2">
+          <Sparkles size={22} className="text-[#4F46E5]" />
           Recommendation Analytics
         </h1>
-        <p className="text-slate-400 text-sm mt-1">Review recommendation conversion ratios and monitor AI click-through rates.</p>
+        <p className="text-xs text-[#64748B] mt-0.5">Review recommendation conversion ratios and monitor AI click-through rates.</p>
       </div>
 
       {/* KPI stats */}
@@ -53,27 +53,27 @@ export const AdminRecommendations = () => {
           { label: 'Clicks', val: metrics.clicks, sub: 'Click-through count' },
           { label: 'Conversions', val: metrics.registrations, sub: 'AI registration rate' }
         ].map(k => (
-          <div key={k.label} className="glass-card p-4 rounded-xl">
-            <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wider block">{k.label}</span>
-            <h3 className="text-lg md:text-xl font-extrabold font-display text-white mt-2">{k.val}</h3>
-            <p className="text-[10px] text-slate-400 mt-0.5">{k.sub}</p>
+          <div key={k.label} className="bg-[#FFFFFF] border border-[#E2E8F0] p-4 rounded-xl shadow-xs">
+            <span className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider block">{k.label}</span>
+            <h3 className="text-xl font-bold text-[#172033] mt-1.5">{k.val}</h3>
+            <p className="text-[11px] text-[#94A3B8] mt-0.5">{k.sub}</p>
           </div>
         ))}
       </div>
 
       {/* Recharts chart */}
-      <div className="glass-card p-5 rounded-2xl space-y-4">
-        <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest">Base Growth vs AI Suggs Influenced Registrations</h3>
-        <div className="h-64 text-slate-450 text-xs">
+      <div className="bg-[#FFFFFF] border border-[#E2E8F0] p-5 rounded-2xl shadow-xs space-y-4">
+        <h3 className="text-xs font-bold text-[#172033] uppercase tracking-wider">Base Growth vs AI-Influenced Registrations</h3>
+        <div className="h-64 text-xs">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={metrics.performanceTrend} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-              <XAxis dataKey="week" stroke="#64748b" tickLine={false} />
-              <YAxis stroke="#64748b" tickLine={false} />
-              <Tooltip contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155' }} />
-              <Legend iconSize={10} verticalAlign="top" height={36} />
-              <Bar dataKey="base" fill="#1e293b" radius={[4, 4, 0, 0]} name="Base Registrations" />
-              <Bar dataKey="ai" fill="#8b5cf6" radius={[4, 4, 0, 0]} name="AI Recommended Registrations" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" />
+              <XAxis dataKey="week" stroke="#94A3B8" tickLine={false} tick={{ fontSize: 11 }} />
+              <YAxis stroke="#94A3B8" tickLine={false} tick={{ fontSize: 11 }} />
+              <Tooltip contentStyle={{ backgroundColor: '#FFFFFF', borderColor: '#E2E8F0', borderRadius: '8px', fontSize: '11px' }} />
+              <Legend iconSize={10} verticalAlign="top" height={36} wrapperStyle={{ fontSize: '11px' }} />
+              <Bar dataKey="base" fill="#CBD5E1" radius={[4, 4, 0, 0]} name="Standard Registrations" />
+              <Bar dataKey="ai" fill="#4F46E5" radius={[4, 4, 0, 0]} name="AI Recommended Registrations" />
             </BarChart>
           </ResponsiveContainer>
         </div>

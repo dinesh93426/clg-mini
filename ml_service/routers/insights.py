@@ -66,7 +66,7 @@ def _compute_analytics() -> dict:
             (SELECT COUNT(*) FROM "Attendance"   WHERE status = 'PRESENT')    AS total_attended,
             (SELECT COUNT(*) FROM "Registration")                              AS total_registrations,
             (SELECT AVG(rating) FROM "Feedback")                               AS avg_rating,
-            (SELECT COUNT(*) FROM "StudentProfile")                            AS total_students
+            (SELECT COUNT(*) FROM "Student")                                   AS total_students
     """)
 
     # Low-attendance events (fill < 30%)

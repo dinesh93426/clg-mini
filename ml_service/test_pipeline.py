@@ -63,7 +63,7 @@ async def run_full_pipeline_and_tests():
     # Test 3.4 Recommendation Engine
     print("\n[TEST 3.4] Hybrid Recommendation Engine:")
     try:
-        students = execute_query('SELECT "userId" as id FROM "StudentProfile" LIMIT 1')
+        students = execute_query('SELECT "id" as id FROM "Student" LIMIT 1')
         if students:
             sid = students[0]['id']
             recs = get_recommendations(sid)

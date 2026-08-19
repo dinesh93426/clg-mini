@@ -1,0 +1,23 @@
+{
+  "interaction_weights": {
+    "VIEW": 1.0,
+    "LIKE": 3.0,
+    "REGISTER": 5.0,
+    "ATTEND": 7.0,
+    "POSITIVE_RATING": 8.0
+  },
+  "score_weights": {
+    "content_similarity": 0.70,
+    "profile_match": 0.20,
+    "popularity": 0.10
+  },
+  "default_limit": 10,
+  "max_limit": 10,
+  "min_rating_for_positive": 4,
+  "tfidf": {
+    "stop_words": "english",
+    "ngram_range": [1, 2],
+    "max_features": 5000,
+    "sublinear_tf": true
+  }
+}
