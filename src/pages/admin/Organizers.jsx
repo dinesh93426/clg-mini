@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { analyticsService } from '../../services/analyticsService';
-import { Search, ShieldAlert, Star, Building, Plus, X } from 'lucide-react';
+import { Search, ShieldAlert, Star, Building, Plus, X, Edit2, Trash2 } from 'lucide-react';
 
 export const AdminOrganizers = () => {
   const [organizers, setOrganizers] = useState([]);
@@ -13,6 +13,10 @@ export const AdminOrganizers = () => {
   });
   const [creating, setCreating] = useState(false);
   const [error, setError] = useState(null);
+
+  const [editingId, setEditingId] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deletingId, setDeletingId] = useState(null);
 
   const fetchOrganizers = async () => {
     setLoading(true);
@@ -30,17 +34,57 @@ export const AdminOrganizers = () => {
     fetchOrganizers();
   }, []);
 
-  const handleCreate = async (e) => {
+  const closeModal = () => {
+    setShowModal(false);
+    setEditingId(null);
+    setFormData({ name: '', email: '', password: '', department: '', organizationName: '' });
+  };
+
+  const handleEdit = (org) => {
+    setFormData({ 
+      name: org.name, 
+      email: org.email, 
+      password: '', 
+      department: org.department, 
+      organizationName: org.organizationName || org.organization 
+    });
+    setEditingId(org.id);
+    setShowModal(true);
+  };
+
+  const confirmDelete = (id) => {
+    setDeletingId(id);
+    setShowDeleteModal(true);
+  };
+
+  const handleDelete = async () => {
+    setCreating(true);
+    try {
+      await analyticsService.deleteOrganizer(deletingId);
+      setShowDeleteModal(false);
+      setDeletingId(null);
+      await fetchOrganizers();
+    } catch (err) {
+      alert(err.response?.data?.error || 'Failed to delete organizer');
+    } finally {
+      setCreating(false);
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setCreating(true);
     setError(null);
     try {
-      await analyticsService.createOrganizer(formData);
-      setShowModal(false);
-      setFormData({ name: '', email: '', password: '', department: '', organizationName: '' });
+      if (editingId) {
+        await analyticsService.updateOrganizer(editingId, formData);
+      } else {
+        await analyticsService.createOrganizer(formData);
+      }
+      closeModal();
       await fetchOrganizers();
     } catch (err) {
-      setError(err.response?.data?.error || 'Failed to create organizer');
+      setError(err.response?.data?.error || `Failed to ${editingId ? 'update' : 'create'} organizer`);
     } finally {
       setCreating(false);
     }
@@ -61,7 +105,7 @@ export const AdminOrganizers = () => {
           <p className="text-xs text-[#64748B] mt-0.5">Review active coordinators, rating scores, and total events generated.</p>
         </div>
         <button
-          onClick={() => setShowModal(true)}
+          onClick={() => { closeModal(); setShowModal(true); }}
           className="px-4 py-2 bg-[#FF5A1F] hover:bg-[#E94712] text-white rounded-lg text-xs font-semibold flex items-center gap-2 transition-colors cursor-pointer"
         >
           <Plus size={15} /> Create Organizer
@@ -101,6 +145,7 @@ export const AdminOrganizers = () => {
                   <th className="px-5 py-3.5">Affiliated Branch / Club</th>
                   <th className="px-5 py-3.5">Events Created</th>
                   <th className="px-5 py-3.5 text-right">Student Rating</th>
+                  <th className="px-5 py-3.5 text-center">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#E2E8F0]">
@@ -121,6 +166,16 @@ export const AdminOrganizers = () => {
                         <span>{o.rating}</span>
                       </div>
                     </td>
+                    <td className="px-5 py-3.5 text-center">
+                      <div className="flex items-center justify-center gap-2">
+                        <button onClick={() => handleEdit(o)} className="text-[#64748B] hover:text-[#172033] cursor-pointer" title="Edit Organizer">
+                          <Edit2 size={15} />
+                        </button>
+                        <button onClick={() => confirmDelete(o.id)} className="text-[#64748B] hover:text-[#DC2626] cursor-pointer" title="Delete Organizer">
+                          <Trash2 size={15} />
+                        </button>
+                      </div>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -134,16 +189,16 @@ export const AdminOrganizers = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0F172A]/30 backdrop-blur-xs">
           <div className="bg-[#FFFFFF] border border-[#E2E8F0] p-6 rounded-2xl w-full max-w-md shadow-xl relative">
             <button 
-              onClick={() => setShowModal(false)}
+              onClick={closeModal}
               className="absolute top-4 right-4 text-[#94A3B8] hover:text-[#172033] cursor-pointer"
             >
               <X size={15} />
             </button>
             
-            <h2 className="text-lg font-bold text-[#172033] mb-4">Create New Organizer</h2>
+            <h2 className="text-lg font-bold text-[#172033] mb-4">{editingId ? 'Edit Organizer' : 'Create New Organizer'}</h2>
             {error && <div className="mb-4 p-2 bg-[#FEE2E2] text-[#DC2626] border border-[#FECACA] rounded-lg text-xs">{error}</div>}
             
-            <form onSubmit={handleCreate} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="text-[#64748B] font-bold block mb-1 uppercase tracking-wider text-[10px]">Full Name</label>
                 <input required type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full px-3 py-2 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg text-xs text-[#172033] focus:outline-none focus:border-[#FF5A1F]" />
@@ -153,8 +208,8 @@ export const AdminOrganizers = () => {
                 <input required type="email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} className="w-full px-3 py-2 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg text-xs text-[#172033] focus:outline-none focus:border-[#FF5A1F]" />
               </div>
               <div>
-                <label className="text-[#64748B] font-bold block mb-1 uppercase tracking-wider text-[10px]">Password</label>
-                <input required type="password" value={formData.password} onChange={e => setFormData({...formData, password: e.target.value})} className="w-full px-3 py-2 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg text-xs text-[#172033] focus:outline-none focus:border-[#FF5A1F]" />
+                <label className="text-[#64748B] font-bold block mb-1 uppercase tracking-wider text-[10px]">Password {editingId && '(Leave blank to keep current)'}</label>
+                <input required={!editingId} type="password" value={formData.password} onChange={e => setFormData({...formData, password: e.target.value})} className="w-full px-3 py-2 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg text-xs text-[#172033] focus:outline-none focus:border-[#FF5A1F]" />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
@@ -172,9 +227,37 @@ export const AdminOrganizers = () => {
                 disabled={creating}
                 className="w-full py-2 bg-[#FF5A1F] hover:bg-[#E94712] disabled:opacity-50 text-white rounded-lg text-xs font-semibold shadow-xs transition-colors cursor-pointer mt-2"
               >
-                {creating ? 'Creating...' : 'Create Organizer Account'}
+                {creating ? (editingId ? 'Updating...' : 'Creating...') : (editingId ? 'Update Organizer' : 'Create Organizer Account')}
               </button>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0F172A]/30 backdrop-blur-xs">
+          <div className="bg-[#FFFFFF] border border-[#E2E8F0] p-6 rounded-2xl w-full max-w-sm shadow-xl relative text-center space-y-4">
+            <div className="mx-auto w-12 h-12 bg-[#FEE2E2] text-[#DC2626] rounded-full flex items-center justify-center mb-4">
+              <Trash2 size={24} />
+            </div>
+            <h2 className="text-lg font-bold text-[#172033]">Delete Organizer?</h2>
+            <p className="text-xs text-[#64748B]">This action cannot be undone. This organizer will lose access to the platform.</p>
+            <div className="flex gap-3 mt-6">
+              <button
+                onClick={() => setShowDeleteModal(false)}
+                className="flex-1 py-2 px-4 bg-[#F8FAFC] hover:bg-[#E2E8F0] text-[#172033] border border-[#E2E8F0] rounded-lg text-xs font-semibold transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDelete}
+                disabled={creating}
+                className="flex-1 py-2 px-4 bg-[#DC2626] hover:bg-[#B91C1C] disabled:opacity-50 text-white rounded-lg text-xs font-semibold shadow-xs transition-colors cursor-pointer"
+              >
+                {creating ? 'Deleting...' : 'Delete'}
+              </button>
+            </div>
           </div>
         </div>
       )}

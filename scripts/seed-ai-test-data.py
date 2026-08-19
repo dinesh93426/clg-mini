@@ -115,7 +115,6 @@ def reset_test_data():
             cur.execute('DELETE FROM "EventPrediction" WHERE "eventId" LIKE %s', (f"{TEST_PREFIX_EVT}%",))
             cur.execute('DELETE FROM "StudentBehavior" WHERE "studentId" LIKE %s', (f"{TEST_PREFIX_STU}%",))
             cur.execute('DELETE FROM "KnowledgeDocument" WHERE "sourceId" LIKE %s', (f"{TEST_PREFIX_EVT}%",))
-            cur.execute('DELETE FROM "EventPoster" WHERE "eventId" LIKE %s OR id LIKE %s', (f"{TEST_PREFIX_EVT}%", f"{TEST_PREFIX_PST}%"))
             cur.execute('DELETE FROM "AIEventGeneration" WHERE "organizerId" LIKE %s', (f"{TEST_PREFIX_ORG}%",))
             cur.execute('DELETE FROM "ChatHistory" WHERE "studentId" LIKE %s', (f"{TEST_PREFIX_STU}%",))
 
@@ -734,12 +733,12 @@ def seed_interactions_and_feedback(students, events):
     run_chunked_insert(
         "Feedbacks",
         """
-        INSERT INTO "Feedback" (id, "studentId", "eventId", rating, comment, sentiment, "sentimentScore", "sentimentModel", "sentimentAnalyzedAt", topics, "createdAt")
+        INSERT INTO "Feedback" (id, "studentId", "eventId", rating, comment, sentiment, "sentimentScore", topics, "createdAt")
         VALUES %s
         ON CONFLICT ("studentId", "eventId") DO NOTHING
         """,
-        [(f[0], f[1], f[2], f[3], f[4], f[5], f[6], f[7], f[8], f[9], f[10]) for f in feedbacks],
-        template="(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s::text[], %s)",
+        [(f[0], f[1], f[2], f[3], f[4], f[5], f[6], f[9], f[10]) for f in feedbacks],
+        template="(%s, %s, %s, %s, %s, %s, %s, %s::text[], %s)",
         chunk_size=1000
     )
 

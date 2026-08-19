@@ -74,16 +74,15 @@ def index_all_events(force: bool = False) -> Dict[str, Any]:
 
                 cur.execute(
                     """
-                    INSERT INTO "KnowledgeDocument" (id, document, "sourceType", "sourceId", metadata, embedding, embedding_vec, "createdAt")
-                    VALUES (%s, %s, 'event', %s, %s, %s, %s::vector, NOW())
+                    INSERT INTO "KnowledgeDocument" (id, document, "sourceType", "sourceId", metadata, embedding, "createdAt")
+                    VALUES (%s, %s, 'event', %s, %s, %s, NOW())
                     ON CONFLICT (id) DO UPDATE SET
                         document = EXCLUDED.document,
                         metadata = EXCLUDED.metadata,
                         embedding = EXCLUDED.embedding,
-                        embedding_vec = EXCLUDED.embedding_vec,
                         "createdAt" = NOW();
                     """,
-                    (doc_id, content, eid, metadata_json, emb, vector_str)
+                    (doc_id, content, eid, metadata_json, emb)
                 )
         conn.commit()
     finally:
@@ -120,16 +119,15 @@ def index_single_event(event_id: str) -> Dict[str, Any]:
 
             cur.execute(
                 """
-                INSERT INTO "KnowledgeDocument" (id, document, "sourceType", "sourceId", metadata, embedding, embedding_vec, "createdAt")
-                VALUES (%s, %s, 'event', %s, %s, %s, %s::vector, NOW())
+                INSERT INTO "KnowledgeDocument" (id, document, "sourceType", "sourceId", metadata, embedding, "createdAt")
+                VALUES (%s, %s, 'event', %s, %s, %s, NOW())
                 ON CONFLICT (id) DO UPDATE SET
                     document = EXCLUDED.document,
                     metadata = EXCLUDED.metadata,
                     embedding = EXCLUDED.embedding,
-                    embedding_vec = EXCLUDED.embedding_vec,
                     "createdAt" = NOW();
                 """,
-                (doc_id, content, eid, metadata_json, emb, vector_str)
+                (doc_id, content, eid, metadata_json, emb)
             )
         conn.commit()
     finally:

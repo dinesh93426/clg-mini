@@ -53,7 +53,7 @@ def retrieve_documents(
     vector_str = f"[{','.join(str(x) for x in query_vector)}]"
 
     where_clauses = ["\"sourceType\" = 'event'"]
-    params = [vector_str, vector_str]
+    params = []
 
     if filters:
         category = filters.get("category")
@@ -72,38 +72,35 @@ def retrieve_documents(
             where_clauses.append("metadata->>'status' = %s")
             params.append(status)
 
-    params.append(top_k)
-
-    # Use pgvector cosine distance: 1 - (embedding_vec <=> query_vec) as similarity
+    # Try pgvector if available, but since embedding_vec isn't there, we just fetch the records and do it in python
     sql = f"""
         SELECT
             "sourceId" AS event_id,
             document   AS content,
             metadata,
-            ROUND((1.0 - (embedding_vec <=> %s::vector))::numeric, 4) AS similarity
+            embedding
         FROM "KnowledgeDocument"
         WHERE {' AND '.join(where_clauses)}
-          AND embedding_vec IS NOT NULL
-        ORDER BY embedding_vec <=> %s::vector ASC
-        LIMIT %s;
     """
 
     try:
         rows = execute_query(sql, tuple(params))
-    except Exception as e:
-        logger.warning(f"pgvector query fallback: {e}")
-        # Fallback to python-side cosine similarity if pgvector operator has issue
-        all_docs = execute_query('SELECT "sourceId" AS event_id, document AS content, metadata, embedding FROM "KnowledgeDocument" WHERE "sourceType" = \'event\';')
-        if not all_docs:
+        if not rows:
             return []
+            
         import numpy as np
         from sklearn.metrics.pairwise import cosine_similarity
+        
+        valid_rows = [d for d in rows if isinstance(d.get("embedding"), list) and len(d["embedding"]) == len(query_vector)]
+        if not valid_rows:
+            return []
+
         q_vec = np.array(query_vector).reshape(1, -1)
-        doc_vecs = np.array([d["embedding"] for d in all_docs])
+        doc_vecs = np.array([d["embedding"] for d in valid_rows])
         sims = cosine_similarity(q_vec, doc_vecs)[0]
         
         results = []
-        for d, s in zip(all_docs, sims):
+        for d, s in zip(valid_rows, sims):
             meta = d["metadata"] if isinstance(d["metadata"], dict) else json.loads(d.get("metadata") or "{}")
             results.append({
                 "event_id": d["event_id"],
@@ -114,6 +111,10 @@ def retrieve_documents(
             })
         results.sort(key=lambda x: x["similarity"], reverse=True)
         return results[:top_k]
+
+    except Exception as e:
+        logger.warning(f"retriever query failed: {e}")
+        return []
 
     results = []
     for r in (rows or []):

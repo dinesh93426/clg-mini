@@ -43,7 +43,7 @@ export const Sidebar = ({ isOpen, setIsOpen }) => {
           { name: 'Events', path: '/admin/events', icon: ClipboardList },
           { name: 'Student Intelligence', path: '/admin/student-intelligence', icon: LineChart, badge: 'AI' },
           { name: 'Event Intelligence', path: '/admin/event-intelligence', icon: BarChart3 },
-          { name: 'Feedback Intelligence', path: '/admin/feedback-intelligence', icon: Star },
+          { name: 'Feedback Intelligence', path: '/admin/sentiment-intelligence', icon: Star },
           { name: 'Recommendations', path: '/admin/recommendations', icon: Sparkles },
           { name: 'Predictions', path: '/admin/predictions', icon: TrendingUp, badge: 'AI' },
           { name: 'AI Insights', path: '/admin/ai-insights', icon: BrainCircuit },

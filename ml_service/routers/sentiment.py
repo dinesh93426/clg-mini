@@ -93,7 +93,7 @@ def analyze_all_db_feedback(batch_size: int = Query(100, ge=10, le=500)):
         SELECT id, "eventId", comment
         FROM "Feedback"
         WHERE comment IS NOT NULL AND comment <> ''
-          AND (sentiment IS NULL OR "sentimentAnalyzedAt" IS NULL)
+          AND sentiment IS NULL
         ORDER BY "createdAt" ASC
         """
     )
@@ -153,12 +153,10 @@ def analyze_all_db_feedback(batch_size: int = Query(100, ge=10, le=500)):
                         UPDATE "Feedback"
                         SET sentiment            = %s,
                             "sentimentScore"     = %s,
-                            "sentimentModel"     = %s,
-                            "sentimentAnalyzedAt"= NOW(),
                             topics               = %s
                         WHERE id = %s
                         """,
-                        (sent, score, model, topics, fb["id"])
+                        (sent, score, topics, fb["id"])
                     )
                     total_processed += 1
 
@@ -211,12 +209,10 @@ def analyze_event_feedback(event_id: str):
                         UPDATE "Feedback"
                         SET sentiment            = %s,
                             "sentimentScore"     = %s,
-                            "sentimentModel"     = %s,
-                            "sentimentAnalyzedAt"= NOW(),
                             topics               = %s
                         WHERE id = %s
                         """,
-                        (res["sentiment"], res["confidence"], res["model"], topics, fb["id"])
+                        (res["sentiment"], res["confidence"], topics, fb["id"])
                     )
         conn.commit()
     finally:

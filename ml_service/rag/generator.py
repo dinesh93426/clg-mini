@@ -57,8 +57,7 @@ def _call_openai(prompt: str) -> Optional[str]:
 _HF_FAILED = False
 
 def _call_huggingface(prompt: str) -> Optional[str]:
-    global _HF_FAILED
-    if not HF_API_KEY or _HF_FAILED:
+    if not HF_API_KEY:
         return None
     try:
         import requests
@@ -68,14 +67,13 @@ def _call_huggingface(prompt: str) -> Optional[str]:
             "inputs": prompt,
             "parameters": {"max_new_tokens": 512, "temperature": 0.2, "return_full_text": False}
         }
-        resp = requests.post(url, headers=headers, json=payload, timeout=2)
+        resp = requests.post(url, headers=headers, json=payload, timeout=15)
         if resp.status_code == 200:
             data = resp.json()
             if isinstance(data, list) and data:
                 return data[0].get("generated_text", "").strip()
     except Exception as e:
         logger.warning(f"HuggingFace API unavailable, using local grounded extractor: {e}")
-        _HF_FAILED = True
     return None
 
 
@@ -118,10 +116,9 @@ def _deterministic_context_answer(question: str, documents: List[Dict[str, Any]]
                 matching_docs.append(doc)
 
         if not matching_docs:
-            topic_str = " ".join(query_keywords).title()
-            return f"I couldn't find information about a {topic_str} workshop in the available event data."
-
-        target_docs = matching_docs
+            target_docs = documents
+        else:
+            target_docs = matching_docs
     elif query_keywords:
         matching_docs = []
         for doc in documents:

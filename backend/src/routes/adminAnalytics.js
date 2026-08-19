@@ -12,6 +12,7 @@
 const express = require('express');
 const router = express.Router();
 const prisma = require('../db');
+const bcrypt = require('bcrypt');
 const { authenticateToken, authorizeRoles } = require('../middleware/auth');
 
 const ML_URL = process.env.ML_SERVICE_URL || 'http://localhost:8000';
@@ -89,12 +90,12 @@ router.get('/students', authenticateToken, authorizeRoles('ADMIN'), async (req, 
 
     // Department participation
     const deptStats = await prisma.$queryRaw`
-      SELECT sp.department,
-             COUNT(DISTINCT sp."userId")   AS "totalStudents",
+      SELECT s.department,
+             COUNT(DISTINCT s.id)   AS "totalStudents",
              COUNT(DISTINCT r."studentId") AS "activeStudents"
-      FROM "StudentProfile" sp
-      LEFT JOIN "Registration" r ON r."studentId" = sp."userId" AND r.status = 'REGISTERED'
-      GROUP BY sp.department
+      FROM "Student" s
+      LEFT JOIN "Registration" r ON r."studentId" = s.id AND r.status = 'REGISTERED'
+      GROUP BY s.department
       ORDER BY "totalStudents" DESC
     `;
 
@@ -105,16 +106,15 @@ router.get('/students', authenticateToken, authorizeRoles('ADMIN'), async (req, 
     }));
 
     // Student list with profiles
-    const students = await prisma.studentProfile.findMany({
-      include: { user: { select: { name: true, email: true } } },
+    const students = await prisma.student.findMany({
       take: 50,
       orderBy: { engagementScore: 'desc' },
     });
 
     const studentList = students.map(s => ({
-      id: s.userId,
-      name: s.user.name,
-      email: s.user.email,
+      id: s.id,
+      name: s.name,
+      email: s.email,
       department: s.department,
       year: s.year,
       clusterLabel: s.clusterLabel,
@@ -449,6 +449,55 @@ router.get('/organizers', authenticateToken, authorizeRoles('ADMIN'), async (req
   } catch (err) {
     console.error('[admin/organizers]', err);
     res.status(500).json({ error: 'Failed to load organizers' });
+  }
+});
+
+router.put('/organizers/:id', authenticateToken, authorizeRoles('ADMIN'), async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, email, department, organizationName, password } = req.body;
+    
+    // Verify organizer belongs to the same college as admin
+    const existing = await prisma.organizer.findUnique({ where: { id } });
+    if (!existing || existing.collegeId !== req.user.collegeId) {
+      return res.status(404).json({ error: 'Organizer not found' });
+    }
+
+    const data = { name, email, department, organizationName };
+    if (password) {
+      data.password = await bcrypt.hash(password, 10);
+    }
+
+    const updated = await prisma.organizer.update({
+      where: { id },
+      data
+    });
+    
+    res.json({ message: 'Organizer updated successfully', id: updated.id });
+  } catch (err) {
+    console.error('[PUT admin/organizers]', err);
+    res.status(500).json({ error: 'Failed to update organizer' });
+  }
+});
+
+router.delete('/organizers/:id', authenticateToken, authorizeRoles('ADMIN'), async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    // Verify organizer belongs to the same college as admin
+    const existing = await prisma.organizer.findUnique({ where: { id } });
+    if (!existing || existing.collegeId !== req.user.collegeId) {
+      return res.status(404).json({ error: 'Organizer not found' });
+    }
+
+    await prisma.organizer.delete({
+      where: { id }
+    });
+    
+    res.json({ message: 'Organizer deleted successfully' });
+  } catch (err) {
+    console.error('[DELETE admin/organizers]', err);
+    res.status(500).json({ error: 'Failed to delete organizer' });
   }
 });
 

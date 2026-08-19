@@ -138,5 +138,15 @@ export const analyticsService = {
     // This calls the new Admin-only organizer registration endpoint
     const response = await apiClient.post('/organizer/register', data);
     return response.data;
+  },
+
+  updateOrganizer: async (id, data) => {
+    const response = await apiClient.put(`/admin/organizers/${id}`, data);
+    return response.data;
+  },
+
+  deleteOrganizer: async (id) => {
+    const response = await apiClient.delete(`/admin/organizers/${id}`);
+    return response.data;
   }
 };
