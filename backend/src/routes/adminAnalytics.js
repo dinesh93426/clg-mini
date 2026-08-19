@@ -40,15 +40,16 @@ router.get('/overview', authenticateToken, authorizeRoles('ADMIN'), async (req, 
       totalFeedbacks,
       avgRating,
     ] = await Promise.all([
-      prisma.studentProfile.count(),
-      prisma.event.count(),
-      prisma.registration.count({ where: { status: 'REGISTERED' } }),
-      prisma.attendance.count({ where: { status: 'PRESENT' } }),
-      prisma.feedback.count(),
-      prisma.feedback.aggregate({ _avg: { rating: true } }),
+      prisma.student.count(), // Note: We leave student count global or keep as is since students don't have collegeId yet
+      prisma.event.count({ where: { collegeId: req.user.collegeId } }),
+      prisma.registration.count({ where: { status: 'REGISTERED', event: { collegeId: req.user.collegeId } } }),
+      prisma.attendance.count({ where: { status: 'PRESENT', event: { collegeId: req.user.collegeId } } }),
+      prisma.feedback.count({ where: { event: { collegeId: req.user.collegeId } } }),
+      prisma.feedback.aggregate({ _avg: { rating: true }, where: { event: { collegeId: req.user.collegeId } } }),
     ]);
 
     const recentEvents = await prisma.event.findMany({
+      where: { collegeId: req.user.collegeId },
       orderBy: { createdAt: 'desc' },
       take: 5,
       select: { id: true, title: true, category: true, status: true, eventDate: true }
@@ -141,6 +142,7 @@ router.get('/events', authenticateToken, authorizeRoles('ADMIN'), async (req, re
       FROM "Event" e
       LEFT JOIN "Registration" r ON r."eventId" = e.id
       LEFT JOIN "Feedback"     f ON f."eventId" = e.id
+      WHERE e."collegeId" = ${req.user.collegeId}
       GROUP BY e.category
       ORDER BY "totalRegistrations" DESC
     `;
@@ -152,6 +154,7 @@ router.get('/events', authenticateToken, authorizeRoles('ADMIN'), async (req, re
              SUM(CASE WHEN status = 'COMPLETED' THEN 1 ELSE 0 END) AS completed
       FROM "Event"
       WHERE "eventDate" >= NOW() - INTERVAL '12 months'
+        AND "collegeId" = ${req.user.collegeId}
       GROUP BY 1
       ORDER BY 1
     `;
@@ -159,11 +162,13 @@ router.get('/events', authenticateToken, authorizeRoles('ADMIN'), async (req, re
     // Status breakdown
     const statusBreakdown = await prisma.event.groupBy({
       by: ['status'],
+      where: { collegeId: req.user.collegeId },
       _count: { _all: true },
     });
 
     // Most popular events
     const popularEvents = await prisma.event.findMany({
+      where: { collegeId: req.user.collegeId },
       take: 8,
       include: {
         _count: { select: { registrations: true } },
@@ -225,13 +230,16 @@ router.get('/feedback', authenticateToken, authorizeRoles('ADMIN'), async (req, 
              COUNT(CASE WHEN f.sentiment = 'NEUTRAL'  THEN 1 END) AS neutral,
              COUNT(CASE WHEN f.sentiment = 'NEGATIVE' THEN 1 END) AS negative
       FROM "Feedback" f
+      INNER JOIN "Event" e ON f."eventId" = e.id
       WHERE f."createdAt" >= NOW() - INTERVAL '6 months'
+        AND e."collegeId" = ${req.user.collegeId}
       GROUP BY DATE_TRUNC('month', f."createdAt"), TO_CHAR(DATE_TRUNC('month', f."createdAt"), 'Mon YYYY')
       ORDER BY DATE_TRUNC('month', f."createdAt")
     `;
 
     // Topic frequency
     const feedbacksWithTopics = await prisma.feedback.findMany({
+      where: { event: { collegeId: req.user.collegeId } },
       select: { topics: true, sentiment: true }
     });
 
@@ -258,6 +266,7 @@ router.get('/feedback', authenticateToken, authorizeRoles('ADMIN'), async (req, 
     // Overall distribution
     const distribution = await prisma.feedback.groupBy({
       by: ['sentiment'],
+      where: { event: { collegeId: req.user.collegeId } },
       _count: { _all: true },
     });
 
@@ -292,6 +301,7 @@ router.get('/predictions', authenticateToken, authorizeRoles('ADMIN'), async (re
 
     // Fallback: from EventPrediction table
     const preds = await prisma.eventPrediction.findMany({
+      where: { event: { collegeId: req.user.collegeId } },
       include: {
         event: {
           select: {
@@ -323,7 +333,7 @@ router.get('/predictions', authenticateToken, authorizeRoles('ADMIN'), async (re
 
     // Fallback: compute rough estimates from registrations
     const events = await prisma.event.findMany({
-      where: { status: 'PUBLISHED' },
+      where: { status: 'PUBLISHED', collegeId: req.user.collegeId },
       include: { _count: { select: { registrations: true } } },
       take: 20,
     });
@@ -421,24 +431,20 @@ router.get('/recommendations', authenticateToken, authorizeRoles('ADMIN'), async
 // ── /api/admin/organizers ─────────────────────────────────────────────────────
 router.get('/organizers', authenticateToken, authorizeRoles('ADMIN'), async (req, res) => {
   try {
-    const organizers = await prisma.organizerProfile.findMany({
+    const organizers = await prisma.organizer.findMany({
+      where: { collegeId: req.user.collegeId },
       include: {
-        user: {
-          select: {
-            id: true, name: true, email: true,
-            _count: { select: { events: true } }
-          }
-        },
+        _count: { select: { events: true } }
       },
     });
 
     res.json(organizers.map(o => ({
-      id: o.userId,
-      name: o.user.name,
-      email: o.user.email,
+      id: o.id,
+      name: o.name,
+      email: o.email,
       department: o.department,
       organizationName: o.organizationName,
-      totalEvents: o.user._count.events,
+      totalEvents: o._count.events,
     })));
   } catch (err) {
     console.error('[admin/organizers]', err);

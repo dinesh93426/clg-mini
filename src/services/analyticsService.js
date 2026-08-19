@@ -132,5 +132,11 @@ export const analyticsService = {
     }
     const response = await apiClient.get('/admin/organizers');
     return response.data;
+  },
+
+  createOrganizer: async (data) => {
+    // This calls the new Admin-only organizer registration endpoint
+    const response = await apiClient.post('/organizer/register', data);
+    return response.data;
   }
 };

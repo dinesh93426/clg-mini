@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Sparkles, Calendar, MapPin, Users, CheckCircle2 } from 'lucide-react';
+import { Sparkles, Calendar, MapPin, Users, CheckCircle2, Building } from 'lucide-react';
 
 const CATEGORY_IMAGES = {
   technical: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&q=80&w=600",
@@ -117,6 +117,10 @@ export const EventCard = ({ event, onRegister, registered = false, registering =
           <div className="flex items-center gap-1.5">
             <MapPin size={13} className="text-[#FF5A1F]" />
             <span className="truncate">{event.venue || 'Campus Main Hall'}</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <Building size={13} className="text-[#FF5A1F]" />
+            <span className="truncate">{event.collegeName || 'Central College'}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <Users size={13} className="text-[#FF5A1F]" />

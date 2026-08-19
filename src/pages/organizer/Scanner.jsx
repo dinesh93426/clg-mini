@@ -10,6 +10,7 @@ export const Scanner = () => {
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [scanResult, setScanResult] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
   const [studentIdInput, setStudentIdInput] = useState('');
 
   useEffect(() => {
@@ -26,37 +27,42 @@ export const Scanner = () => {
     fetchEvent();
   }, [id]);
 
-  const handleSimulateScan = (e) => {
+  const handleSimulateScan = async (e) => {
     e.preventDefault();
     if (!studentIdInput.trim()) return;
     
     setScanResult(null);
-    setTimeout(() => {
-      setScanResult({
-        success: true,
-        studentName: studentIdInput.startsWith('stu-') ? `Demo Student (${studentIdInput})` : studentIdInput,
-        timestamp: new Date().toLocaleTimeString()
-      });
+    setErrorMsg(null);
+    
+    try {
+      const result = await eventService.markAttendance(id, studentIdInput);
+      setScanResult(result);
       setStudentIdInput('');
       
       setTimeout(() => {
         setScanResult(null);
       }, 3000);
-    }, 500);
+    } catch (err) {
+      setErrorMsg(err.message || 'Scan failed');
+      setTimeout(() => setErrorMsg(null), 3000);
+    }
   };
 
-  const handleMockRandomScan = () => {
+  const handleMockRandomScan = async () => {
     setScanResult(null);
-    setTimeout(() => {
-      setScanResult({
-        success: true,
-        studentName: 'Alex Johnson (CSE 3rd Year)',
-        timestamp: new Date().toLocaleTimeString()
-      });
+    setErrorMsg(null);
+    try {
+      // Simulate scanning the QR payload
+      const payload = `${id}:demo-stu-${Math.floor(Math.random() * 1000)}`;
+      const result = await eventService.markAttendance(id, payload);
+      setScanResult(result);
       setTimeout(() => {
         setScanResult(null);
       }, 3000);
-    }, 500);
+    } catch (err) {
+      setErrorMsg(err.message || 'Scan failed. Student may not be registered.');
+      setTimeout(() => setErrorMsg(null), 3000);
+    }
   };
 
   if (loading) {
@@ -95,7 +101,7 @@ export const Scanner = () => {
         
         {/* Left Column: Scanner View */}
         <div className="bg-[#FFFFFF] rounded-2xl border border-[#E2E8F0] overflow-hidden relative flex flex-col items-center justify-center p-8 min-h-[320px] shadow-xs">
-          {!scanResult ? (
+          {!scanResult && !errorMsg ? (
             <div className="flex flex-col items-center">
               <div className="w-52 h-52 border-2 border-dashed border-[#FF5A1F]/40 rounded-2xl relative flex items-center justify-center bg-[#F8FAFC]">
                 <ScanLine size={40} className="text-[#FF5A1F]/30" />
@@ -106,14 +112,23 @@ export const Scanner = () => {
               </div>
               <p className="mt-4 text-xs font-semibold text-[#64748B]">Waiting for QR Code scan...</p>
             </div>
-          ) : (
+          ) : scanResult ? (
             <div className="flex flex-col items-center text-center p-6 rounded-xl bg-[#DCFCE7] border border-[#BBF7D0]">
               <div className="w-14 h-14 rounded-full bg-[#16A34A] text-white flex items-center justify-center mb-2">
                 <CheckCircle2 size={28} />
               </div>
               <h3 className="text-lg font-bold text-[#16A34A]">Checked In Successfully</h3>
               <p className="text-xs text-[#172033] font-semibold mt-0.5">{scanResult.studentName}</p>
+              <p className="text-[10px] text-[#16A34A] font-medium mt-1">{scanResult.message}</p>
               <span className="text-[10px] text-[#64748B] mt-2 block">Scanned at {scanResult.timestamp}</span>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center text-center p-6 rounded-xl bg-[#FEE2E2] border border-[#FECACA]">
+              <div className="w-14 h-14 rounded-full bg-[#DC2626] text-white flex items-center justify-center mb-2">
+                <AlertTriangle size={28} />
+              </div>
+              <h3 className="text-lg font-bold text-[#DC2626]">Check-In Failed</h3>
+              <p className="text-xs text-[#172033] font-semibold mt-0.5">{errorMsg}</p>
             </div>
           )}
 

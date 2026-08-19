@@ -23,6 +23,18 @@ enum AttendanceStatus {
   ABSENT
 }
 
+model College {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  domain    String?  @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  admins     Admin[]
+  organizers Organizer[]
+  events     Event[]
+}
+
 model Student {
   id              String   @id @default(uuid())
   name            String
@@ -39,13 +51,13 @@ model Student {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
-  registrations     Registration[]
-  attendances       Attendance[]
-  feedbacks         Feedback[]
-  interactions      EventInteraction[]
-  recommendations   Recommendation[]
-  chatHistories     ChatHistory[]
-  studentBehaviors  StudentBehavior[]
+  registrations    Registration[]
+  attendances      Attendance[]
+  feedbacks        Feedback[]
+  interactions     EventInteraction[]
+  recommendations  Recommendation[]
+  chatHistories    ChatHistory[]
+  studentBehaviors StudentBehavior[]
 }
 
 model Organizer {
@@ -55,11 +67,13 @@ model Organizer {
   password         String
   department       String
   organizationName String?
+  collegeId        String?
+  college          College? @relation(fields: [collegeId], references: [id])
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
-  events           Event[]
-  aiGenerations    AIEventGeneration[]
+  events        Event[]
+  aiGenerations AIEventGeneration[]
 }
 
 model Admin {
@@ -67,6 +81,8 @@ model Admin {
   name      String
   email     String   @unique
   password  String
+  collegeId String?
+  college   College? @relation(fields: [collegeId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -78,6 +94,8 @@ model Event {
   category       String
   organizerId    String
   organizer      Organizer   @relation(fields: [organizerId], references: [id])
+  collegeId      String?
+  college        College?    @relation(fields: [collegeId], references: [id])
   venue          String
   eventDate      DateTime
   startTime      String
@@ -141,7 +159,7 @@ model EventInteraction {
   student         Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
   eventId         String
   event           Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  interactionType String   // VIEW, REGISTER, CANCEL, LIKE, SHARE
+  interactionType String // VIEW, REGISTER, CANCEL, LIKE, SHARE
   createdAt       DateTime @default(now())
 }
 
@@ -198,10 +216,10 @@ model StudentBehavior {
 
 model AIInsight {
   id          String   @id @default(uuid())
-  type        String   // TREND, WARNING, OPPORTUNITY, PREDICTION, RECOMMENDATION
+  type        String // TREND, WARNING, OPPORTUNITY, PREDICTION, RECOMMENDATION
   title       String
   description String
-  severity    String   // INFO, WARNING, CRITICAL
+  severity    String // INFO, WARNING, CRITICAL
   metadata    Json?
   createdAt   DateTime @default(now())
 }

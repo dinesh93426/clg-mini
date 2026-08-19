@@ -334,8 +334,12 @@ router.post('/poster/:posterId/publish', authenticateToken, async (req, res) => 
 // GET /api/ai/analytics/overview
 router.get('/analytics/overview', authenticateToken, async (req, res) => {
   try {
-    const qs = new URLSearchParams(req.query).toString();
-    const url = `${ML_URL}/api/v1/analytics/overview${qs ? '?' + qs : ''}`;
+    const qs = new URLSearchParams(req.query);
+    if (req.user.role === 'ADMIN' && req.user.collegeId) {
+      qs.set('collegeId', req.user.collegeId);
+    }
+    const qsStr = qs.toString();
+    const url = `${ML_URL}/api/v1/analytics/overview${qsStr ? '?' + qsStr : ''}`;
     const resp = await fetch(url);
     if (!resp.ok) {
       const errText = await resp.text();
@@ -352,7 +356,10 @@ router.get('/analytics/overview', authenticateToken, async (req, res) => {
 // GET /api/ai/analytics/events
 router.get('/analytics/events', authenticateToken, async (req, res) => {
   try {
-    const resp = await fetch(`${ML_URL}/api/v1/analytics/events`);
+    const url = req.user.role === 'ADMIN' && req.user.collegeId 
+      ? `${ML_URL}/api/v1/analytics/events?collegeId=${req.user.collegeId}` 
+      : `${ML_URL}/api/v1/analytics/events`;
+    const resp = await fetch(url);
     if (!resp.ok) {
       const errText = await resp.text();
       return res.status(resp.status).json({ error: errText });
@@ -368,7 +375,10 @@ router.get('/analytics/events', authenticateToken, async (req, res) => {
 // GET /api/ai/analytics/sentiment
 router.get('/analytics/sentiment', authenticateToken, async (req, res) => {
   try {
-    const resp = await fetch(`${ML_URL}/api/v1/analytics/sentiment`);
+    const url = req.user.role === 'ADMIN' && req.user.collegeId 
+      ? `${ML_URL}/api/v1/analytics/sentiment?collegeId=${req.user.collegeId}` 
+      : `${ML_URL}/api/v1/analytics/sentiment`;
+    const resp = await fetch(url);
     if (!resp.ok) {
       const errText = await resp.text();
       return res.status(resp.status).json({ error: errText });
@@ -384,7 +394,10 @@ router.get('/analytics/sentiment', authenticateToken, async (req, res) => {
 // GET /api/ai/analytics/demand
 router.get('/analytics/demand', authenticateToken, async (req, res) => {
   try {
-    const resp = await fetch(`${ML_URL}/api/v1/analytics/demand`);
+    const url = req.user.role === 'ADMIN' && req.user.collegeId 
+      ? `${ML_URL}/api/v1/analytics/demand?collegeId=${req.user.collegeId}` 
+      : `${ML_URL}/api/v1/analytics/demand`;
+    const resp = await fetch(url);
     if (!resp.ok) {
       const errText = await resp.text();
       return res.status(resp.status).json({ error: errText });
@@ -422,7 +435,7 @@ router.get('/dashboard/admin', authenticateToken, async (req, res) => {
     if (req.user.role !== 'ADMIN') {
       return res.status(403).json({ error: 'Forbidden: Admin access required for institution dashboard.' });
     }
-    const resp = await fetch(`${ML_URL}/api/v1/dashboard/admin`);
+    const resp = await fetch(`${ML_URL}/api/v1/dashboard/admin?collegeId=${req.user.collegeId}`);
     if (!resp.ok) {
       const errText = await resp.text();
       return res.status(resp.status).json({ error: errText });
@@ -438,7 +451,10 @@ router.get('/dashboard/admin', authenticateToken, async (req, res) => {
 // GET /api/ai/dashboard/events
 router.get('/dashboard/events', authenticateToken, async (req, res) => {
   try {
-    const resp = await fetch(`${ML_URL}/api/v1/dashboard/events`);
+    const url = req.user.role === 'ADMIN' && req.user.collegeId 
+      ? `${ML_URL}/api/v1/dashboard/events?collegeId=${req.user.collegeId}` 
+      : `${ML_URL}/api/v1/dashboard/events`;
+    const resp = await fetch(url);
     if (!resp.ok) {
       const errText = await resp.text();
       return res.status(resp.status).json({ error: errText });
@@ -454,7 +470,10 @@ router.get('/dashboard/events', authenticateToken, async (req, res) => {
 // GET /api/ai/dashboard/demand
 router.get('/dashboard/demand', authenticateToken, async (req, res) => {
   try {
-    const resp = await fetch(`${ML_URL}/api/v1/dashboard/demand`);
+    const url = req.user.role === 'ADMIN' && req.user.collegeId 
+      ? `${ML_URL}/api/v1/dashboard/demand?collegeId=${req.user.collegeId}` 
+      : `${ML_URL}/api/v1/dashboard/demand`;
+    const resp = await fetch(url);
     if (!resp.ok) {
       const errText = await resp.text();
       return res.status(resp.status).json({ error: errText });
@@ -470,7 +489,10 @@ router.get('/dashboard/demand', authenticateToken, async (req, res) => {
 // GET /api/ai/dashboard/sentiment
 router.get('/dashboard/sentiment', authenticateToken, async (req, res) => {
   try {
-    const resp = await fetch(`${ML_URL}/api/v1/dashboard/sentiment`);
+    const url = req.user.role === 'ADMIN' && req.user.collegeId 
+      ? `${ML_URL}/api/v1/dashboard/sentiment?collegeId=${req.user.collegeId}` 
+      : `${ML_URL}/api/v1/dashboard/sentiment`;
+    const resp = await fetch(url);
     if (!resp.ok) {
       const errText = await resp.text();
       return res.status(resp.status).json({ error: errText });
@@ -487,9 +509,12 @@ router.get('/dashboard/sentiment', authenticateToken, async (req, res) => {
 router.get('/dashboard/alerts', authenticateToken, async (req, res) => {
   try {
     const organizerId = req.user.role === 'ORGANIZER' ? (req.user.userId || req.user.id) : null;
-    const url = organizerId 
-      ? `${ML_URL}/api/v1/dashboard/alerts?organizerId=${encodeURIComponent(organizerId)}`
-      : `${ML_URL}/api/v1/dashboard/alerts`;
+    let url = `${ML_URL}/api/v1/dashboard/alerts`;
+    if (organizerId) {
+      url += `?organizerId=${encodeURIComponent(organizerId)}`;
+    } else if (req.user.role === 'ADMIN' && req.user.collegeId) {
+      url += `?collegeId=${req.user.collegeId}`;
+    }
     const resp = await fetch(url);
     if (!resp.ok) {
       const errText = await resp.text();
@@ -506,7 +531,8 @@ router.get('/dashboard/alerts', authenticateToken, async (req, res) => {
 // POST /api/ai/dashboard/insights
 router.post('/dashboard/insights', authenticateToken, async (req, res) => {
   try {
-    const result = await callML('/api/v1/dashboard/insights', req.body || {});
+    const qs = req.user.role === 'ADMIN' && req.user.collegeId ? `?collegeId=${req.user.collegeId}` : '';
+    const result = await callML(`/api/v1/dashboard/insights${qs}`, req.body || {});
     res.json(result);
   } catch (err) {
     console.error('[ai/dashboard/insights]', err);

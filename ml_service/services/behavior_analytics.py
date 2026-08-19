@@ -11,17 +11,19 @@ if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
 import logging
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 from core.db import execute_query
 
 logger = logging.getLogger("ml_service.analytics.behavior")
 
 
-def get_behavior_analytics() -> Dict[str, Any]:
+def get_behavior_analytics(college_id: Optional[str] = None) -> Dict[str, Any]:
     """
     Retrieves student cluster distribution and segment engagement statistics.
     """
-    students = execute_query("""
+    where_sql = "WHERE e.\"collegeId\" = %s" if college_id else ""
+    params = (college_id,) if college_id else None
+    students = execute_query(f"""
         SELECT
             s.id,
             s.department,
@@ -30,10 +32,12 @@ def get_behavior_analytics() -> Dict[str, Any]:
             ROUND(AVG(f.rating)::numeric, 2) as avg_rating
         FROM "Student" s
         LEFT JOIN "Registration" r ON s.id = r."studentId"
-        LEFT JOIN "Attendance" a ON s.id = a."studentId"
-        LEFT JOIN "Feedback" f ON s.id = f."studentId"
+        LEFT JOIN "Event" e ON r."eventId" = e.id
+        LEFT JOIN "Attendance" a ON s.id = a."studentId" AND a."eventId" = e.id
+        LEFT JOIN "Feedback" f ON s.id = f."studentId" AND f."eventId" = e.id
+        {where_sql}
         GROUP BY s.id, s.department;
-    """)
+    """, params)
 
     total_students = len(students or [])
     clusters = {

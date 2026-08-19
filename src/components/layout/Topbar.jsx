@@ -4,14 +4,12 @@ import { useAuth } from '../../hooks/useAuth';
 import { useApp } from '../../hooks/useApp';
 
 export const Topbar = ({ onMenuClick }) => {
-  const { user, switchRole } = useAuth();
+  const { user } = useAuth();
   const { notifications, markAllRead, removeNotification, setShowSearchModal } = useApp();
   
   const [showNotifDropdown, setShowNotifDropdown] = useState(false);
-  const [showRoleSwitcher, setShowRoleSwitcher] = useState(false);
   
   const notifRef = useRef(null);
-  const roleRef = useRef(null);
 
   // Close dropdowns on outside clicks
   useEffect(() => {
@@ -19,21 +17,12 @@ export const Topbar = ({ onMenuClick }) => {
       if (notifRef.current && !notifRef.current.contains(e.target)) {
         setShowNotifDropdown(false);
       }
-      if (roleRef.current && !roleRef.current.contains(e.target)) {
-        setShowRoleSwitcher(false);
-      }
     };
     document.addEventListener('mousedown', handleOutsideClick);
     return () => document.removeEventListener('mousedown', handleOutsideClick);
   }, []);
 
   const unreadCount = notifications.filter(n => !n.read).length;
-
-  const handleRoleChange = (role) => {
-    switchRole(role);
-    setShowRoleSwitcher(false);
-    window.location.href = `/${role}/dashboard`;
-  };
 
   const getNotifIcon = (type) => {
     switch (type) {
@@ -79,46 +68,6 @@ export const Topbar = ({ onMenuClick }) => {
         <div className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium bg-[#DCFCE7] text-[#16A34A] border border-[#BBF7D0]">
           <span className="h-1.5 w-1.5 rounded-full bg-[#16A34A]"></span>
           <span>AI Engine Active</span>
-        </div>
-
-        {/* Quick Role Switcher */}
-        <div className="relative" ref={roleRef}>
-          <button
-            onClick={() => setShowRoleSwitcher(!showRoleSwitcher)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-[#172033] bg-[#FFFFFF] border border-[#E2E8F0] hover:border-[#FFB49A] hover:bg-[#FFF7F3] transition-colors cursor-pointer"
-          >
-            <RefreshCw size={12} className="text-[#FF5A1F]" />
-            <span className="hidden md:inline text-[#64748B]">Portal:</span>
-            <span className="capitalize text-[#FF5A1F]">{user?.role}</span>
-          </button>
-          
-          {showRoleSwitcher && (
-            <div className="absolute right-0 mt-1.5 w-48 rounded-xl shadow-lg border border-[#E2E8F0] bg-[#FFFFFF] p-1.5 divide-y divide-[#E2E8F0] z-50">
-              <div className="px-3 py-1.5 text-[10px] font-bold text-[#94A3B8] uppercase tracking-wider">
-                Switch Portal Role
-              </div>
-              <div className="py-1 space-y-0.5">
-                <button
-                  onClick={() => handleRoleChange('student')}
-                  className={`flex w-full items-center px-3 py-1.5 text-xs rounded-lg font-medium transition-colors ${user?.role === 'student' ? 'bg-[#FFF1EB] text-[#FF5A1F]' : 'text-[#64748B] hover:text-[#FF5A1F] hover:bg-[#FFF7F3]'}`}
-                >
-                  Student Portal
-                </button>
-                <button
-                  onClick={() => handleRoleChange('organizer')}
-                  className={`flex w-full items-center px-3 py-1.5 text-xs rounded-lg font-medium transition-colors ${user?.role === 'organizer' ? 'bg-[#FFF1EB] text-[#FF5A1F]' : 'text-[#64748B] hover:text-[#FF5A1F] hover:bg-[#FFF7F3]'}`}
-                >
-                  Organizer Portal
-                </button>
-                <button
-                  onClick={() => handleRoleChange('admin')}
-                  className={`flex w-full items-center px-3 py-1.5 text-xs rounded-lg font-medium transition-colors ${user?.role === 'admin' ? 'bg-[#FFF1EB] text-[#FF5A1F]' : 'text-[#64748B] hover:text-[#FF5A1F] hover:bg-[#FFF7F3]'}`}
-                >
-                  Admin Portal
-                </button>
-              </div>
-            </div>
-          )}
         </div>
 
         {/* Notifications Dropdown */}

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { eventService } from '../../services/eventService';
 import { EventCard } from '../../components/events/EventCard';
-import { Search, SlidersHorizontal, LayoutGrid, List, AlertCircle, X, Sparkles, CheckCircle2, MapPin, Calendar, Users } from 'lucide-react';
+import { Search, SlidersHorizontal, LayoutGrid, List, AlertCircle, X, Sparkles, CheckCircle2, MapPin, Calendar, Users, Building } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export const Events = () => {
@@ -18,6 +18,7 @@ export const Events = () => {
   const [viewMode, setViewMode] = useState('grid');
   const [registeringId, setRegisteringId] = useState(null);
   const [alertInfo, setAlertInfo] = useState(null);
+  const [selectedCollege, setSelectedCollege] = useState('All Colleges');
 
   const categories = ['All', 'AI', 'Technology', 'Business', 'Arts', 'Sports'];
 
@@ -74,12 +75,15 @@ export const Events = () => {
     }
   };
 
+  const uniqueColleges = ['All Colleges', ...new Set(events.map(e => e.collegeName).filter(Boolean))];
+
   const filteredEvents = events.filter(e => {
     const matchesSearch = e.title.toLowerCase().includes(search.toLowerCase()) || 
                           e.description.toLowerCase().includes(search.toLowerCase()) ||
                           e.organizer.toLowerCase().includes(search.toLowerCase());
     const matchesCategory = selectedCategory === 'All' || e.category.toLowerCase() === selectedCategory.toLowerCase();
-    return matchesSearch && matchesCategory;
+    const matchesCollege = selectedCollege === 'All Colleges' || e.collegeName === selectedCollege;
+    return matchesSearch && matchesCategory && matchesCollege;
   });
 
   return (
@@ -182,7 +186,17 @@ export const Events = () => {
 
       {/* Expanded filters drawer */}
       {showFilters && (
-        <div className="p-4 rounded-xl bg-[#FFFFFF] border border-[#E2E8F0] grid grid-cols-2 md:grid-cols-4 gap-3 text-xs shadow-xs">
+        <div className="p-4 rounded-xl bg-[#FFFFFF] border border-[#E2E8F0] grid grid-cols-2 md:grid-cols-5 gap-3 text-xs shadow-xs">
+          <div>
+            <label className="text-[#64748B] font-bold block mb-1 uppercase tracking-wider text-[10px]">College</label>
+            <select 
+              value={selectedCollege} 
+              onChange={(e) => setSelectedCollege(e.target.value)}
+              className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-1.5 w-full text-[#172033] focus:outline-none focus:border-[#FF5A1F]"
+            >
+              {uniqueColleges.map(c => <option key={c} value={c}>{c}</option>)}
+            </select>
+          </div>
           <div>
             <label className="text-[#64748B] font-bold block mb-1 uppercase tracking-wider text-[10px]">Department</label>
             <select className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-1.5 w-full text-[#172033] focus:outline-none focus:border-[#FF5A1F]">
@@ -232,9 +246,9 @@ export const Events = () => {
         <div className="py-12 text-center space-y-2.5 border border-[#E2E8F0] rounded-2xl bg-[#FFFFFF] shadow-xs">
           <AlertCircle size={22} className="text-[#94A3B8] mx-auto" />
           <h3 className="text-sm font-semibold text-[#172033]">No events found</h3>
-          <p className="text-xs text-[#64748B] max-w-sm mx-auto">Try adjusting your search terms or clearing selected category filters.</p>
+          <p className="text-xs text-[#64748B] max-w-sm mx-auto">Try adjusting your search terms or clearing selected category and college filters.</p>
           <button
-            onClick={() => { setSearch(''); setSelectedCategory('All'); }}
+            onClick={() => { setSearch(''); setSelectedCategory('All'); setSelectedCollege('All Colleges'); }}
             className="px-3.5 py-1.5 bg-[#FF5A1F] hover:bg-[#E94712] text-white rounded-lg text-xs font-semibold shadow-xs transition-colors cursor-pointer"
           >
             Reset Filters
@@ -282,6 +296,10 @@ export const Events = () => {
                     <Link to={`/student/events/${event.id}`}>
                       <h3 className="text-xs font-semibold text-[#172033] hover:text-[#FF5A1F] transition-colors mt-1 truncate">{event.title}</h3>
                     </Link>
+                    <div className="flex items-center gap-1 mt-0.5 text-[#64748B] text-[10px]">
+                      <Building size={10} className="text-[#FF5A1F]" />
+                      <span>{event.collegeName || 'Central College'}</span>
+                    </div>
                     <p className="text-[11px] text-[#64748B] mt-0.5 line-clamp-1">{event.description}</p>
                   </div>
                 </div>

@@ -1,26 +1,50 @@
 import React, { useState, useEffect } from 'react';
 import { analyticsService } from '../../services/analyticsService';
-import { Search, ShieldAlert, Star, Building } from 'lucide-react';
+import { Search, ShieldAlert, Star, Building, Plus, X } from 'lucide-react';
 
 export const AdminOrganizers = () => {
   const [organizers, setOrganizers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  
+  const [showModal, setShowModal] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '', email: '', password: '', department: '', organizationName: ''
+  });
+  const [creating, setCreating] = useState(false);
+  const [error, setError] = useState(null);
+
+  const fetchOrganizers = async () => {
+    setLoading(true);
+    try {
+      const res = await analyticsService.getOrganizersList();
+      setOrganizers(res);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchOrganizers = async () => {
-      setLoading(true);
-      try {
-        const res = await analyticsService.getOrganizersList();
-        setOrganizers(res);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchOrganizers();
   }, []);
+
+  const handleCreate = async (e) => {
+    e.preventDefault();
+    setCreating(true);
+    setError(null);
+    try {
+      await analyticsService.createOrganizer(formData);
+      setShowModal(false);
+      setFormData({ name: '', email: '', password: '', department: '', organizationName: '' });
+      await fetchOrganizers();
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to create organizer');
+    } finally {
+      setCreating(false);
+    }
+  };
 
   const filteredOrganizers = organizers.filter(o => 
     o.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -31,9 +55,17 @@ export const AdminOrganizers = () => {
     <div className="space-y-6 pb-12">
       
       {/* Header */}
-      <div className="border-b border-[#E2E8F0] pb-5">
-        <h1 className="text-2xl font-bold tracking-tight text-[#172033]">Organizers Registry</h1>
-        <p className="text-xs text-[#64748B] mt-0.5">Review active coordinators, rating scores, and total events generated.</p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E2E8F0] pb-5">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-[#172033]">Organizers Registry</h1>
+          <p className="text-xs text-[#64748B] mt-0.5">Review active coordinators, rating scores, and total events generated.</p>
+        </div>
+        <button
+          onClick={() => setShowModal(true)}
+          className="px-4 py-2 bg-[#FF5A1F] hover:bg-[#E94712] text-white rounded-lg text-xs font-semibold flex items-center gap-2 transition-colors cursor-pointer"
+        >
+          <Plus size={15} /> Create Organizer
+        </button>
       </div>
 
       {/* Search */}
@@ -93,6 +125,56 @@ export const AdminOrganizers = () => {
                 ))}
               </tbody>
             </table>
+          </div>
+        </div>
+      )}
+
+      {/* Create Organizer Modal */}
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0F172A]/30 backdrop-blur-xs">
+          <div className="bg-[#FFFFFF] border border-[#E2E8F0] p-6 rounded-2xl w-full max-w-md shadow-xl relative">
+            <button 
+              onClick={() => setShowModal(false)}
+              className="absolute top-4 right-4 text-[#94A3B8] hover:text-[#172033] cursor-pointer"
+            >
+              <X size={15} />
+            </button>
+            
+            <h2 className="text-lg font-bold text-[#172033] mb-4">Create New Organizer</h2>
+            {error && <div className="mb-4 p-2 bg-[#FEE2E2] text-[#DC2626] border border-[#FECACA] rounded-lg text-xs">{error}</div>}
+            
+            <form onSubmit={handleCreate} className="space-y-4">
+              <div>
+                <label className="text-[#64748B] font-bold block mb-1 uppercase tracking-wider text-[10px]">Full Name</label>
+                <input required type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full px-3 py-2 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg text-xs text-[#172033] focus:outline-none focus:border-[#FF5A1F]" />
+              </div>
+              <div>
+                <label className="text-[#64748B] font-bold block mb-1 uppercase tracking-wider text-[10px]">Email</label>
+                <input required type="email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} className="w-full px-3 py-2 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg text-xs text-[#172033] focus:outline-none focus:border-[#FF5A1F]" />
+              </div>
+              <div>
+                <label className="text-[#64748B] font-bold block mb-1 uppercase tracking-wider text-[10px]">Password</label>
+                <input required type="password" value={formData.password} onChange={e => setFormData({...formData, password: e.target.value})} className="w-full px-3 py-2 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg text-xs text-[#172033] focus:outline-none focus:border-[#FF5A1F]" />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-[#64748B] font-bold block mb-1 uppercase tracking-wider text-[10px]">Department</label>
+                  <input required type="text" value={formData.department} onChange={e => setFormData({...formData, department: e.target.value})} className="w-full px-3 py-2 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg text-xs text-[#172033] focus:outline-none focus:border-[#FF5A1F]" />
+                </div>
+                <div>
+                  <label className="text-[#64748B] font-bold block mb-1 uppercase tracking-wider text-[10px]">Organization</label>
+                  <input required type="text" value={formData.organizationName} onChange={e => setFormData({...formData, organizationName: e.target.value})} className="w-full px-3 py-2 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg text-xs text-[#172033] focus:outline-none focus:border-[#FF5A1F]" />
+                </div>
+              </div>
+              
+              <button
+                type="submit"
+                disabled={creating}
+                className="w-full py-2 bg-[#FF5A1F] hover:bg-[#E94712] disabled:opacity-50 text-white rounded-lg text-xs font-semibold shadow-xs transition-colors cursor-pointer mt-2"
+              >
+                {creating ? 'Creating...' : 'Create Organizer Account'}
+              </button>
+            </form>
           </div>
         </div>
       )}

@@ -3,7 +3,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { eventService } from '../../services/eventService';
 import { 
   Calendar, MapPin, CheckCircle, Clock, XCircle, AlertTriangle, 
-  Star, MessageSquareCode, ShieldCheck, X, Sparkles, QrCode
+  Star, MessageSquareCode, ShieldCheck, X, Sparkles, QrCode, Award, Download
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -23,6 +23,9 @@ export const Registrations = () => {
 
   const [showQRModal, setShowQRModal] = useState(false);
   const [selectedQRReg, setSelectedQRReg] = useState(null);
+
+  const [showCertModal, setShowCertModal] = useState(false);
+  const [selectedCertReg, setSelectedCertReg] = useState(null);
 
   const loadRegistrations = async () => {
     setLoading(true);
@@ -62,6 +65,11 @@ export const Registrations = () => {
   const handleOpenQR = (reg) => {
     setSelectedQRReg(reg);
     setShowQRModal(true);
+  };
+
+  const handleOpenCert = (reg) => {
+    setSelectedCertReg(reg);
+    setShowCertModal(true);
   };
 
   const handleFeedbackSubmit = async (e) => {
@@ -138,6 +146,79 @@ export const Registrations = () => {
             <p className="text-[11px] text-[#64748B] max-w-[220px] mx-auto leading-relaxed">
               Present this QR code to the event organizers at the venue entrance for automated attendance.
             </p>
+          </div>
+        </div>
+      )}
+
+      {/* Certificate Modal Overlay */}
+      {showCertModal && selectedCertReg && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0F172A]/80 backdrop-blur-sm">
+          <div className="bg-[#FFFFFF] p-8 rounded-xl w-full max-w-2xl space-y-6 shadow-2xl relative text-center border-8 border-[#F8FAFC]">
+            <button 
+              onClick={() => setShowCertModal(false)}
+              className="absolute top-4 right-4 text-[#94A3B8] hover:text-[#172033] cursor-pointer bg-[#F1F5F9] rounded-full p-1 z-10"
+            >
+              <X size={16} />
+            </button>
+            
+            <div className="border-4 border-double border-[#E2E8F0] p-10 relative">
+              {/* Decorative corners */}
+              <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-[#FF5A1F]"></div>
+              <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-[#FF5A1F]"></div>
+              <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-[#FF5A1F]"></div>
+              <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-[#FF5A1F]"></div>
+              
+              <div className="flex justify-center mb-6">
+                 <div className="w-16 h-16 rounded-full bg-[#FFF1EB] flex items-center justify-center shadow-inner">
+                    <Award size={32} className="text-[#FF5A1F]" />
+                 </div>
+              </div>
+              
+              <h1 className="text-2xl sm:text-3xl font-serif font-bold text-[#172033] tracking-widest uppercase mb-2">Certificate of Attendance</h1>
+              <p className="text-[10px] sm:text-xs text-[#64748B] uppercase tracking-widest mb-8">This is to certify that</p>
+              
+              <h2 className="text-3xl sm:text-4xl font-serif text-[#FF5A1F] italic mb-8 border-b border-[#E2E8F0] pb-4 inline-block px-10">
+                {user?.name || 'Student Attendee'}
+              </h2>
+              
+              <p className="text-xs sm:text-sm text-[#172033] leading-relaxed mb-4">
+                has successfully attended the <br/>
+                <strong className="text-base sm:text-lg mt-1 block">{selectedCertReg.event?.title}</strong>
+              </p>
+              
+              <p className="text-[10px] sm:text-xs text-[#64748B] mb-12 max-w-sm mx-auto leading-relaxed">
+                Organized by <strong>{selectedCertReg.event?.organizer || selectedCertReg.event?.organizerName || 'EventIntel Committee'}</strong> on {selectedCertReg.event?.date}.
+              </p>
+              
+              <div className="flex justify-between items-end mt-12 px-4 sm:px-8">
+                <div className="text-center w-24 sm:w-32">
+                  <div className="border-b border-[#172033] w-full mb-2"></div>
+                  <p className="text-[8px] sm:text-[10px] font-bold text-[#172033] uppercase tracking-wider">Date Issued</p>
+                  <p className="text-[8px] sm:text-[10px] text-[#64748B]">{new Date().toLocaleDateString()}</p>
+                </div>
+                
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full border border-[#FFD2C2] bg-[#FFF1EB] flex flex-col items-center justify-center opacity-80 shrink-0 mx-2">
+                   <ShieldCheck size={16} className="text-[#FF5A1F] mb-0.5 sm:mb-1" />
+                   <span className="text-[5px] sm:text-[6px] font-bold uppercase tracking-widest text-[#FF5A1F]">Verified</span>
+                </div>
+                
+                <div className="text-center w-24 sm:w-32">
+                  <div className="border-b border-[#172033] w-full mb-2"></div>
+                  <p className="text-[8px] sm:text-[10px] font-bold text-[#172033] uppercase tracking-wider">Event Organizer</p>
+                  <p className="text-[8px] sm:text-[10px] text-[#64748B]">Digital Signature</p>
+                </div>
+              </div>
+            </div>
+            
+            <button 
+              onClick={() => {
+                alert("Downloading high-resolution PDF certificate...");
+                setShowCertModal(false);
+              }}
+              className="mt-4 px-6 py-2.5 rounded-lg bg-[#FF5A1F] hover:bg-[#E94712] text-white text-xs font-semibold shadow-xs flex items-center justify-center gap-2 mx-auto cursor-pointer transition-colors"
+            >
+              <Download size={14} /> Download PDF
+            </button>
           </div>
         </div>
       )}
@@ -345,6 +426,16 @@ export const Registrations = () => {
 
                 {activeTab === 'completed' && (
                   <div className="flex items-center gap-2">
+                    {reg.attendance && (
+                      <button
+                        onClick={() => handleOpenCert(reg)}
+                        className="px-3 py-1.5 rounded-lg text-xs font-semibold text-[#16A34A] bg-[#DCFCE7] border border-[#BBF7D0] hover:bg-[#BBF7D0] transition-colors flex items-center gap-1 shadow-xs cursor-pointer mr-1"
+                      >
+                        <Award size={12} />
+                        <span className="hidden sm:inline">Certificate</span>
+                      </button>
+                    )}
+                    
                     {reg.feedbackSubmitted ? (
                       <div className="flex flex-col items-end gap-0.5">
                         <span className="text-[10px] font-medium text-[#94A3B8]">Feedback Recorded</span>
@@ -364,7 +455,7 @@ export const Registrations = () => {
                         className="px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-[#FF5A1F] hover:bg-[#E94712] transition-colors flex items-center gap-1 shadow-xs cursor-pointer"
                       >
                         <Star size={12} fill="currentColor" />
-                        <span>Give Feedback</span>
+                        <span className="hidden sm:inline">Give Feedback</span>
                       </button>
                     )}
                   </div>

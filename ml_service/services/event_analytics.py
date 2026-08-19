@@ -19,13 +19,17 @@ from core.db import execute_query
 logger = logging.getLogger("ml_service.analytics.events")
 
 
-def get_overview_analytics(filters: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+def get_overview_analytics(filters: Optional[Dict[str, Any]] = None, college_id: Optional[str] = None) -> Dict[str, Any]:
     """
     Computes overall summary dashboard metrics directly from database.
     Zero-division safe.
     """
     where_clauses = []
     params = []
+
+    if college_id:
+        where_clauses.append("e.\"collegeId\" = %s")
+        params.append(college_id)
 
     if filters:
         if filters.get("category"):
@@ -127,11 +131,14 @@ def get_overview_analytics(filters: Optional[Dict[str, Any]] = None) -> Dict[str
     }
 
 
-def get_category_analytics() -> List[Dict[str, Any]]:
+def get_category_analytics(college_id: Optional[str] = None) -> List[Dict[str, Any]]:
     """
     Computes category performance metrics directly from PostgreSQL.
     """
-    rows = execute_query("""
+    where_sql = f"WHERE e.\"collegeId\" = %s" if college_id else ""
+    params = (college_id,) if college_id else None
+
+    rows = execute_query(f"""
         SELECT
             e.category,
             COUNT(DISTINCT e.id) as event_count,
@@ -142,9 +149,10 @@ def get_category_analytics() -> List[Dict[str, Any]]:
         LEFT JOIN "Registration" r ON e.id = r."eventId"
         LEFT JOIN "Attendance" a ON e.id = a."eventId"
         LEFT JOIN "Feedback" f ON e.id = f."eventId"
+        {where_sql}
         GROUP BY e.category
         ORDER BY total_registrations DESC;
-    """)
+    """, params)
 
     results = []
     for r in (rows or []):
@@ -172,11 +180,14 @@ def get_category_analytics() -> List[Dict[str, Any]]:
     return results
 
 
-def get_department_analytics() -> List[Dict[str, Any]]:
+def get_department_analytics(college_id: Optional[str] = None) -> List[Dict[str, Any]]:
     """
     Computes student department engagement and attendance statistics.
     """
-    rows = execute_query("""
+    where_sql = f"WHERE e.\"collegeId\" = %s" if college_id else ""
+    params = (college_id,) if college_id else None
+
+    rows = execute_query(f"""
         SELECT
             s.department,
             COUNT(DISTINCT s.id) as student_count,
@@ -185,11 +196,13 @@ def get_department_analytics() -> List[Dict[str, Any]]:
             ROUND(AVG(f.rating)::numeric, 2) as avg_rating
         FROM "Student" s
         LEFT JOIN "Registration" r ON s.id = r."studentId"
-        LEFT JOIN "Attendance" a ON s.id = a."studentId"
-        LEFT JOIN "Feedback" f ON s.id = f."studentId"
+        LEFT JOIN "Event" e ON r."eventId" = e.id
+        LEFT JOIN "Attendance" a ON s.id = a."studentId" AND a."eventId" = e.id
+        LEFT JOIN "Feedback" f ON s.id = f."studentId" AND f."eventId" = e.id
+        {where_sql}
         GROUP BY s.department
         ORDER BY registrations DESC;
-    """)
+    """, params)
 
     results = []
     for r in (rows or []):
@@ -215,12 +228,15 @@ def get_department_analytics() -> List[Dict[str, Any]]:
     return results
 
 
-def get_event_performance_list() -> List[Dict[str, Any]]:
+def get_event_performance_list(college_id: Optional[str] = None) -> List[Dict[str, Any]]:
     """
     Computes individual metrics for all events including occupancy, attendance rate,
     ratings, and status labeling.
     """
-    rows = execute_query("""
+    where_sql = f"WHERE e.\"collegeId\" = %s" if college_id else ""
+    params = (college_id,) if college_id else None
+
+    rows = execute_query(f"""
         SELECT
             e.id,
             e.title,
@@ -238,9 +254,10 @@ def get_event_performance_list() -> List[Dict[str, Any]]:
         LEFT JOIN "Registration" r ON e.id = r."eventId"
         LEFT JOIN "Attendance" a ON e.id = a."eventId"
         LEFT JOIN "Feedback" f ON e.id = f."eventId"
+        {where_sql}
         GROUP BY e.id, e.title, e.category, e.status, e."eventDate", e.capacity
         ORDER BY reg_count DESC;
-    """)
+    """, params)
 
     results = []
     for r in (rows or []):
@@ -294,11 +311,11 @@ def get_event_performance_list() -> List[Dict[str, Any]]:
     return results
 
 
-def get_top_and_underperforming_events() -> Dict[str, Any]:
+def get_top_and_underperforming_events(college_id: Optional[str] = None) -> Dict[str, Any]:
     """
     Returns structured top 10 rankings across diverse metrics and flagged underperforming events.
     """
-    events = get_event_performance_list()
+    events = get_event_performance_list(college_id=college_id)
 
     top_registrations = sorted(events, key=lambda x: x["registrations"], reverse=True)[:10]
     top_attendance = sorted(events, key=lambda x: x["attendance"], reverse=True)[:10]

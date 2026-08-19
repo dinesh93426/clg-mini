@@ -10,7 +10,6 @@ export const Register = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('student');
   const [department, setDepartment] = useState('Computer Science & Engineering');
   const [year, setYear] = useState('1');
   const [showPassword, setShowPassword] = useState(false);
@@ -33,9 +32,9 @@ export const Register = () => {
         name,
         email,
         password,
-        role,
+        role: 'student',
         department,
-        year: role === 'student' ? parseInt(year, 10) : undefined
+        year: parseInt(year, 10)
       });
       setSuccess(true);
       setTimeout(() => {
@@ -151,14 +150,9 @@ export const Register = () => {
               <label className="block text-xs font-medium text-[#172033] mb-1.5">
                 Role
               </label>
-              <select
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-                className="w-full px-2.5 py-2 text-xs bg-[#FFFFFF] border border-[#E2E8F0] rounded-lg text-[#172033] focus:outline-none focus:border-[#FF5A1F]"
-              >
-                <option value="student">Student</option>
-                <option value="organizer">Event Organizer</option>
-              </select>
+              <div className="w-full px-2.5 py-2 text-xs bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg text-[#64748B] flex items-center cursor-not-allowed">
+                Student
+              </div>
             </div>
 
             <div>
@@ -178,10 +172,9 @@ export const Register = () => {
             </div>
           </div>
 
-          {role === 'student' && (
-            <div>
-              <label className="block text-xs font-medium text-[#172033] mb-1.5">
-                Academic Year
+          <div>
+            <label className="block text-xs font-medium text-[#172033] mb-1.5">
+              Academic Year
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#94A3B8]">
@@ -199,7 +192,6 @@ export const Register = () => {
                 </select>
               </div>
             </div>
-          )}
 
           <button
             type="submit"

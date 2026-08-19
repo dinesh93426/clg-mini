@@ -13,18 +13,21 @@ if str(ROOT_DIR) not in sys.path:
 
 import math
 import logging
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 from core.db import execute_query
 
 logger = logging.getLogger("ml_service.analytics.demand")
 
 
-def get_demand_analytics() -> Dict[str, Any]:
+def get_demand_analytics(college_id: Optional[str] = None) -> Dict[str, Any]:
     """
     Computes upcoming demand distributions and historical error metrics.
     """
+    where_sql = "AND e.\"collegeId\" = %s" if college_id else ""
+    params = (college_id,) if college_id else None
+
     # 1. Upcoming events demand forecast
-    upcoming_rows = execute_query("""
+    upcoming_rows = execute_query(f"""
         SELECT
             e.id,
             e.title,
@@ -34,10 +37,10 @@ def get_demand_analytics() -> Dict[str, Any]:
             COUNT(r.id) as current_registrations
         FROM "Event" e
         LEFT JOIN "Registration" r ON e.id = r."eventId"
-        WHERE e.status = 'PUBLISHED' AND e."eventDate" >= NOW()
+        WHERE e.status = 'PUBLISHED' AND e."eventDate" >= NOW() {where_sql}
         GROUP BY e.id, e.title, e.category, e.capacity, e."eventDate"
         ORDER BY e."eventDate" ASC;
-    """)
+    """, params)
 
     forecast_list = []
     high_count, med_count, low_count = 0, 0, 0
@@ -75,7 +78,7 @@ def get_demand_analytics() -> Dict[str, Any]:
         })
 
     # 2. Historical Demand vs Actual (Completed Events)
-    completed_rows = execute_query("""
+    completed_rows = execute_query(f"""
         SELECT
             e.id,
             e.title,
@@ -83,9 +86,9 @@ def get_demand_analytics() -> Dict[str, Any]:
             COUNT(r.id) as actual_registrations
         FROM "Event" e
         LEFT JOIN "Registration" r ON e.id = r."eventId"
-        WHERE e.status = 'COMPLETED' OR e."eventDate" < NOW()
+        WHERE (e.status = 'COMPLETED' OR e."eventDate" < NOW()) {where_sql}
         GROUP BY e.id, e.title, e.capacity;
-    """)
+    """, params)
 
     errors = []
     sq_errors = []

@@ -15,7 +15,7 @@ if str(ROOT_DIR) not in sys.path:
 import json
 import logging
 from datetime import datetime, timezone
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 from services.event_analytics import get_overview_analytics, get_category_analytics, get_department_analytics, get_top_and_underperforming_events
 from services.sentiment_analytics import get_sentiment_analytics
 from services.demand_analytics import get_demand_analytics
@@ -23,17 +23,17 @@ from services.demand_analytics import get_demand_analytics
 logger = logging.getLogger("ml_service.analytics.insights")
 
 
-def generate_ai_insights(custom_metrics: Dict[str, Any] = None) -> Dict[str, Any]:
+def generate_ai_insights(custom_metrics: Dict[str, Any] = None, college_id: Optional[str] = None) -> Dict[str, Any]:
     """
     Generates structured AI insights and prioritized recommendations based on verified metrics.
     """
     # 1. Fetch verified metrics if not explicitly passed
-    overview = get_overview_analytics()
-    categories = get_category_analytics()
-    departments = get_department_analytics()
-    sentiment = get_sentiment_analytics()
-    demand = get_demand_analytics()
-    events_data = get_top_and_underperforming_events()
+    overview = get_overview_analytics(college_id=college_id)
+    categories = get_category_analytics(college_id=college_id)
+    departments = get_department_analytics(college_id=college_id)
+    sentiment = get_sentiment_analytics(college_id=college_id)
+    demand = get_demand_analytics(college_id=college_id)
+    events_data = get_top_and_underperforming_events(college_id=college_id)
 
     total_events = overview["totalEvents"]
     att_rate = overview["attendanceRate"]

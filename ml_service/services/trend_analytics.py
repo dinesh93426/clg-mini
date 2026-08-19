@@ -11,17 +11,19 @@ if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
 import logging
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 from core.db import execute_query
 
 logger = logging.getLogger("ml_service.analytics.trends")
 
 
-def get_trend_analytics(period: str = "monthly") -> Dict[str, Any]:
+def get_trend_analytics(period: str = "monthly", college_id: Optional[str] = None) -> Dict[str, Any]:
     """
     Computes chronological time series for event registrations, attendance, ratings, and sentiment.
     """
-    rows = execute_query("""
+    where_sql = "WHERE e.\"collegeId\" = %s" if college_id else ""
+    params = (college_id,) if college_id else None
+    rows = execute_query(f"""
         SELECT
             to_char(date_trunc('month', e."eventDate"), 'Mon YYYY') as month_label,
             date_trunc('month', e."eventDate") as month_date,
@@ -34,9 +36,10 @@ def get_trend_analytics(period: str = "monthly") -> Dict[str, Any]:
         LEFT JOIN "Registration" r ON e.id = r."eventId"
         LEFT JOIN "Attendance" a ON e.id = a."eventId"
         LEFT JOIN "Feedback" f ON e.id = f."eventId"
+        {where_sql}
         GROUP BY month_date, month_label
         ORDER BY month_date ASC;
-    """)
+    """, params)
 
     labels = []
     registrations = []

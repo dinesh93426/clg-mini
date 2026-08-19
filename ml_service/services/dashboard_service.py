@@ -136,22 +136,24 @@ def get_organizer_dashboard_payload(organizer_id: Optional[str] = None) -> Dict[
     }
 
 
-def get_admin_dashboard_payload() -> Dict[str, Any]:
+def get_admin_dashboard_payload(college_id: Optional[str] = None) -> Dict[str, Any]:
     """
     Builds unified aggregated dashboard payload for the ADMIN role across entire institution.
     """
-    overview = get_overview_analytics()
-    categories = get_category_analytics()
-    departments = get_department_analytics()
-    trends = get_trend_analytics()
-    sentiment = get_sentiment_analytics()
-    demand = get_demand_analytics()
-    behavior = get_behavior_analytics()
-    alerts = get_early_warning_alerts()
-    ai_insights = generate_ai_insights()
+    overview = get_overview_analytics(college_id=college_id)
+    categories = get_category_analytics(college_id=college_id)
+    departments = get_department_analytics(college_id=college_id)
+    trends = get_trend_analytics(college_id=college_id)
+    sentiment = get_sentiment_analytics(college_id=college_id)
+    demand = get_demand_analytics(college_id=college_id)
+    behavior = get_behavior_analytics(college_id=college_id)
+    alerts = get_early_warning_alerts(college_id=college_id)
+    ai_insights = generate_ai_insights(college_id=college_id)
 
     # Active organizers count
-    org_count_row = execute_query('SELECT COUNT(DISTINCT "organizerId") as org_count FROM "Event" WHERE "organizerId" IS NOT NULL;')
+    where_sql = 'AND "collegeId" = %s' if college_id else ""
+    params = (college_id,) if college_id else None
+    org_count_row = execute_query(f'SELECT COUNT(DISTINCT "organizerId") as org_count FROM "Event" WHERE "organizerId" IS NOT NULL {where_sql};', params)
     active_organizers = int(org_count_row[0].get("org_count") or 1) if org_count_row else 1
 
     kpis = {

@@ -18,12 +18,23 @@ from core.db import execute_query
 logger = logging.getLogger("ml_service.dashboard.early_warning")
 
 
-def get_early_warning_alerts(organizer_id: Optional[str] = None) -> List[Dict[str, Any]]:
+def get_early_warning_alerts(organizer_id: Optional[str] = None, college_id: Optional[str] = None) -> List[Dict[str, Any]]:
     """
     Scans events and generates structured early warning risk alerts.
     """
-    where_sql = 'WHERE e."organizerId" = %s' if organizer_id else ""
-    params = (organizer_id,) if organizer_id else None
+    where_clauses = []
+    params = []
+    
+    if organizer_id:
+        where_clauses.append("e.\"organizerId\" = %s")
+        params.append(organizer_id)
+        
+    if college_id:
+        where_clauses.append("e.\"collegeId\" = %s")
+        params.append(college_id)
+
+    where_sql = "WHERE " + " AND ".join(where_clauses) if where_clauses else ""
+    params = tuple(params) if params else None
 
     rows = execute_query(f"""
         SELECT
