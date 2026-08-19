@@ -5,6 +5,14 @@ import { Sparkles, Calendar, MapPin, Users, CheckCircle2 } from 'lucide-react';
 export const EventCard = ({ event, onRegister, registered = false, registering = false }) => {
   const isSoldOut = event.availableSeats === 0;
 
+  const organizerName = typeof event.organizer === 'object' && event.organizer !== null
+    ? (event.organizer.name || 'Campus Committee')
+    : (event.organizer || event.organizerName || 'Campus Committee');
+
+  const categoryName = typeof event.category === 'object' && event.category !== null
+    ? (event.category.name || 'Event')
+    : (event.category || 'Event');
+
   return (
     <div className={`bg-[#FFFFFF] rounded-xl overflow-hidden flex flex-col justify-between group relative border ${registered ? 'border-[#4F46E5]/50 ring-1 ring-[#4F46E5]/20' : 'border-[#E2E8F0]'} shadow-xs hover:shadow-md hover:border-[#CBD5E1] transition-all duration-150`}>
       
@@ -41,7 +49,7 @@ export const EventCard = ({ event, onRegister, registered = false, registering =
         />
         <div className="absolute bottom-2.5 left-3">
           <span className="text-[10px] px-2 py-0.5 rounded-md bg-[#FFFFFF]/90 text-[#172033] border border-[#E2E8F0] font-semibold uppercase tracking-wider shadow-xs">
-            {event.category}
+            {categoryName}
           </span>
         </div>
       </div>
@@ -69,7 +77,7 @@ export const EventCard = ({ event, onRegister, registered = false, registering =
           </div>
           <div className="flex items-center gap-1.5">
             <Users size={13} className="text-[#94A3B8]" />
-            <span className="truncate">Organized by {event.organizer}</span>
+            <span className="truncate">Organized by {organizerName}</span>
           </div>
         </div>
 

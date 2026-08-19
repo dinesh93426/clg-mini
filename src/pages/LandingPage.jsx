@@ -167,9 +167,11 @@ export const LandingPage = () => {
 
     try {
       const studentProfile = isStudent ? {
-        department: user.department,
+        department: typeof user.department === 'object' ? user.department?.name : user.department,
         year: user.year,
-        interests: user.interests || []
+        interests: Array.isArray(user.interests) 
+          ? user.interests.map(i => (typeof i === 'object' ? i.name : i)) 
+          : []
       } : null;
 
       const response = await aiService.sendMessageToAssistant(newMessages, studentProfile);
@@ -194,18 +196,29 @@ export const LandingPage = () => {
     }
   };
 
+  // Helper to extract clean string from potentially nested fields
+  const safeString = (val) => {
+    if (!val) return '';
+    if (typeof val === 'object') return val.name || val.title || '';
+    return String(val);
+  };
+
   // Filtered Events logic
   const filteredEvents = useMemo(() => {
     return allEvents.filter(event => {
+      const cat = safeString(event.category).toLowerCase();
+      const dept = (safeString(event.department) || safeString(event.organizer)).toLowerCase();
+      const title = safeString(event.title).toLowerCase();
+      const desc = safeString(event.description).toLowerCase();
+      const venue = safeString(event.venue).toLowerCase();
+
       // Category filter
       if (selectedCategory !== 'All') {
-        const catMatch = (event.category || '').toLowerCase() === selectedCategory.toLowerCase();
-        if (!catMatch) return false;
+        if (cat !== selectedCategory.toLowerCase()) return false;
       }
 
       // Department filter
       if (selectedDepartment !== 'All Departments') {
-        const dept = (event.department || event.organizer || '').toLowerCase();
         const target = selectedDepartment.toLowerCase();
         if (!dept.includes(target) && !target.includes(dept)) return false;
       }
@@ -213,12 +226,9 @@ export const LandingPage = () => {
       // Search query
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase();
-        const inTitle = (event.title || '').toLowerCase().includes(q);
-        const inDesc = (event.description || '').toLowerCase().includes(q);
-        const inCat = (event.category || '').toLowerCase().includes(q);
-        const inDept = (event.department || event.organizer || '').toLowerCase().includes(q);
-        const inVenue = (event.venue || '').toLowerCase().includes(q);
-        if (!inTitle && !inDesc && !inCat && !inDept && !inVenue) return false;
+        if (!title.includes(q) && !desc.includes(q) && !cat.includes(q) && !dept.includes(q) && !venue.includes(q)) {
+          return false;
+        }
       }
 
       return true;
@@ -237,17 +247,26 @@ export const LandingPage = () => {
 
   // Events matching student's explicit interests
   const interestEvents = useMemo(() => {
-    if (!isStudent || !user?.interests || user.interests.length === 0) {
+    if (!isStudent || !Array.isArray(user?.interests) || user.interests.length === 0) {
       return allEvents.slice(0, 4);
     }
-    const studentInterests = user.interests.map(i => i.toLowerCase());
+    const studentInterests = user.interests.map(i => safeString(i).toLowerCase()).filter(Boolean);
+    if (studentInterests.length === 0) return allEvents.slice(0, 4);
+
     return allEvents.filter(e => {
-      const cat = (e.category || '').toLowerCase();
-      const title = (e.title || '').toLowerCase();
-      const desc = (e.description || '').toLowerCase();
+      const cat = safeString(e.category).toLowerCase();
+      const title = safeString(e.title).toLowerCase();
+      const desc = safeString(e.description).toLowerCase();
       return studentInterests.some(i => cat.includes(i) || title.includes(i) || desc.includes(i));
     }).slice(0, 4);
   }, [allEvents, isStudent, user?.interests]);
+
+  const studentInterestsList = useMemo(() => {
+    if (!Array.isArray(user?.interests) || user.interests.length === 0) {
+      return ['Technology', 'Workshops', 'Coding'];
+    }
+    return user.interests.map(i => safeString(i)).filter(Boolean);
+  }, [user?.interests]);
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] text-[#172033] flex flex-col font-sans selection:bg-[#EEF2FF] selection:text-[#4F46E5]">
@@ -359,10 +378,10 @@ export const LandingPage = () => {
                     <span>Personalized Student Event Portal</span>
                   </div>
                   <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#172033]">
-                    Welcome back, {user.name || 'Student'} 👋
+                    Welcome back, {safeString(user.name) || 'Student'} 👋
                   </h1>
                   <p className="mt-1 text-xs sm:text-sm text-[#64748B]">
-                    Here are campus events and workshops selected for you in <span className="font-semibold text-[#172033]">{user.department || 'Computer Science'}</span> ({user.year || '3rd Year'}).
+                    Here are campus events and workshops selected for you in <span className="font-semibold text-[#172033]">{safeString(user.department) || 'Computer Science'}</span> ({safeString(user.year) || '3rd Year'}).
                   </p>
                 </div>
 
@@ -425,10 +444,10 @@ export const LandingPage = () => {
                     <Activity size={16} className="text-[#F59E0B]" />
                   </div>
                   <div className="text-sm font-bold text-[#172033] truncate">
-                    {user.department || 'Active Student'}
+                    {safeString(user.department) || 'Active Student'}
                   </div>
                   <div className="text-[11px] text-[#64748B] mt-0.5">
-                    {user.interests && user.interests.length > 0 ? `${user.interests.length} topics saved` : 'General persona'}
+                    {studentInterestsList.length} topics saved
                   </div>
                 </div>
               </div>
@@ -543,17 +562,17 @@ export const LandingPage = () => {
                       </div>
                       <div className="flex-1 min-w-0 space-y-1">
                         <span className="text-[10px] px-2 py-0.5 rounded font-semibold bg-[#EEF2FF] text-[#4F46E5] uppercase">
-                          {event.category}
+                          {safeString(event.category)}
                         </span>
                         <h4 className="text-xs font-bold text-[#172033] truncate">
-                          {event.title}
+                          {safeString(event.title)}
                         </h4>
                         <div className="flex items-center gap-3 text-[11px] text-[#64748B]">
                           <span className="flex items-center gap-1">
-                            <Calendar size={12} /> {event.date}
+                            <Calendar size={12} /> {safeString(event.date)}
                           </span>
                           <span className="truncate flex items-center gap-1">
-                            <MapPin size={12} /> {event.venue}
+                            <MapPin size={12} /> {safeString(event.venue)}
                           </span>
                         </div>
                       </div>
@@ -614,7 +633,7 @@ export const LandingPage = () => {
                       <div className="mt-2 p-2 rounded-lg bg-[#EEF2FF] border border-[#C7D2FE]/60 text-[11px] text-[#4F46E5] flex items-start gap-1.5">
                         <Sparkles size={13} className="shrink-0 mt-0.5" />
                         <span className="line-clamp-2 leading-tight">
-                          {event.recommendationReason}
+                          {safeString(event.recommendationReason)}
                         </span>
                       </div>
                     )}
@@ -670,14 +689,14 @@ export const LandingPage = () => {
                         Registered ✓
                       </span>
                       <h4 className="text-xs font-bold text-[#172033] truncate">
-                        {ev.title || 'Campus Event'}
+                        {safeString(ev.title) || 'Campus Event'}
                       </h4>
                       <div className="text-[11px] text-[#64748B] flex items-center gap-3">
                         <span className="flex items-center gap-1">
-                          <Calendar size={12} /> {ev.date || 'Upcoming'}
+                          <Calendar size={12} /> {safeString(ev.date) || 'Upcoming'}
                         </span>
                         <span className="truncate flex items-center gap-1">
-                          <MapPin size={12} /> {ev.venue || 'Campus Venue'}
+                          <MapPin size={12} /> {safeString(ev.venue) || 'Campus Venue'}
                         </span>
                       </div>
                     </div>
@@ -707,8 +726,8 @@ export const LandingPage = () => {
                 </h2>
                 <div className="flex flex-wrap items-center gap-1.5 mt-1">
                   <span className="text-xs text-[#64748B]">Matching topics:</span>
-                  {(user.interests || ['Technology', 'Workshops', 'Coding']).map(tag => (
-                    <span key={tag} className="text-[11px] px-2 py-0.5 rounded-md bg-[#F1F5F9] text-[#475569] font-medium border border-[#E2E8F0]">
+                  {studentInterestsList.map((tag, tIdx) => (
+                    <span key={tIdx} className="text-[11px] px-2 py-0.5 rounded-md bg-[#F1F5F9] text-[#475569] font-medium border border-[#E2E8F0]">
                       #{tag}
                     </span>
                   ))}
@@ -905,7 +924,7 @@ export const LandingPage = () => {
                         <span className="font-semibold">Sources: </span>
                         {msg.sources.map((s, sIdx) => (
                           <span key={sIdx} className="font-medium text-[#4F46E5] mr-2">
-                            [{s.title || s.name || 'Event'}]
+                            [{safeString(s.title) || safeString(s.name) || 'Event'}]
                           </span>
                         ))}
                       </div>
