@@ -2,16 +2,59 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Sparkles, Calendar, MapPin, Users, CheckCircle2 } from 'lucide-react';
 
+const CATEGORY_IMAGES = {
+  technical: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&q=80&w=600",
+  technology: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=600",
+  workshop: "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&q=80&w=600",
+  hackathon: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&q=80&w=600",
+  seminar: "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&q=80&w=600",
+  cultural: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=600",
+  sports: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&q=80&w=600",
+  career: "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&q=80&w=600",
+  entrepreneurship: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&q=80&w=600",
+  "club activities": "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&q=80&w=600"
+};
+
 export const EventCard = ({ event, onRegister, registered = false, registering = false }) => {
-  const isSoldOut = event.availableSeats === 0;
-
-  const organizerName = typeof event.organizer === 'object' && event.organizer !== null
-    ? (event.organizer.name || 'Campus Committee')
-    : (event.organizer || event.organizerName || 'Campus Committee');
-
   const categoryName = typeof event.category === 'object' && event.category !== null
     ? (event.category.name || 'Event')
     : (event.category || 'Event');
+
+  const catKey = categoryName.toLowerCase();
+  const defaultPoster = CATEGORY_IMAGES[catKey] || "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80&w=600";
+  const eventPoster = event.image || event.posterUrl || defaultPoster;
+
+  const organizerName = typeof event.organizer === 'object' && event.organizer !== null
+    ? (event.organizer.organizationName || event.organizer.name || 'Campus Committee')
+    : (event.organizer || event.organizerName || 'Campus Committee');
+
+  // Format date
+  const displayDate = (() => {
+    if (event.date) return event.date;
+    if (event.eventDate) {
+      const d = new Date(event.eventDate);
+      return !isNaN(d.getTime()) ? d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Upcoming';
+    }
+    return 'Upcoming';
+  })();
+
+  // Format time
+  const displayTime = (() => {
+    if (event.time) return event.time.split(' ')[0];
+    if (event.startTime) {
+      const s = String(event.startTime);
+      return s.length > 5 ? s.slice(0, 5) : s;
+    }
+    return '10:00 AM';
+  })();
+
+  // Calculate remaining seats
+  const totalSeats = event.capacity || event.totalSeats || 100;
+  const registeredCount = event.registrationCount ?? event._count?.registrations ?? 0;
+  const availableSeats = typeof event.availableSeats === 'number'
+    ? event.availableSeats
+    : Math.max(0, totalSeats - registeredCount);
+  const isSoldOut = availableSeats === 0;
 
   return (
     <div className={`bg-[#FFFFFF] rounded-xl overflow-hidden flex flex-col justify-between group relative border ${registered ? 'border-[#4F46E5]/50 ring-1 ring-[#4F46E5]/20' : 'border-[#E2E8F0]'} shadow-xs hover:shadow-md hover:border-[#CBD5E1] transition-all duration-150`}>
@@ -31,7 +74,7 @@ export const EventCard = ({ event, onRegister, registered = false, registering =
           </div>
         ) : (
           <div className={`px-2 py-0.5 rounded-md text-[11px] font-medium ${isSoldOut ? 'bg-[#FEE2E2] text-[#DC2626] border border-[#FECACA]' : 'bg-[#DCFCE7] text-[#16A34A] border border-[#BBF7D0]'}`}>
-            {isSoldOut ? 'Sold Out' : `${event.availableSeats} seats left`}
+            {isSoldOut ? 'Sold Out' : `${availableSeats} seats left`}
           </div>
         )}
       </div>
@@ -39,11 +82,11 @@ export const EventCard = ({ event, onRegister, registered = false, registering =
       {/* Event Image Banner */}
       <div className="h-40 overflow-hidden relative bg-[#EEF2FF]">
         <img 
-          src={event.image || "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80&w=600"} 
+          src={eventPoster} 
           alt={event.title} 
           onError={(e) => {
             e.target.onerror = null;
-            e.target.src = "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80&w=600";
+            e.target.src = defaultPoster;
           }}
           className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-200" 
         />
@@ -69,11 +112,11 @@ export const EventCard = ({ event, onRegister, registered = false, registering =
         <div className="space-y-1.5 pt-2.5 border-t border-[#E2E8F0] text-[11px] text-[#64748B]">
           <div className="flex items-center gap-1.5">
             <Calendar size={13} className="text-[#94A3B8]" />
-            <span>{event.date} • {event.time?.split(' ')[0]}</span>
+            <span>{displayDate} • {displayTime}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <MapPin size={13} className="text-[#94A3B8]" />
-            <span className="truncate">{event.venue}</span>
+            <span className="truncate">{event.venue || 'Campus Main Hall'}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <Users size={13} className="text-[#94A3B8]" />
@@ -91,7 +134,7 @@ export const EventCard = ({ event, onRegister, registered = false, registering =
         {/* Actions bar */}
         <div className="flex gap-2 pt-1">
           <Link 
-            to={`/student/events/${event.id}`}
+            to={`/events/${event.id}`}
             className="flex-1 py-1.5 text-center text-xs font-medium text-[#172033] bg-[#FFFFFF] border border-[#E2E8F0] hover:bg-[#F8FAFC] rounded-lg transition-colors flex items-center justify-center cursor-pointer"
           >
             <span>Details</span>
