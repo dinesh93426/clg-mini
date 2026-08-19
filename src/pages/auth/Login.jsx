@@ -35,18 +35,22 @@ export const Login = () => {
   };
 
   const handleQuickLogin = async (role) => {
+    setPortalRole(role);
     setLoading(true);
     setError('');
-    const emails = {
-      student: 'student@university.edu',
-      organizer: 'sarah.organizer@university.edu',
-      admin: 'dean.vance@university.edu'
+    const credentials = {
+      student: { email: 'alex.johnson@university.edu', password: 'Test@12345' },
+      organizer: { email: 'sarah.organizer@university.edu', password: 'Test@12345' },
+      admin: { email: 'dean.vance@university.edu', password: 'Test@12345' }
     };
+    const { email: testEmail, password: testPassword } = credentials[role];
+    setEmail(testEmail);
+    setPassword(testPassword);
     try {
-      const data = await login(emails[role], 'password123');
+      const data = await login(testEmail, testPassword, role);
       navigate(`/${data.user.role.toLowerCase()}/dashboard`);
     } catch (err) {
-      setError('Simulated sign in failed.');
+      setError(err.response?.data?.error || err.response?.data?.message || 'Sign in failed. Please check credentials.');
     } finally {
       setLoading(false);
     }
