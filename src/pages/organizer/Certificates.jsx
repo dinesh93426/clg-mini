@@ -30,7 +30,6 @@ export const Certificates = () => {
     title: 'EVENT TITLE',
     college: 'EventIntel University'
   });
-  const [activeDrag, setActiveDrag] = useState(null);
   const containerRef = useRef(null);
   const [dispatching, setDispatching] = useState(false);
   const [dispatchError, setDispatchError] = useState('');
