@@ -272,9 +272,21 @@ router.post('/:id/attendance/scan', authenticateToken, authorizeRoles('ORGANIZER
 const multer = require('multer');
 const sharp = require('sharp');
 const { Resend } = require('resend');
+const nodemailer = require('nodemailer');
 
 const upload = multer({ storage: multer.memoryStorage() });
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
+
+let transporter = null;
+if (process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD) {
+  transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.GMAIL_USER,
+      pass: process.env.GMAIL_APP_PASSWORD
+    }
+  });
+}
 
 // Dispatch Certificates
 router.post('/:id/certificates/dispatch', authenticateToken, authorizeRoles('ORGANIZER', 'ADMIN'), upload.single('template'), async (req, res) => {
@@ -367,7 +379,25 @@ router.post('/:id/certificates/dispatch', authenticateToken, authorizeRoles('ORG
         .jpeg({ quality: 90 })
         .toBuffer();
 
-      if (resend) {
+      if (transporter) {
+        try {
+          await transporter.sendMail({
+            from: `"EventIntel" <${process.env.GMAIL_USER}>`,
+            to: student.email,
+            subject: `Your Certificate for ${event.title}`,
+            html: `<p>Hi ${student.name},</p><p>Thank you for attending <strong>${event.title}</strong>! Your certificate is attached.</p>`,
+            attachments: [
+              {
+                filename: `${student.name.replace(/\s+/g, '_')}_Certificate.jpg`,
+                content: certificateBuffer
+              }
+            ]
+          });
+          successCount++;
+        } catch (e) {
+          console.error(`Failed to send Gmail to ${student.email}:`, e);
+        }
+      } else if (resend) {
         try {
           await resend.emails.send({
             from: 'EventIntel <onboarding@resend.dev>',
