@@ -12,12 +12,17 @@ export const Scanner = () => {
   const [scanResult, setScanResult] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [studentIdInput, setStudentIdInput] = useState('');
+  const [attendees, setAttendees] = useState([]);
 
   useEffect(() => {
     const fetchEvent = async () => {
       try {
         const ev = await eventService.getEventById(id);
         setEvent(ev);
+        
+        // Fetch real attendees for simulation
+        const eventAttendees = await eventService.getEventAttendees(id);
+        setAttendees(eventAttendees || []);
       } catch (err) {
         console.error(err);
       } finally {
@@ -52,10 +57,27 @@ export const Scanner = () => {
     setScanResult(null);
     setErrorMsg(null);
     try {
-      // Simulate scanning the QR payload
-      const payload = `${id}:demo-stu-${Math.floor(Math.random() * 1000)}`;
+      // Find a student who is registered but hasn't checked in yet
+      const pendingAttendees = attendees.filter(a => a.attendance !== 'PRESENT');
+      
+      let payload;
+      if (pendingAttendees.length > 0) {
+        // Pick a random pending student
+        const randomStudent = pendingAttendees[Math.floor(Math.random() * pendingAttendees.length)];
+        payload = `${id}:${randomStudent.id}`;
+      } else {
+        // If no one is pending, just simulate a fake one which will naturally fail (or succeed if in DEMO_MODE)
+        payload = `${id}:demo-stu-${Math.floor(Math.random() * 1000)}`;
+      }
+      
       const result = await eventService.markAttendance(id, payload);
       setScanResult(result);
+      
+      // Update local attendance state to avoid picking them again immediately
+      if (pendingAttendees.length > 0) {
+        setAttendees(prev => prev.map(a => a.id === payload.split(':')[1] ? { ...a, attendance: 'PRESENT' } : a));
+      }
+      
       setTimeout(() => {
         setScanResult(null);
       }, 3000);
