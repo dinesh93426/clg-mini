@@ -283,6 +283,7 @@ if (process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD) {
     host: 'smtp.gmail.com',
     port: 465,
     secure: true,
+    family: 4, // Force IPv4 to prevent ENETUNREACH on Render's IPv6-blocked network
     connectionTimeout: 10000,
     greetingTimeout: 5000,
     socketTimeout: 15000,
