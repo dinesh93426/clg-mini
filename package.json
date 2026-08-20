@@ -13,6 +13,7 @@
     "seed:test:validate": "python scripts/seed-ai-test-data.py --validate"
   },
   "dependencies": {
+    "@yudiel/react-qr-scanner": "^2.6.0",
     "axios": "^1.19.0",
     "framer-motion": "^13.1.0",
     "lucide-react": "^1.31.0",

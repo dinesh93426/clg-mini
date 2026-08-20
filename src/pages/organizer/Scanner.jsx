@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { eventService } from '../../services/eventService';
+import { Scanner as QRScanner } from '@yudiel/react-qr-scanner';
 import { ArrowLeft, QrCode, ScanLine, CheckCircle2, UserCheck, AlertTriangle } from 'lucide-react';
 
 export const Scanner = () => {
@@ -12,6 +13,8 @@ export const Scanner = () => {
   const [scanResult, setScanResult] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [studentIdInput, setStudentIdInput] = useState('');
+  const [attendees, setAttendees] = useState([]);
+  const [isScanning, setIsScanning] = useState(false);
   const [attendees, setAttendees] = useState([]);
 
   useEffect(() => {
@@ -53,7 +56,31 @@ export const Scanner = () => {
     }
   };
 
+  const handleQRScan = async (text) => {
+    if (isScanning || scanResult || errorMsg) return;
+    setIsScanning(true);
+    setScanResult(null);
+    setErrorMsg(null);
+    
+    try {
+      const result = await eventService.markAttendance(id, text);
+      setScanResult(result);
+      setTimeout(() => {
+        setScanResult(null);
+        setIsScanning(false);
+      }, 3000);
+    } catch (err) {
+      setErrorMsg(err.message || 'Scan failed');
+      setTimeout(() => {
+        setErrorMsg(null);
+        setIsScanning(false);
+      }, 3000);
+    }
+  };
+
   const handleMockRandomScan = async () => {
+    if (isScanning || scanResult || errorMsg) return;
+    setIsScanning(true);
     setScanResult(null);
     setErrorMsg(null);
     try {
@@ -80,10 +107,14 @@ export const Scanner = () => {
       
       setTimeout(() => {
         setScanResult(null);
+        setIsScanning(false);
       }, 3000);
     } catch (err) {
       setErrorMsg(err.message || 'Scan failed. Student may not be registered.');
-      setTimeout(() => setErrorMsg(null), 3000);
+      setTimeout(() => {
+        setErrorMsg(null);
+        setIsScanning(false);
+      }, 3000);
     }
   };
 
@@ -122,17 +153,22 @@ export const Scanner = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-4">
         
         {/* Left Column: Scanner View */}
-        <div className="bg-[#FFFFFF] rounded-2xl border border-[#E2E8F0] overflow-hidden relative flex flex-col items-center justify-center p-8 min-h-[320px] shadow-xs">
+        <div className="bg-[#FFFFFF] rounded-2xl border border-[#E2E8F0] overflow-hidden relative flex flex-col items-center justify-center p-8 min-h-[420px] shadow-xs">
           {!scanResult && !errorMsg ? (
-            <div className="flex flex-col items-center">
-              <div className="w-52 h-52 border-2 border-dashed border-[#FF5A1F]/40 rounded-2xl relative flex items-center justify-center bg-[#F8FAFC]">
-                <ScanLine size={40} className="text-[#FF5A1F]/30" />
-                <div className="absolute top-0 left-0 w-6 h-6 border-t-3 border-l-3 border-[#FF5A1F] rounded-tl-lg"></div>
-                <div className="absolute top-0 right-0 w-6 h-6 border-t-3 border-r-3 border-[#FF5A1F] rounded-tr-lg"></div>
-                <div className="absolute bottom-0 left-0 w-6 h-6 border-b-3 border-l-3 border-[#FF5A1F] rounded-bl-lg"></div>
-                <div className="absolute bottom-0 right-0 w-6 h-6 border-b-3 border-r-3 border-[#FF5A1F] rounded-br-lg"></div>
+            <div className="w-full flex flex-col items-center">
+              <div className="w-64 h-64 border-2 border-dashed border-[#FF5A1F]/40 rounded-2xl relative flex items-center justify-center bg-[#172033] overflow-hidden">
+                <QRScanner
+                  onResult={(text) => handleQRScan(text)}
+                  onError={(error) => console.log(error?.message)}
+                  options={{ delayBetweenScanAttempts: 1000 }}
+                  containerStyle={{ width: '100%', height: '100%' }}
+                />
+                <div className="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-[#FF5A1F] rounded-tl-xl pointer-events-none z-10"></div>
+                <div className="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-[#FF5A1F] rounded-tr-xl pointer-events-none z-10"></div>
+                <div className="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-[#FF5A1F] rounded-bl-xl pointer-events-none z-10"></div>
+                <div className="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-[#FF5A1F] rounded-br-xl pointer-events-none z-10"></div>
               </div>
-              <p className="mt-4 text-xs font-semibold text-[#64748B]">Waiting for QR Code scan...</p>
+              <p className="mt-4 text-xs font-semibold text-[#64748B]">Point camera at attendee's QR code...</p>
             </div>
           ) : scanResult ? (
             <div className="flex flex-col items-center text-center p-6 rounded-xl bg-[#DCFCE7] border border-[#BBF7D0]">
@@ -154,9 +190,9 @@ export const Scanner = () => {
             </div>
           )}
 
-          <div className="absolute bottom-0 left-0 right-0 bg-[#FEF3C7] border-t border-[#FDE68A] p-2 flex items-center justify-center gap-1.5 text-[10px] text-[#D97706] font-bold uppercase tracking-wider">
-            <AlertTriangle size={11} />
-            <span>Simulated Scanner Mode Active</span>
+          <div className="absolute bottom-0 left-0 right-0 bg-[#DCFCE7] border-t border-[#BBF7D0] p-2 flex items-center justify-center gap-1.5 text-[10px] text-[#16A34A] font-bold uppercase tracking-wider">
+            <ScanLine size={11} />
+            <span>LIVE SCANNER ACTIVE</span>
           </div>
         </div>
 
