@@ -30,13 +30,13 @@ export const EventAnalytics = () => {
 
         const analytics = await analyticsService.getOrganizerOverview();
         
-        const scaledTrends = analytics.registrationTrend.map(t => ({
+        const scaledTrends = (analytics.registrationTrend || []).map(t => ({
           ...t,
-          count: Math.round(t.count * (ev.registrationCount / analytics.overview.registrations)) || 5
+          count: Math.round(t.count * (ev.registrationCount / (analytics.overview?.registrations || 1))) || 5
         }));
         setRegData(scaledTrends);
 
-        const aspects = analytics.feedbackTopics.map(topic => ({
+        const aspects = (analytics.feedbackTopics || []).map(topic => ({
           name: topic.name,
           Score: topic.score,
           Target: 80
@@ -44,9 +44,9 @@ export const EventAnalytics = () => {
         setAspectData(aspects);
 
         const sentiment = [
-          { name: 'Positive', value: analytics.feedbackSentiment.positive, color: '#16A34A' },
-          { name: 'Neutral', value: analytics.feedbackSentiment.neutral, color: '#64748B' },
-          { name: 'Negative', value: analytics.feedbackSentiment.negative, color: '#DC2626' }
+          { name: 'Positive', value: analytics.feedbackSentiment?.positive || 0, color: '#16A34A' },
+          { name: 'Neutral', value: analytics.feedbackSentiment?.neutral || 0, color: '#64748B' },
+          { name: 'Negative', value: analytics.feedbackSentiment?.negative || 0, color: '#DC2626' }
         ];
         setSentimentData(sentiment);
 

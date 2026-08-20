@@ -31,6 +31,11 @@ def _auto_train():
     """
     import time
     import gc
+    
+    if os.environ.get("DISABLE_AUTO_TRAIN") == "true" or os.environ.get("RENDER") == "true":
+        logger.info("[startup] Skipping auto-training because RENDER or DISABLE_AUTO_TRAIN is set. This prevents OOM crashes on free tier.")
+        return
+
     time.sleep(3)
 
     # ── 1. K-Means student behavior clustering ──────────────────────────────
