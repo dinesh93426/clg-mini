@@ -7,8 +7,24 @@ export const analyticsService = {
     if (DEMO_MODE) {
       return MOCK_ORGANIZER_ANALYTICS;
     }
-    const response = await apiClient.get('/organizer/analytics/overview');
-    return response.data;
+    try {
+      const response = await apiClient.get('/organizer/analytics/overview');
+      return response.data;
+    } catch (e) {
+      console.warn("Organizer analytics fetch failed, returning empty fallback", e);
+      return {
+        totalEvents: 0,
+        publishedEvents: 0,
+        completedEvents: 0,
+        totalRegistrations: 0,
+        totalAttended: 0,
+        attendanceRate: 0,
+        avgRating: 0,
+        upcoming: [],
+        categoryBreakdown: [],
+        events: []
+      };
+    }
   },
 
   getAdminOverview: async () => {

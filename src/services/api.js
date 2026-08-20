@@ -36,9 +36,9 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    const message = error.response?.data?.message || error.response?.data?.error || 'Unable to connect to service.';
+    const message = error.response?.data?.message || error.response?.data?.error || error.message || 'Unable to connect to service.';
     console.error('API Error:', message);
-    return Promise.reject(error);
+    return Promise.reject(new Error(message));
   }
 );
 

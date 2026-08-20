@@ -140,15 +140,8 @@ export const eventService = {
     };
     
     if (!DEMO_MODE) {
-      try {
-        const response = await apiClient.post(`/events/${eventId}/register`);
-        if (response.data) {
-          registrationsList.push(response.data);
-          return response.data;
-        }
-      } catch (err) {
-        console.warn("API register failed, persisting locally in memory", err);
-      }
+      const response = await apiClient.post(`/events/${eventId}/register`);
+      return response.data;
     }
     
     registrationsList.push(newReg);
@@ -161,9 +154,36 @@ export const eventService = {
     if (!DEMO_MODE) {
       try {
         const response = await apiClient.get('/registrations');
-        if (response.data && response.data.length > 0) {
-          return response.data;
-        }
+        const data = response.data || [];
+        return data.map(r => {
+          const isCompleted = r.event?.status === 'COMPLETED';
+          let mappedStatus = 'upcoming';
+          if (r.status === 'CANCELLED') mappedStatus = 'cancelled';
+          else if (isCompleted) mappedStatus = 'completed';
+          
+          return {
+            id: r.id,
+            eventId: r.eventId,
+            userId: r.studentId,
+            status: mappedStatus,
+            attendance: r.attendance || null, // Assuming backend doesn't send this yet, handled separately if needed
+            feedbackSubmitted: r.hasFeedback,
+            feedbackRating: r.feedback?.rating,
+            feedbackText: r.feedback?.comment,
+            feedbackSentiment: r.feedback?.sentiment,
+            registrationDate: new Date(r.registeredAt).toISOString().split('T')[0],
+            event: r.event ? {
+              id: r.event.id,
+              title: r.event.title,
+              category: r.event.category,
+              date: r.event.eventDate ? new Date(r.event.eventDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Upcoming',
+              time: r.event.startTime || '10:00 AM',
+              venue: r.event.venue,
+              image: r.event.image || r.event.posterUrl || "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80&w=600",
+              organizer: r.event.organizer?.name || 'Organizer'
+            } : null
+          };
+        });
       } catch (err) {
         console.warn("API registrations unavailable, returning local data", err);
       }
