@@ -8,7 +8,6 @@ load_dotenv()
 
 DATABASE_URL = (
     os.getenv("DATABASE_URL", "")
-    .replace("-pooler", "")
     .replace("&channel_binding=require", "")
     .replace("?channel_binding=require", "")
 )
