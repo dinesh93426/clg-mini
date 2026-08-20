@@ -86,31 +86,42 @@ export const analyticsService = {
   },
 
   getOrganizerDashboard: async () => {
+    await simulateNetworkDelay(400);
+    if (DEMO_MODE) {
+      return MOCK_ORGANIZER_ANALYTICS;
+    }
     try {
       const response = await apiClient.get('/ai/dashboard/organizer');
       return response.data;
     } catch (e) {
-      // Gracefully fallback to mock data without throwing, to prevent console errors
+      // Gracefully fallback to mock data if API fails
       return MOCK_ORGANIZER_ANALYTICS;
     }
   },
 
   getAdminDashboard: async () => {
+    await simulateNetworkDelay(400);
+    if (DEMO_MODE) {
+      return MOCK_ADMIN_ANALYTICS;
+    }
     try {
       const response = await apiClient.get('/ai/dashboard/admin');
       return response.data;
     } catch (e) {
-      if (DEMO_MODE) return MOCK_ADMIN_ANALYTICS;
       throw e;
     }
   },
 
   getDashboardAlerts: async () => {
+    await simulateNetworkDelay(400);
+    if (DEMO_MODE) {
+      return MOCK_ADMIN_ANALYTICS.aiInsights; // Mock alerts
+    }
     try {
       const response = await apiClient.get('/ai/dashboard/alerts');
       return response.data;
     } catch (e) {
-      return { alerts: [] };
+      return MOCK_ADMIN_ANALYTICS.aiInsights;
     }
   },
 
