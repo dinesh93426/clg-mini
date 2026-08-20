@@ -45,6 +45,14 @@ export const eventService = {
     if (filters.category && filters.category !== 'All') {
       filtered = filtered.filter(e => e.category.toLowerCase() === filters.category.toLowerCase());
     }
+    if (filters.organizerId) {
+      // In DEMO_MODE, simulate ownership by returning only events assigned to this organizer 
+      // or a subset of mock events if they don't have an organizerId yet.
+      filtered = filtered.filter((e, idx) => 
+        e.organizerId === filters.organizerId || 
+        (!e.organizerId && idx < 3)
+      );
+    }
     if (filters.search) {
       const query = filters.search.toLowerCase();
       filtered = filtered.filter(e => 
@@ -112,7 +120,8 @@ export const eventService = {
       aiMatchPercentage: 70 + Math.floor(Math.random() * 25),
       recommendationReason: "Suggested event matching general interest.",
       aiRecommended: Math.random() > 0.5,
-      tags: eventData.tags || ['Event']
+      tags: eventData.tags || ['Event'],
+      organizerId: eventData.organizerId || 'org-01'
     };
     
     if (!DEMO_MODE) {
