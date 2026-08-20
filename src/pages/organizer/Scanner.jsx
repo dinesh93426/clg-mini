@@ -157,10 +157,14 @@ export const Scanner = () => {
             <div className="w-full flex flex-col items-center">
               <div className="w-64 h-64 border-2 border-dashed border-[#FF5A1F]/40 rounded-2xl relative flex items-center justify-center bg-[#172033] overflow-hidden">
                 <QRScanner
-                  onResult={(text) => handleQRScan(text)}
+                  onScan={(detectedCodes) => {
+                    if (detectedCodes && detectedCodes.length > 0) {
+                      handleQRScan(detectedCodes[0].rawValue);
+                    }
+                  }}
                   onError={(error) => console.log(error?.message)}
-                  options={{ delayBetweenScanAttempts: 1000 }}
-                  containerStyle={{ width: '100%', height: '100%' }}
+                  scanDelay={1000}
+                  styles={{ container: { width: '100%', height: '100%' } }}
                 />
                 <div className="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-[#FF5A1F] rounded-tl-xl pointer-events-none z-10"></div>
                 <div className="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-[#FF5A1F] rounded-tr-xl pointer-events-none z-10"></div>
