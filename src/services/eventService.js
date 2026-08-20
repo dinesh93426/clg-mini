@@ -33,7 +33,7 @@ export const eventService = {
     if (!DEMO_MODE) {
       try {
         const response = await apiClient.get('/events', { params: filters });
-        if (response.data && response.data.length > 0) {
+        if (response.data) {
           return response.data;
         }
       } catch (err) {
