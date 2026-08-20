@@ -205,4 +205,119 @@ router.post('/:id/attendance/scan', authenticateToken, authorizeRoles('ORGANIZER
   }
 });
 
+const multer = require('multer');
+const sharp = require('sharp');
+const { Resend } = require('resend');
+
+const upload = multer({ storage: multer.memoryStorage() });
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
+
+// Dispatch Certificates
+router.post('/:id/certificates/dispatch', authenticateToken, authorizeRoles('ORGANIZER', 'ADMIN'), upload.single('template'), async (req, res) => {
+  try {
+    const eventId = req.params.id;
+    const { positions } = req.body;
+    const templateBuffer = req.file?.buffer;
+
+    if (!templateBuffer || !positions) {
+      return res.status(400).json({ error: 'Template image and positions are required' });
+    }
+
+    const pos = JSON.parse(positions);
+    const event = await prisma.event.findUnique({
+      where: { id: eventId },
+      include: {
+        college: true,
+        attendances: {
+          where: { status: 'PRESENT' },
+          include: { student: true }
+        }
+      }
+    });
+
+    if (!event) return res.status(404).json({ error: 'Event not found' });
+    if (req.user.role === 'ORGANIZER' && event.organizerId !== req.user.id) {
+      return res.status(403).json({ error: 'Unauthorized to dispatch for this event' });
+    }
+
+    const attendances = event.attendances || [];
+    if (attendances.length === 0) {
+      return res.status(400).json({ error: 'No attendees marked as PRESENT to dispatch to' });
+    }
+
+    if (!resend) {
+      console.warn("RESEND_API_KEY not set. Certificates generated but emails not sent.");
+    }
+
+    const metadata = await sharp(templateBuffer).metadata();
+    const width = metadata.width || 1200;
+    const height = metadata.height || 800;
+
+    let successCount = 0;
+
+    for (const attendance of attendances) {
+      const student = attendance.student;
+      
+      const nameX = Math.round((pos.name?.x || 50) / 100 * width);
+      const nameY = Math.round((pos.name?.y || 40) / 100 * height);
+      
+      const titleX = Math.round((pos.title?.x || 50) / 100 * width);
+      const titleY = Math.round((pos.title?.y || 65) / 100 * height);
+      
+      const collegeX = Math.round((pos.college?.x || 50) / 100 * width);
+      const collegeY = Math.round((pos.college?.y || 80) / 100 * height);
+
+      const svgText = `
+        <svg width="${width}" height="${height}">
+          <style>
+            .name { font: italic bold 50px serif; fill: #172033; text-anchor: middle; }
+            .title { font: bold 24px sans-serif; fill: #172033; text-anchor: middle; text-transform: uppercase; letter-spacing: 2px; }
+            .college { font: italic 20px serif; fill: #172033; text-anchor: middle; text-transform: uppercase; letter-spacing: 1px; }
+          </style>
+          <text x="${nameX}" y="${nameY}" class="name">${student.name}</text>
+          <text x="${titleX}" y="${titleY}" class="title">${event.title}</text>
+          <text x="${collegeX}" y="${collegeY}" class="college">${event.college?.name || 'Central College'}</text>
+        </svg>
+      `;
+
+      const certificateBuffer = await sharp(templateBuffer)
+        .composite([{
+          input: Buffer.from(svgText),
+          top: 0,
+          left: 0,
+        }])
+        .jpeg({ quality: 90 })
+        .toBuffer();
+
+      if (resend) {
+        try {
+          await resend.emails.send({
+            from: 'EventIntel <onboarding@resend.dev>',
+            to: student.email,
+            subject: `Your Certificate for ${event.title}`,
+            html: `<p>Hi ${student.name},</p><p>Thank you for attending <strong>${event.title}</strong>! Your certificate is attached.</p>`,
+            attachments: [
+              {
+                filename: `${student.name.replace(/\s+/g, '_')}_Certificate.jpg`,
+                content: certificateBuffer
+              }
+            ]
+          });
+          successCount++;
+        } catch (e) {
+          console.error(`Failed to send email to ${student.email}:`, e);
+        }
+      } else {
+        successCount++;
+      }
+    }
+
+    res.json({ success: true, count: successCount });
+
+  } catch (error) {
+    console.error('[certificates/dispatch]', error);
+    res.status(500).json({ error: 'Failed to dispatch certificates' });
+  }
+});
+
 module.exports = router;

@@ -286,6 +286,22 @@ export const eventService = {
       certificateUrl: `/student/events/${eventId}/certificate`,
       message: 'Attendance marked successfully. Certificate distributed.'
     };
+  },
+
+  dispatchCertificates: async (eventId, formData) => {
+    // Cannot simulate network delay with formData easily if using DEMO_MODE, but we will call the API
+    if (DEMO_MODE) {
+      await simulateNetworkDelay(2500);
+      return { success: true, count: Math.floor(Math.random() * 50) + 10 };
+    }
+    
+    // formData must be posted directly to allow multer to parse it correctly
+    const response = await apiClient.post(`/events/${eventId}/certificates/dispatch`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      }
+    });
+    return response.data;
   }
 };
 

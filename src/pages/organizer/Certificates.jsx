@@ -25,6 +25,7 @@ export const Certificates = () => {
   const containerRef = useRef(null);
   const [dispatching, setDispatching] = useState(false);
   const fileInputRef = useRef(null);
+  const [templateFile, setTemplateFile] = useState(null);
 
   useEffect(() => {
     const fetchEvent = async () => {
@@ -45,6 +46,7 @@ export const Certificates = () => {
     if (file) {
       const url = URL.createObjectURL(file);
       setTemplatePreview(url);
+      setTemplateFile(file);
       setStep(3);
     }
   };
@@ -72,12 +74,22 @@ export const Certificates = () => {
     setActiveDrag(null);
   };
 
-  const handleDispatch = () => {
+  const handleDispatch = async () => {
+    if (!templateFile) return;
     setDispatching(true);
-    setTimeout(() => {
-      setDispatching(false);
+    try {
+      const formData = new FormData();
+      formData.append('template', templateFile);
+      formData.append('positions', JSON.stringify(positions));
+
+      await eventService.dispatchCertificates(id, formData);
       setStep(4);
-    }, 2500);
+    } catch (err) {
+      console.error(err);
+      alert(err.message || 'Failed to dispatch certificates.');
+    } finally {
+      setDispatching(false);
+    }
   };
 
   if (loading) {
