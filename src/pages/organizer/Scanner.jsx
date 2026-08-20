@@ -15,7 +15,6 @@ export const Scanner = () => {
   const [studentIdInput, setStudentIdInput] = useState('');
   const [attendees, setAttendees] = useState([]);
   const [isScanning, setIsScanning] = useState(false);
-  const [attendees, setAttendees] = useState([]);
 
   useEffect(() => {
     const fetchEvent = async () => {
