@@ -271,10 +271,8 @@ router.post('/:id/attendance/scan', authenticateToken, authorizeRoles('ORGANIZER
 
 const multer = require('multer');
 const sharp = require('sharp');
-const { Resend } = require('resend');
 
 const upload = multer({ storage: multer.memoryStorage() });
-const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
 
 // Dispatch Certificates
@@ -288,9 +286,9 @@ router.post('/:id/certificates/dispatch', authenticateToken, authorizeRoles('ORG
       return res.status(400).json({ error: 'Template image and positions are required' });
     }
 
-    if (!resend) {
-      console.error('[Email] Email provider request failed: No RESEND_API_KEY configured on the server.');
-      return res.status(500).json({ error: 'No email service configured on the server. Please check RESEND_API_KEY environment variable.' });
+    if (!process.env.BREVO_API_KEY) {
+      console.error('[Email] Email provider request failed: No BREVO_API_KEY configured on the server.');
+      return res.status(500).json({ error: 'No email service configured on the server. Please check BREVO_API_KEY environment variable.' });
     }
 
     const pos = JSON.parse(positions);
@@ -377,22 +375,34 @@ router.post('/:id/certificates/dispatch', authenticateToken, authorizeRoles('ORG
       console.log(`[Email] Sending through email API for student: ${student.name}`);
 
       try {
-        const resendData = await resend.emails.send({
-          from: 'EventIntel <onboarding@resend.dev>',
-          to: student.email,
+        const senderEmail = process.env.SENDER_EMAIL || 'dineshsivakumar9342@gmail.com';
+        
+        const payload = {
+          sender: { name: 'EventIntel', email: senderEmail },
+          to: [{ email: student.email, name: student.name }],
           subject: `Certificate of Participation - ${event.title}`,
-          html: `<p>Dear ${student.name},</p><p>Thank you for participating in ${event.title}.</p><p>Please find your certificate attached to this email.</p><br><p>Regards,<br>Campus Events Portal</p>`,
-          attachments: [
+          htmlContent: `<p>Dear ${student.name},</p><p>Thank you for participating in ${event.title}.</p><p>Please find your certificate attached to this email.</p><br><p>Regards,<br>Campus Events Portal</p>`,
+          attachment: [
             {
-              filename: `${student.name.replace(/\s+/g, '_')}_Certificate.pdf`,
-              content: certificateBuffer,
-              content_type: 'application/pdf'
+              name: `${student.name.replace(/\s+/g, '_')}_Certificate.pdf`,
+              content: certificateBuffer.toString('base64')
             }
           ]
+        };
+
+        const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+          method: 'POST',
+          headers: {
+            'accept': 'application/json',
+            'api-key': process.env.BREVO_API_KEY,
+            'content-type': 'application/json'
+          },
+          body: JSON.stringify(payload)
         });
-        
-        if (resendData.error) {
-          throw new Error(resendData.error.message || 'Resend API returned an error');
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.message || `Brevo API returned status ${response.status}`);
         }
         
         console.log(`[Email] Email provider accepted message for student: ${student.name}`);
@@ -400,7 +410,7 @@ router.post('/:id/certificates/dispatch', authenticateToken, authorizeRoles('ORG
         successCount++;
       } catch (e) {
         failedCount++;
-        const errorType = e.message.includes('Resend API') ? 'Provider Rejection' : 'API Connection Error';
+        const errorType = e.message.includes('Brevo API') ? 'Provider Rejection' : 'API Connection Error';
         console.error(`[Email] Email provider request failed for student ${student.id}`);
         console.error(`[Email] Status: ${errorType}`);
         console.error(`[Email] Error: ${e.message}`);
