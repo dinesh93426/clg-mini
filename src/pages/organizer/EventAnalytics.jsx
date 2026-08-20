@@ -19,6 +19,7 @@ export const EventAnalytics = () => {
   const [regData, setRegData] = useState([]);
   const [aspectData, setAspectData] = useState([]);
   const [sentimentData, setSentimentData] = useState([]);
+  const [attendees, setAttendees] = useState([]);
 
   useEffect(() => {
     const fetchAnalytics = async () => {
@@ -49,6 +50,9 @@ export const EventAnalytics = () => {
           { name: 'Negative', value: analytics.feedbackSentiment?.negative || 0, color: '#DC2626' }
         ];
         setSentimentData(sentiment);
+
+        const eventAttendees = await eventService.getEventAttendees(id);
+        setAttendees(eventAttendees || []);
 
       } catch (err) {
         setError(err.message || 'Failed to load event statistics.');
@@ -253,6 +257,53 @@ export const EventAnalytics = () => {
           </div>
         </div>
 
+      </div>
+
+      {/* Registered Students Table */}
+      <div className="bg-[#FFFFFF] border border-[#E2E8F0] rounded-2xl shadow-xs overflow-hidden mt-6">
+        <div className="p-5 border-b border-[#E2E8F0] flex items-center justify-between">
+          <h3 className="text-sm font-bold text-[#172033] uppercase tracking-wider">Registered Students</h3>
+          <div className="text-[10px] bg-[#F1F5F9] text-[#64748B] px-2.5 py-1 rounded-full font-bold">
+            {attendees.length} Total
+          </div>
+        </div>
+        
+        {attendees.length === 0 ? (
+          <div className="py-8 text-center text-xs text-[#64748B]">
+            No students have registered for this event yet.
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr className="bg-[#F8FAFC] border-b border-[#E2E8F0] text-[#64748B] font-semibold">
+                  <th className="px-5 py-3.5">Student Name</th>
+                  <th className="px-5 py-3.5">Email</th>
+                  <th className="px-5 py-3.5">Department</th>
+                  <th className="px-5 py-3.5 text-right">Attendance</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[#E2E8F0]">
+                {attendees.map((student, idx) => (
+                  <tr key={student.id || idx} className="hover:bg-[#F8FAFC] text-[#172033] transition-colors">
+                    <td className="px-5 py-3.5 font-medium">{student.name}</td>
+                    <td className="px-5 py-3.5 text-[#64748B]">{student.email}</td>
+                    <td className="px-5 py-3.5 text-[#64748B]">{student.department || 'N/A'}</td>
+                    <td className="px-5 py-3.5 text-right">
+                      <span className={`inline-flex px-2 py-0.5 rounded-full text-[10px] font-semibold border ${
+                        student.attendance === 'PRESENT' 
+                          ? 'bg-[#DCFCE7] text-[#16A34A] border-[#BBF7D0]' 
+                          : 'bg-[#F1F5F9] text-[#64748B] border-[#E2E8F0]'
+                      }`}>
+                        {student.attendance === 'PRESENT' ? 'Checked In' : 'Pending'}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
 
     </div>

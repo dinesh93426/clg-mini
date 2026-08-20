@@ -73,6 +73,26 @@ export const eventService = {
     return event;
   },
 
+  getEventAttendees: async (id) => {
+    await simulateNetworkDelay(200);
+    
+    if (!DEMO_MODE) {
+      try {
+        const response = await apiClient.get(`/events/${id}/attendees`);
+        if (response.data) return response.data;
+      } catch (err) {
+        console.warn("API attendees not found, returning mock data", err);
+      }
+    }
+    
+    // Mock data fallback
+    return [
+      { id: 'stud-1', name: 'Alex Johnson', email: 'alex@example.com', department: 'Computer Science', attendance: 'PRESENT' },
+      { id: 'stud-2', name: 'Maria Garcia', email: 'maria@example.com', department: 'Information Tech', attendance: 'ABSENT' },
+      { id: 'stud-3', name: 'James Smith', email: 'james@example.com', department: 'Electronics', attendance: 'PRESENT' }
+    ];
+  },
+
   createEvent: async (eventData) => {
     await simulateNetworkDelay(400);
     

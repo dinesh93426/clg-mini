@@ -160,6 +160,48 @@ router.delete('/:id', authenticateToken, authorizeRoles('ORGANIZER', 'ADMIN'), a
   }
 });
 
+// Get attendees for an event (Organizer/Admin only)
+router.get('/:id/attendees', authenticateToken, authorizeRoles('ORGANIZER', 'ADMIN'), async (req, res) => {
+  try {
+    const event = await prisma.event.findUnique({ where: { id: req.params.id } });
+    if (!event) return res.status(404).json({ error: 'Event not found' });
+    
+    if (req.user.role === 'ADMIN' && event.collegeId !== req.user.collegeId) {
+      return res.status(403).json({ error: 'Unauthorized to view events outside your college' });
+    }
+    if (req.user.role === 'ORGANIZER' && event.organizerId !== req.user.id) {
+      return res.status(403).json({ error: 'Unauthorized to view this event' });
+    }
+
+    const registrations = await prisma.registration.findMany({
+      where: { eventId: req.params.id, status: 'REGISTERED' },
+      include: {
+        student: { select: { id: true, name: true, email: true, department: true } }
+      }
+    });
+
+    const attendances = await prisma.attendance.findMany({
+      where: { eventId: req.params.id, status: 'PRESENT' }
+    });
+    
+    const presentStudentIds = new Set(attendances.map(a => a.studentId));
+
+    const attendees = registrations.map(reg => ({
+      id: reg.student.id,
+      name: reg.student.name,
+      email: reg.student.email,
+      department: reg.student.department,
+      registeredAt: reg.registeredAt,
+      attendance: presentStudentIds.has(reg.student.id) ? 'PRESENT' : 'ABSENT'
+    }));
+
+    res.json(attendees);
+  } catch (error) {
+    console.error('[get attendees error]', error);
+    res.status(500).json({ error: 'Failed to fetch attendees' });
+  }
+});
+
 // Scan QR Code & Mark Attendance
 router.post('/:id/attendance/scan', authenticateToken, authorizeRoles('ORGANIZER', 'ADMIN'), async (req, res) => {
   try {
