@@ -272,35 +272,10 @@ router.post('/:id/attendance/scan', authenticateToken, authorizeRoles('ORGANIZER
 const multer = require('multer');
 const sharp = require('sharp');
 const { Resend } = require('resend');
-const nodemailer = require('nodemailer');
 
 const upload = multer({ storage: multer.memoryStorage() });
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
-let transporter = null;
-if (process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD) {
-  transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
-    family: 4, // Force IPv4 to prevent ENETUNREACH on Render's IPv6-blocked network
-    connectionTimeout: 10000,
-    greetingTimeout: 5000,
-    socketTimeout: 15000,
-    auth: {
-      user: process.env.GMAIL_USER,
-      pass: process.env.GMAIL_APP_PASSWORD
-    }
-  });
-
-  // Asynchronous diagnostic verification
-  console.log('[SMTP] Initializing transporter...');
-  transporter.verify().then(() => {
-    console.log(`[SMTP] Connection successful. Host: smtp.gmail.com, Port: 465, User configured: ${!!process.env.GMAIL_USER}, Password configured: ${!!process.env.GMAIL_APP_PASSWORD}`);
-  }).catch((err) => {
-    console.error(`[SMTP] Connection failed: ${err.message}`);
-  });
-}
 
 // Dispatch Certificates
 router.post('/:id/certificates/dispatch', authenticateToken, authorizeRoles('ORGANIZER', 'ADMIN'), upload.single('template'), async (req, res) => {
@@ -313,9 +288,9 @@ router.post('/:id/certificates/dispatch', authenticateToken, authorizeRoles('ORG
       return res.status(400).json({ error: 'Template image and positions are required' });
     }
 
-    if (!transporter && !resend) {
-      console.error('[Certificate] Email dispatch failed: No email provider configured on the server. Please check SMTP/Resend environment variables.');
-      return res.status(500).json({ error: 'No email service configured on the server. Please check environment variables.' });
+    if (!resend) {
+      console.error('[Email] Email provider request failed: No RESEND_API_KEY configured on the server.');
+      return res.status(500).json({ error: 'No email service configured on the server. Please check RESEND_API_KEY environment variable.' });
     }
 
     const pos = JSON.parse(positions);
@@ -340,7 +315,7 @@ router.post('/:id/certificates/dispatch', authenticateToken, authorizeRoles('ORG
       return res.status(400).json({ error: 'No attendees marked as PRESENT to dispatch to' });
     }
 
-    console.log(`[Certificate] Starting generation for event: ${event.title} (${attendances.length} attendees)`);
+    console.log(`[Email] Starting certificate email generation for event: ${event.title} (${attendances.length} attendees)`);
 
     const metadata = await sharp(templateBuffer).metadata();
     const width = metadata.width || 1200;
@@ -398,66 +373,42 @@ router.post('/:id/certificates/dispatch', authenticateToken, authorizeRoles('ORG
         .jpeg({ quality: 90 })
         .toBuffer();
         
-      console.log(`[Certificate] PDF generated in-memory for student: ${student.name}`);
-      console.log(`[Certificate] Preparing email for student: ${student.name}`);
+      console.log(`[Email] Certificate PDF generated for student: ${student.name}`);
+      console.log(`[Email] Sending through email API for student: ${student.name}`);
 
-      if (transporter) {
-        try {
-          console.log(`[Certificate] Sending email via SMTP for student: ${student.name}`);
-          await transporter.sendMail({
-            from: `"EventIntel" <${process.env.GMAIL_USER}>`,
-            to: student.email,
-            subject: `Your Certificate for ${event.title}`,
-            html: `<p>Hi ${student.name},</p><p>Thank you for attending <strong>${event.title}</strong>! Your certificate is attached.</p>`,
-            attachments: [
-              {
-                filename: `${student.name.replace(/\s+/g, '_')}_Certificate.jpg`,
-                content: certificateBuffer
-              }
-            ]
-          });
-          console.log(`[Certificate] Email provider accepted message for student: ${student.name}`);
-          successCount++;
-        } catch (e) {
-          failedCount++;
-          let errorType = 'Unknown Error';
-          if (e.code === 'ETIMEDOUT' || e.message.includes('timeout')) errorType = 'Connection Timeout';
-          else if (e.code === 'EAUTH') errorType = 'Authentication Failed';
-          else if (e.responseCode) errorType = `SMTP Provider Rejection (${e.responseCode})`;
-          
-          console.error(`[Certificate] Email dispatch failed: SMTP error for student ${student.id} - ${errorType} - ${e.message}`);
-          errors.push({ studentId: student.id, type: errorType, message: e.message });
+      try {
+        const resendData = await resend.emails.send({
+          from: 'EventIntel <onboarding@resend.dev>',
+          to: student.email,
+          subject: `Certificate of Participation - ${event.title}`,
+          html: `<p>Dear ${student.name},</p><p>Thank you for participating in ${event.title}.</p><p>Please find your certificate attached to this email.</p><br><p>Regards,<br>Campus Events Portal</p>`,
+          attachments: [
+            {
+              filename: `${student.name.replace(/\s+/g, '_')}_Certificate.pdf`,
+              content: certificateBuffer,
+              content_type: 'application/pdf'
+            }
+          ]
+        });
+        
+        if (resendData.error) {
+          throw new Error(resendData.error.message || 'Resend API returned an error');
         }
-      } else if (resend) {
-        try {
-          console.log(`[Certificate] Sending email via Resend for student: ${student.name}`);
-          const resendData = await resend.emails.send({
-            from: 'EventIntel <onboarding@resend.dev>',
-            to: student.email,
-            subject: `Your Certificate for ${event.title}`,
-            html: `<p>Hi ${student.name},</p><p>Thank you for attending <strong>${event.title}</strong>! Your certificate is attached.</p>`,
-            attachments: [
-              {
-                filename: `${student.name.replace(/\s+/g, '_')}_Certificate.jpg`,
-                content: certificateBuffer
-              }
-            ]
-          });
-          if (resendData.error) {
-            throw new Error(resendData.error.message || 'Resend API returned an error');
-          }
-          console.log(`[Certificate] Email provider accepted message for student: ${student.name}`);
-          successCount++;
-        } catch (e) {
-          failedCount++;
-          const errorType = e.message.includes('Resend API') ? 'Provider Rejection' : 'API Connection Error';
-          console.error(`[Certificate] Email dispatch failed: Resend error for student ${student.id} - ${errorType} - ${e.message}`);
-          errors.push({ studentId: student.id, type: errorType, message: e.message });
-        }
+        
+        console.log(`[Email] Email provider accepted message for student: ${student.name}`);
+        console.log(`[Email] Certificate email sent successfully for student: ${student.name}`);
+        successCount++;
+      } catch (e) {
+        failedCount++;
+        const errorType = e.message.includes('Resend API') ? 'Provider Rejection' : 'API Connection Error';
+        console.error(`[Email] Email provider request failed for student ${student.id}`);
+        console.error(`[Email] Status: ${errorType}`);
+        console.error(`[Email] Error: ${e.message}`);
+        errors.push({ studentId: student.id, type: errorType, message: e.message });
       }
     }
 
-    console.log(`[Certificate] Dispatch completed. Sent: ${successCount}, Failed: ${failedCount}.`);
+    console.log(`[Email] Dispatch completed. Sent: ${successCount}, Failed: ${failedCount}.`);
     res.json({ 
       success: successCount > 0, 
       sent: successCount, 
