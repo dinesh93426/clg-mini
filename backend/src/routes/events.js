@@ -39,7 +39,8 @@ function normaliseEvent(ev) {
     image: ev.image || ev.posterUrl || `https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80&w=600`,
     availableSeats: available,
     totalSeats: capacity,
-    registrationCount: current
+    registrationCount: current,
+    attendanceCount: ev._count?.attendances ?? 0
   };
 }
 
@@ -74,7 +75,7 @@ router.get('/:id', async (req, res) => {
       include: {
         organizer: { select: { name: true, organizationName: true, department: true } },
         college: { select: { id: true, name: true } },
-        _count: { select: { registrations: true } }
+        _count: { select: { registrations: true, attendances: { where: { status: 'PRESENT' } } } }
       }
     });
     if (!event) return res.status(404).json({ error: 'Event not found' });

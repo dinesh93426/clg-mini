@@ -110,7 +110,7 @@ export const Certificates = () => {
     );
   }
 
-  const eligibleCount = Math.floor((event?.registrationCount || 0) * 0.85);
+  const eligibleCount = event?.attendanceCount || 0;
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto pb-12">
