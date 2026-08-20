@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Toggle between DEMO_MODE and REAL API endpoints.
 // Default to true for local testing with high-fidelity mock data.
-export const DEMO_MODE = true;
+export const DEMO_MODE = false;
 
 let rawBaseUrl = (import.meta.env.VITE_API_URL || '/api').trim();
 if (rawBaseUrl.endsWith('/')) {
