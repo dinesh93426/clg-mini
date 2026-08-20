@@ -29,8 +29,12 @@ async function callML(path, body) {
 
 // POST /api/ai/assistant
 router.post('/assistant', authenticateToken, async (req, res) => {
+  console.log(`[AI] Request received for /assistant from user: ${req.user?.id || 'unknown'}`);
   try {
     const { question, messages, studentProfile, conversationId, filters } = req.body;
+    
+    console.log(`[AI] Authentication successful`);
+    console.log(`[AI] Calling ML service at ${ML_URL}`);
 
     let result;
     if (question && typeof question === 'string') {
@@ -51,6 +55,7 @@ router.post('/assistant', authenticateToken, async (req, res) => {
       return res.status(400).json({ error: 'Either question string or messages array is required.' });
     }
 
+    console.log(`[AI] AI provider response received successfully`);
     res.json({
       role: 'ai',
       text: result.text || result.answer || 'I could not generate a response.',
@@ -59,15 +64,17 @@ router.post('/assistant', authenticateToken, async (req, res) => {
       suggestions: result.suggestions || ['What technical workshops are happening?', 'Tell me about hackathons'],
       timestamp: new Date().toISOString(),
     });
+    });
   } catch (err) {
-    console.error('[ai/assistant]', err);
-    // Graceful degradation
-    res.json({
-      role: 'ai',
-      text: 'I\'m having trouble connecting to the AI service right now. Please try again in a moment.',
-      sources: [],
-      suggestions: ['What events are coming up?', 'How do I register?'],
-      timestamp: new Date().toISOString(),
+    console.error(`[AI] AI provider request failed`);
+    console.error(`[AI] ML_URL: ${ML_URL}`);
+    console.error(`[AI] Error: ${err.message}`);
+    
+    // Return a 503 Service Unavailable so the frontend knows it failed
+    res.status(503).json({
+      success: false,
+      message: 'I\'m having trouble connecting to the AI service right now. Please try again in a moment.',
+      error: err.message
     });
   }
 });
