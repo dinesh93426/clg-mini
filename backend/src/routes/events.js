@@ -404,7 +404,7 @@ router.post('/:id/certificates/dispatch', authenticateToken, authorizeRoles('ORG
           successCount++;
         } catch (e) {
           console.error(`[Certificate] Email dispatch failed: SMTP error for student ${student.id} - ${e.message}`);
-          throw new Error('Email provider failed to send the certificate.');
+          // Don't throw here, continue with the next student
         }
       } else if (resend) {
         try {
@@ -428,7 +428,7 @@ router.post('/:id/certificates/dispatch', authenticateToken, authorizeRoles('ORG
           successCount++;
         } catch (e) {
           console.error(`[Certificate] Email dispatch failed: Resend error for student ${student.id} - ${e.message}`);
-          throw new Error('Email provider failed to send the certificate.');
+          // Don't throw here, continue with the next student
         }
       }
     }
