@@ -64,7 +64,6 @@ router.post('/assistant', authenticateToken, async (req, res) => {
       suggestions: result.suggestions || ['What technical workshops are happening?', 'Tell me about hackathons'],
       timestamp: new Date().toISOString(),
     });
-    });
   } catch (err) {
     console.error(`[AI] AI provider request failed`);
     console.error(`[AI] ML_URL: ${ML_URL}`);
