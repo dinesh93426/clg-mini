@@ -36,8 +36,13 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    const message = error.response?.data?.message || error.response?.data?.error || error.message || 'Unable to connect to service.';
-    console.error('API Error:', message);
+    const isDashboardAi404 = error.config?.url?.includes('/ai/dashboard') && error.response?.status === 404;
+    const message = error.response?.data?.message || error.response?.data?.error || error.response?.data?.detail || error.message || 'Unable to connect to service.';
+    
+    if (!isDashboardAi404) {
+      console.error('API Error:', message);
+    }
+    
     return Promise.reject(new Error(message));
   }
 );

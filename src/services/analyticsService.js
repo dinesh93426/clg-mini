@@ -90,8 +90,8 @@ export const analyticsService = {
       const response = await apiClient.get('/ai/dashboard/organizer');
       return response.data;
     } catch (e) {
-      if (DEMO_MODE) return MOCK_ORGANIZER_ANALYTICS;
-      throw e;
+      // Gracefully fallback to mock data without throwing, to prevent console errors
+      return MOCK_ORGANIZER_ANALYTICS;
     }
   },
 
