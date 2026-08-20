@@ -10,7 +10,9 @@ const router = express.Router();
 const { authenticateToken } = require('../middleware/auth');
 const prisma = require('../db');
 
-const ML_URL = process.env.ML_SERVICE_URL || 'http://localhost:8000';
+let ML_URL = process.env.ML_SERVICE_URL || 'http://localhost:8000';
+if (ML_URL.endsWith('/')) ML_URL = ML_URL.slice(0, -1);
+if (ML_URL.endsWith('/api/v1')) ML_URL = ML_URL.slice(0, -7);
 
 async function callML(path, body) {
   const resp = await fetch(`${ML_URL}${path}`, {
