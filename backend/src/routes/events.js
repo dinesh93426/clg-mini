@@ -299,6 +299,11 @@ router.post('/:id/certificates/dispatch', authenticateToken, authorizeRoles('ORG
       return res.status(400).json({ error: 'Template image and positions are required' });
     }
 
+    if (!transporter && !resend) {
+      console.error('[Certificate] Email dispatch failed: No email provider configured on the server. Please check SMTP/Resend environment variables.');
+      return res.status(500).json({ error: 'No email service configured on the server. Please check environment variables.' });
+    }
+
     const pos = JSON.parse(positions);
     const event = await prisma.event.findUnique({
       where: { id: eventId },
@@ -321,9 +326,7 @@ router.post('/:id/certificates/dispatch', authenticateToken, authorizeRoles('ORG
       return res.status(400).json({ error: 'No attendees marked as PRESENT to dispatch to' });
     }
 
-    if (!resend) {
-      console.warn("RESEND_API_KEY not set. Certificates generated but emails not sent.");
-    }
+    console.log(`[Certificate] Starting generation for event: ${event.title} (${attendances.length} attendees)`);
 
     const metadata = await sharp(templateBuffer).metadata();
     const width = metadata.width || 1200;
@@ -378,9 +381,13 @@ router.post('/:id/certificates/dispatch', authenticateToken, authorizeRoles('ORG
         }])
         .jpeg({ quality: 90 })
         .toBuffer();
+        
+      console.log(`[Certificate] PDF generated in-memory for student: ${student.name}`);
+      console.log(`[Certificate] Preparing email for student: ${student.name}`);
 
       if (transporter) {
         try {
+          console.log(`[Certificate] Sending email via SMTP for student: ${student.name}`);
           await transporter.sendMail({
             from: `"EventIntel" <${process.env.GMAIL_USER}>`,
             to: student.email,
@@ -393,13 +400,16 @@ router.post('/:id/certificates/dispatch', authenticateToken, authorizeRoles('ORG
               }
             ]
           });
+          console.log(`[Certificate] Email provider accepted message for student: ${student.name}`);
           successCount++;
         } catch (e) {
-          console.error(`Failed to send Gmail to ${student.email}:`, e);
+          console.error(`[Certificate] Email dispatch failed: SMTP error for student ${student.id} - ${e.message}`);
+          throw new Error('Email provider failed to send the certificate.');
         }
       } else if (resend) {
         try {
-          await resend.emails.send({
+          console.log(`[Certificate] Sending email via Resend for student: ${student.name}`);
+          const resendData = await resend.emails.send({
             from: 'EventIntel <onboarding@resend.dev>',
             to: student.email,
             subject: `Your Certificate for ${event.title}`,
@@ -411,15 +421,19 @@ router.post('/:id/certificates/dispatch', authenticateToken, authorizeRoles('ORG
               }
             ]
           });
+          if (resendData.error) {
+            throw new Error(resendData.error.message || 'Resend API returned an error');
+          }
+          console.log(`[Certificate] Email provider accepted message for student: ${student.name}`);
           successCount++;
         } catch (e) {
-          console.error(`Failed to send email to ${student.email}:`, e);
+          console.error(`[Certificate] Email dispatch failed: Resend error for student ${student.id} - ${e.message}`);
+          throw new Error('Email provider failed to send the certificate.');
         }
-      } else {
-        successCount++;
       }
     }
 
+    console.log(`[Certificate] Dispatch completed. Sent ${successCount} certificates.`);
     res.json({ success: true, count: successCount });
 
   } catch (error) {

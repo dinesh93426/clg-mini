@@ -4,7 +4,8 @@ import { useAuth } from '../../hooks/useAuth';
 import { eventService } from '../../services/eventService';
 import { 
   ArrowLeft, Calendar, MapPin, Clock, Users, ShieldCheck, 
-  AlertTriangle, Sparkles, BookOpen, UserCircle2, ArrowRight
+  AlertTriangle, Sparkles, BookOpen, UserCircle2, ArrowRight,
+  Star, MessageSquare
 } from 'lucide-react';
 
 export const EventDetails = () => {
@@ -18,6 +19,14 @@ export const EventDetails = () => {
   const [registered, setRegistered] = useState(false);
   const [registering, setRegistering] = useState(false);
   const [showSuccessMsg, setShowSuccessMsg] = useState(false);
+  const [registrationData, setRegistrationData] = useState(null);
+
+  // Feedback State
+  const [rating, setRating] = useState(0);
+  const [hoverRating, setHoverRating] = useState(0);
+  const [comment, setComment] = useState('');
+  const [feedbackSubmitting, setFeedbackSubmitting] = useState(false);
+  const [feedbackResult, setFeedbackResult] = useState(null);
 
   useEffect(() => {
     const fetchEventData = async () => {
@@ -28,8 +37,13 @@ export const EventDetails = () => {
         setEvent(ev);
         
         const userRegs = await eventService.getRegistrations(user?.id);
-        const isReg = userRegs.some(r => r.eventId === id && r.status !== 'cancelled');
-        setRegistered(isReg);
+        const userReg = userRegs.find(r => r.eventId === id && r.status !== 'cancelled');
+        if (userReg) {
+          setRegistered(true);
+          setRegistrationData(userReg);
+        } else {
+          setRegistered(false);
+        }
       } catch (err) {
         setError(err.message || 'Unable to retrieve event information.');
       } finally {
@@ -39,6 +53,31 @@ export const EventDetails = () => {
     
     fetchEventData();
   }, [id, user]);
+
+  const handleFeedbackSubmit = async () => {
+    if (rating === 0) {
+      alert("Please select a star rating first.");
+      return;
+    }
+    
+    if (!registrationData) return;
+
+    setFeedbackSubmitting(true);
+    try {
+      await eventService.submitFeedback(registrationData.id, {
+        rating,
+        comment
+      });
+      setFeedbackResult('success');
+      // Update registrationData to reflect submission so the form hides
+      setRegistrationData(prev => ({ ...prev, feedbackSubmitted: true, feedbackRating: rating, feedbackText: comment }));
+    } catch (err) {
+      console.error(err);
+      setFeedbackResult('error');
+    } finally {
+      setFeedbackSubmitting(false);
+    }
+  };
 
   const handleRegister = async () => {
     if (registered || registering) return;
@@ -224,6 +263,86 @@ export const EventDetails = () => {
               </div>
             </div>
           </div>
+
+          {/* Feedback Form (Shown if Event is Past, User is Registered, and hasn't submitted yet) */}
+          {registered && registrationData && new Date(event.date) < new Date() && !registrationData.feedbackSubmitted && (
+            <div className="p-6 rounded-2xl bg-[#FFFFFF] border border-[#E2E8F0] shadow-xs space-y-4">
+              <h2 className="text-sm font-bold text-[#172033] flex items-center gap-1.5">
+                <MessageSquare size={16} className="text-[#FF5A1F]" /> Rate & Review this Event
+              </h2>
+              <p className="text-xs text-[#64748B]">Your feedback helps organizers improve future events.</p>
+              
+              <div className="space-y-4 pt-2">
+                <div>
+                  <label className="block text-xs font-medium text-[#172033] mb-2">Overall Experience Rating</label>
+                  <div className="flex gap-1.5">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        type="button"
+                        onClick={() => setRating(star)}
+                        onMouseEnter={() => setHoverRating(star)}
+                        onMouseLeave={() => setHoverRating(0)}
+                        className="p-1 rounded-full hover:bg-[#FFF1EB] transition-colors focus:outline-none"
+                      >
+                        <Star
+                          size={24}
+                          className={`transition-colors ${(hoverRating || rating) >= star ? 'fill-[#FF5A1F] text-[#FF5A1F]' : 'text-[#CBD5E1]'}`}
+                        />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="comment" className="block text-xs font-medium text-[#172033] mb-2">What did you like or dislike? (Optional)</label>
+                  <textarea
+                    id="comment"
+                    rows={3}
+                    className="w-full px-3 py-2 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] text-xs text-[#172033] focus:outline-none focus:border-[#FF5A1F] focus:ring-1 focus:ring-[#FF5A1F] resize-none transition-all placeholder:text-[#94A3B8]"
+                    placeholder="E.g., Great speaker, but the room was too cold..."
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                  />
+                </div>
+
+                <div className="flex items-center justify-between">
+                  {feedbackResult === 'success' ? (
+                    <span className="text-[#16A34A] text-xs font-semibold flex items-center gap-1"><ShieldCheck size={14}/> Feedback submitted successfully</span>
+                  ) : feedbackResult === 'error' ? (
+                    <span className="text-[#DC2626] text-xs font-medium">Failed to submit feedback. Try again.</span>
+                  ) : (
+                    <span></span>
+                  )}
+                  
+                  <button
+                    onClick={handleFeedbackSubmit}
+                    disabled={feedbackSubmitting || rating === 0}
+                    className="px-5 py-2 rounded-lg bg-[#FF5A1F] hover:bg-[#E94712] text-white text-xs font-semibold shadow-xs transition-colors disabled:opacity-50 cursor-pointer"
+                  >
+                    {feedbackSubmitting ? 'Submitting...' : 'Submit Review'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+          
+          {registered && registrationData?.feedbackSubmitted && (
+             <div className="p-5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] text-center space-y-2">
+                <div className="flex justify-center mb-1">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <Star
+                      key={star}
+                      size={16}
+                      className={(registrationData.feedbackRating || 5) >= star ? 'fill-[#FF5A1F] text-[#FF5A1F]' : 'text-[#CBD5E1]'}
+                    />
+                  ))}
+                </div>
+                <h3 className="text-xs font-bold text-[#172033]">You've reviewed this event.</h3>
+                <p className="text-[11px] text-[#64748B]">Thank you for contributing to campus event intelligence!</p>
+             </div>
+          )}
+
         </div>
 
         {/* Right Column: Sticky Registration Card */}

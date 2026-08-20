@@ -17,10 +17,11 @@ export const Certificates = () => {
   const [templatePreview, setTemplatePreview] = useState(null);
   
   const [positions, setPositions] = useState({
-    name: { x: 50, y: 40 },
-    title: { x: 50, y: 65 },
-    college: { x: 50, y: 80 }
+    name: { x: 50, y: 40, width: 75, fontSize: 20 },
+    title: { x: 50, y: 65, width: 60, fontSize: 14 },
+    college: { x: 50, y: 80, width: 60, fontSize: 14 }
   });
+  const [selectedField, setSelectedField] = useState(null);
   
   const [texts, setTexts] = useState({
     title: 'EVENT TITLE',
@@ -29,6 +30,7 @@ export const Certificates = () => {
   const [activeDrag, setActiveDrag] = useState(null);
   const containerRef = useRef(null);
   const [dispatching, setDispatching] = useState(false);
+  const [dispatchError, setDispatchError] = useState('');
   const fileInputRef = useRef(null);
   const [templateFile, setTemplateFile] = useState(null);
 
@@ -59,6 +61,7 @@ export const Certificates = () => {
 
   const handleMouseDown = (field) => {
     setActiveDrag(field);
+    setSelectedField(field);
   };
 
   const handleMouseMove = (e) => {
@@ -70,8 +73,20 @@ export const Certificates = () => {
     setPositions(prev => ({
       ...prev,
       [activeDrag]: { 
+        ...prev[activeDrag],
         x: Math.max(0, Math.min(100, x)), 
         y: Math.max(0, Math.min(100, y)) 
+      }
+    }));
+  };
+
+  const handleStyleChange = (property, value) => {
+    if (!selectedField) return;
+    setPositions(prev => ({
+      ...prev,
+      [selectedField]: {
+        ...prev[selectedField],
+        [property]: Number(value)
       }
     }));
   };
@@ -83,6 +98,7 @@ export const Certificates = () => {
   const handleDispatch = async () => {
     if (!templateFile) return;
     setDispatching(true);
+    setDispatchError('');
     try {
       const formData = new FormData();
       formData.append('template', templateFile);
@@ -96,7 +112,7 @@ export const Certificates = () => {
       setStep(4);
     } catch (err) {
       console.error(err);
-      alert(err.message || 'Failed to dispatch certificates.');
+      setDispatchError(err.message || 'Failed to dispatch certificates. Please try again.');
     } finally {
       setDispatching(false);
     }
@@ -221,14 +237,20 @@ export const Certificates = () => {
                   if (e.target.tagName !== 'H2' && e.target.tagName !== 'P') handleMouseDown('name');
                 }}
                 className={`absolute -translate-x-1/2 -translate-y-1/2 p-3 text-center cursor-move transition-all ${
-                  activeDrag === 'name' ? 'bg-[#EEECFF] border-2 border-[#FF5A1F]' : 'bg-[#EEECFF]/70 border border-dashed border-[#FF5A1F] hover:bg-[#EEECFF]'
+                  activeDrag === 'name' || selectedField === 'name' ? 'bg-[#EEECFF] border-2 border-[#FF5A1F]' : 'bg-[#EEECFF]/70 border border-dashed border-[#FF5A1F] hover:bg-[#EEECFF]'
                 }`}
-                style={{ left: `${positions.name.x}%`, top: `${positions.name.y}%`, width: '75%' }}
+                style={{ 
+                  left: `${positions.name.x}%`, 
+                  top: `${positions.name.y}%`, 
+                  width: `${positions.name.width}%` 
+                }}
               >
                 <span className="absolute -top-2.5 -left-1 bg-[#FF5A1F] text-white text-[8px] px-1 py-0.5 rounded font-bold uppercase tracking-wider">
                   Student Name
                 </span>
-                <h2 className="text-xl font-serif text-[#172033] italic">Alex Johnson (Student Name)</h2>
+                <h2 className="font-serif text-[#172033] italic leading-tight" style={{ fontSize: `${positions.name.fontSize}px` }}>
+                  Alex Johnson (Student Name)
+                </h2>
               </div>
               
               <div 
@@ -236,9 +258,13 @@ export const Certificates = () => {
                   if (e.target.tagName !== 'H2' && e.target.tagName !== 'P') handleMouseDown('title');
                 }}
                 className={`absolute -translate-x-1/2 -translate-y-1/2 p-2 text-center cursor-move transition-all ${
-                  activeDrag === 'title' ? 'bg-[#EEECFF] border-2 border-[#FF5A1F]' : 'bg-[#EEECFF]/70 border border-dashed border-[#FF5A1F] hover:bg-[#EEECFF]'
+                  activeDrag === 'title' || selectedField === 'title' ? 'bg-[#EEECFF] border-2 border-[#FF5A1F]' : 'bg-[#EEECFF]/70 border border-dashed border-[#FF5A1F] hover:bg-[#EEECFF]'
                 }`}
-                style={{ left: `${positions.title.x}%`, top: `${positions.title.y}%` }}
+                style={{ 
+                  left: `${positions.title.x}%`, 
+                  top: `${positions.title.y}%`,
+                  width: `${positions.title.width}%`
+                }}
               >
                 <span className="absolute -top-2.5 -left-1 bg-[#FF5A1F] text-white text-[8px] px-1 py-0.5 rounded font-bold uppercase tracking-wider">
                   Event Title
@@ -247,7 +273,8 @@ export const Certificates = () => {
                   contentEditable
                   suppressContentEditableWarning
                   onBlur={(e) => setTexts(prev => ({ ...prev, title: e.target.innerText }))}
-                  className="text-xs font-semibold text-[#172033] uppercase tracking-wider whitespace-nowrap outline-none cursor-text"
+                  className="font-semibold text-[#172033] uppercase tracking-wider outline-none cursor-text leading-tight break-words"
+                  style={{ fontSize: `${positions.title.fontSize}px` }}
                 >
                   {texts.title}
                 </p>
@@ -258,9 +285,13 @@ export const Certificates = () => {
                   if (e.target.tagName !== 'H2' && e.target.tagName !== 'P') handleMouseDown('college');
                 }}
                 className={`absolute -translate-x-1/2 -translate-y-1/2 p-2 text-center cursor-move transition-all ${
-                  activeDrag === 'college' ? 'bg-[#DCFCE7] border-2 border-[#16A34A]' : 'bg-[#DCFCE7]/70 border border-dashed border-[#16A34A] hover:bg-[#DCFCE7]'
+                  activeDrag === 'college' || selectedField === 'college' ? 'bg-[#DCFCE7] border-2 border-[#16A34A]' : 'bg-[#DCFCE7]/70 border border-dashed border-[#16A34A] hover:bg-[#DCFCE7]'
                 }`}
-                style={{ left: `${positions.college.x}%`, top: `${positions.college.y}%` }}
+                style={{ 
+                  left: `${positions.college.x}%`, 
+                  top: `${positions.college.y}%`,
+                  width: `${positions.college.width}%`
+                }}
               >
                 <span className="absolute -top-2.5 -left-1 bg-[#16A34A] text-white text-[8px] px-1 py-0.5 rounded font-bold uppercase tracking-wider">
                   Institution
@@ -269,7 +300,8 @@ export const Certificates = () => {
                   contentEditable
                   suppressContentEditableWarning
                   onBlur={(e) => setTexts(prev => ({ ...prev, college: e.target.innerText }))}
-                  className="text-xs font-serif text-[#172033] uppercase tracking-wider whitespace-nowrap outline-none cursor-text"
+                  className="font-serif text-[#172033] uppercase tracking-wider outline-none cursor-text leading-tight break-words"
+                  style={{ fontSize: `${positions.college.fontSize}px` }}
                 >
                   {texts.college}
                 </p>
@@ -283,6 +315,54 @@ export const Certificates = () => {
 
           {/* Dispatch Console */}
           <div className="space-y-4">
+            
+            {/* Field Styling Controls */}
+            <div className={`bg-[#FFFFFF] p-5 rounded-2xl border ${selectedField ? 'border-[#FF5A1F] shadow-md' : 'border-[#E2E8F0] shadow-xs'} transition-all`}>
+              <h3 className="text-xs font-bold text-[#172033] mb-3 uppercase tracking-wider flex items-center justify-between">
+                <span>Field Settings</span>
+                {selectedField && (
+                  <span className="px-2 py-0.5 rounded bg-[#FFF1EB] text-[#FF5A1F] text-[10px]">
+                    Editing: {selectedField.toUpperCase()}
+                  </span>
+                )}
+              </h3>
+              
+              {!selectedField ? (
+                <div className="py-4 text-center text-[#94A3B8] text-xs">
+                  Click on a field in the template to adjust its size and layout.
+                </div>
+              ) : (
+                <div className="space-y-4 text-xs">
+                  <div>
+                    <label className="flex justify-between text-[#64748B] mb-1.5 font-medium">
+                      <span>Font Size (px)</span>
+                      <span className="text-[#172033]">{positions[selectedField].fontSize}px</span>
+                    </label>
+                    <input 
+                      type="range" 
+                      min="8" max="72" 
+                      value={positions[selectedField].fontSize}
+                      onChange={(e) => handleStyleChange('fontSize', e.target.value)}
+                      className="w-full accent-[#FF5A1F]"
+                    />
+                  </div>
+                  <div>
+                    <label className="flex justify-between text-[#64748B] mb-1.5 font-medium">
+                      <span>Container Width (%)</span>
+                      <span className="text-[#172033]">{positions[selectedField].width}%</span>
+                    </label>
+                    <input 
+                      type="range" 
+                      min="20" max="100" 
+                      value={positions[selectedField].width}
+                      onChange={(e) => handleStyleChange('width', e.target.value)}
+                      className="w-full accent-[#FF5A1F]"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+
             <div className="bg-[#FFFFFF] p-6 rounded-2xl border border-[#E2E8F0] shadow-xs space-y-4">
               
               <div>
@@ -313,6 +393,13 @@ export const Certificates = () => {
                 <span className="font-bold block mb-0.5">Confirm Batch Generation</span>
                 High-resolution PDFs will be compiled and dispatched directly to all {eligibleCount} eligible student mailboxes.
               </div>
+
+              {dispatchError && (
+                <div className="bg-[#FEE2E2] border border-[#FECACA] rounded-xl p-3 text-xs text-[#DC2626] leading-relaxed">
+                  <span className="font-bold block mb-0.5">Dispatch Failed</span>
+                  {dispatchError}
+                </div>
+              )}
 
               <button
                 onClick={handleDispatch}

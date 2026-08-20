@@ -450,13 +450,13 @@ export const Registrations = () => {
                         )}
                       </div>
                     ) : (
-                      <button
-                        onClick={() => handleOpenFeedback(reg)}
+                      <Link
+                        to={`/student/events/${reg.event?.id}`}
                         className="px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-[#FF5A1F] hover:bg-[#E94712] transition-colors flex items-center gap-1 shadow-xs cursor-pointer"
                       >
                         <Star size={12} fill="currentColor" />
                         <span className="hidden sm:inline">Give Feedback</span>
-                      </button>
+                      </Link>
                     )}
                   </div>
                 )}

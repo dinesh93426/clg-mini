@@ -49,6 +49,72 @@ router.get('/overview', authenticateToken, authorizeRoles('ORGANIZER'), async (r
       catBreakdown[e.category] = (catBreakdown[e.category] || 0) + 1;
     }
 
+    // Feedback Intelligence processing
+    const feedbacks = await prisma.feedback.findMany({
+      where: { event: { organizerId } }
+    });
+
+    let positive = 0, neutral = 0, negative = 0;
+    const topicCounts = {};
+    const positiveTopics = {};
+    const negativeTopics = {};
+    
+    feedbacks.forEach(f => {
+      // Calculate Sentiment
+      const isPositive = f.sentiment === 'Positive' || f.sentiment === 'POSITIVE' || (!f.sentiment && f.rating >= 4);
+      const isNegative = f.sentiment === 'Negative' || f.sentiment === 'NEGATIVE' || (!f.sentiment && f.rating <= 2);
+      
+      if (isPositive) positive++;
+      else if (isNegative) negative++;
+      else neutral++;
+
+      // Process Topics
+      if (f.topics && Array.isArray(f.topics)) {
+        f.topics.forEach(t => {
+          const topicName = typeof t === 'string' ? t : t.name;
+          if (!topicName) return;
+          topicCounts[topicName] = (topicCounts[topicName] || 0) + 1;
+          
+          if (isPositive) positiveTopics[topicName] = (positiveTopics[topicName] || 0) + 1;
+          if (isNegative) negativeTopics[topicName] = (negativeTopics[topicName] || 0) + 1;
+        });
+      }
+    });
+
+    const totalFb = feedbacks.length || 1; // avoid division by zero
+    const feedbackSentiment = {
+      positive: Math.round((positive / totalFb) * 100),
+      neutral: Math.round((neutral / totalFb) * 100),
+      negative: Math.round((negative / totalFb) * 100)
+    };
+
+    // Format topics
+    const feedbackTopics = Object.keys(topicCounts).map(name => {
+      const posCount = positiveTopics[name] || 0;
+      const negCount = negativeTopics[name] || 0;
+      const total = topicCounts[name];
+      const sentiment = posCount >= negCount ? (posCount > negCount ? 'positive' : 'neutral') : 'negative';
+      return {
+        name,
+        sentiment,
+        score: Math.round((posCount / total) * 100)
+      };
+    }).sort((a, b) => b.score - a.score).slice(0, 5); // top 5 topics
+
+    // Dynamic AI Event Summary
+    let aiEventSummary = null;
+    if (feedbacks.length > 0) {
+      const topStrengths = feedbackTopics.filter(t => t.sentiment === 'positive').map(t => `Students appreciated the ${t.name}.`);
+      const topIssues = feedbackTopics.filter(t => t.sentiment === 'negative').map(t => `Concerns were raised regarding ${t.name}.`);
+      
+      aiEventSummary = {
+        text: `Analysis of ${feedbacks.length} recent feedbacks indicates a ${feedbackSentiment.positive}% positive response rate.`,
+        strengths: topStrengths.length > 0 ? topStrengths : ["General positive feedback received on event execution."],
+        issues: topIssues.length > 0 ? topIssues : ["No major issues reported."],
+        improvements: topIssues.length > 0 ? topIssues.map(i => `Consider addressing the feedback around ${i.replace('Concerns were raised regarding ', '')}.`) : ["Continue maintaining current event quality."]
+      };
+    }
+
     res.json({
       totalEvents,
       publishedEvents,
@@ -77,6 +143,9 @@ router.get('/overview', authenticateToken, authorizeRoles('ORGANIZER'), async (r
         attended: e._count.attendances,
         feedbacks: e._count.feedbacks,
       })),
+      feedbackSentiment: feedbacks.length > 0 ? feedbackSentiment : undefined,
+      feedbackTopics: feedbacks.length > 0 ? feedbackTopics : undefined,
+      aiEventSummary: aiEventSummary
     });
   } catch (err) {
     console.error('[organizer/overview]', err);

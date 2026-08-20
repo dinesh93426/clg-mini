@@ -142,13 +142,19 @@ def get_category_analytics(college_id: Optional[str] = None) -> List[Dict[str, A
         SELECT
             e.category,
             COUNT(DISTINCT e.id) as event_count,
-            COUNT(DISTINCT r.id) as total_registrations,
-            COUNT(DISTINCT a.id) as total_attendance,
-            ROUND(AVG(f.rating)::numeric, 2) as avg_rating
+            SUM(COALESCE(r.reg_count, 0)) as total_registrations,
+            SUM(COALESCE(a.att_count, 0)) as total_attendance,
+            ROUND((SUM(COALESCE(f.sum_rating, 0)) / NULLIF(SUM(COALESCE(f.total_fb, 0)), 0))::numeric, 2) as avg_rating
         FROM "Event" e
-        LEFT JOIN "Registration" r ON e.id = r."eventId"
-        LEFT JOIN "Attendance" a ON e.id = a."eventId"
-        LEFT JOIN "Feedback" f ON e.id = f."eventId"
+        LEFT JOIN (
+            SELECT "eventId", COUNT(id) as reg_count FROM "Registration" GROUP BY "eventId"
+        ) r ON e.id = r."eventId"
+        LEFT JOIN (
+            SELECT "eventId", COUNT(id) as att_count FROM "Attendance" GROUP BY "eventId"
+        ) a ON e.id = a."eventId"
+        LEFT JOIN (
+            SELECT "eventId", SUM(rating) as sum_rating, COUNT(id) as total_fb FROM "Feedback" GROUP BY "eventId"
+        ) f ON e.id = f."eventId"
         {where_sql}
         GROUP BY e.category
         ORDER BY total_registrations DESC;
@@ -244,18 +250,28 @@ def get_event_performance_list(college_id: Optional[str] = None) -> List[Dict[st
             e.status,
             e."eventDate",
             e.capacity,
-            COUNT(DISTINCT r.id) as reg_count,
-            COUNT(DISTINCT a.id) as att_count,
-            ROUND(AVG(f.rating)::numeric, 2) as avg_rating,
-            COUNT(DISTINCT f.id) FILTER (WHERE f.sentiment = 'POSITIVE' OR f.rating >= 4) as pos_fb_count,
-            COUNT(DISTINCT f.id) FILTER (WHERE f.sentiment = 'NEGATIVE' OR (f.rating <= 2 AND f.rating > 0)) as neg_fb_count,
-            COUNT(DISTINCT f.id) as total_fb
+            COALESCE(r.reg_count, 0) as reg_count,
+            COALESCE(a.att_count, 0) as att_count,
+            ROUND(COALESCE(f.avg_rating, 0)::numeric, 2) as avg_rating,
+            COALESCE(f.pos_fb_count, 0) as pos_fb_count,
+            COALESCE(f.neg_fb_count, 0) as neg_fb_count,
+            COALESCE(f.total_fb, 0) as total_fb
         FROM "Event" e
-        LEFT JOIN "Registration" r ON e.id = r."eventId"
-        LEFT JOIN "Attendance" a ON e.id = a."eventId"
-        LEFT JOIN "Feedback" f ON e.id = f."eventId"
+        LEFT JOIN (
+            SELECT "eventId", COUNT(id) as reg_count FROM "Registration" GROUP BY "eventId"
+        ) r ON e.id = r."eventId"
+        LEFT JOIN (
+            SELECT "eventId", COUNT(id) as att_count FROM "Attendance" GROUP BY "eventId"
+        ) a ON e.id = a."eventId"
+        LEFT JOIN (
+            SELECT "eventId",
+                   AVG(rating) as avg_rating,
+                   COUNT(id) FILTER (WHERE sentiment = 'POSITIVE' OR rating >= 4) as pos_fb_count,
+                   COUNT(id) FILTER (WHERE sentiment = 'NEGATIVE' OR (rating <= 2 AND rating > 0)) as neg_fb_count,
+                   COUNT(id) as total_fb
+            FROM "Feedback" GROUP BY "eventId"
+        ) f ON e.id = f."eventId"
         {where_sql}
-        GROUP BY e.id, e.title, e.category, e.status, e."eventDate", e.capacity
         ORDER BY reg_count DESC;
     """, params)
 

@@ -27,15 +27,25 @@ def get_trend_analytics(period: str = "monthly", college_id: Optional[str] = Non
         SELECT
             to_char(date_trunc('month', e."eventDate"), 'Mon YYYY') as month_label,
             date_trunc('month', e."eventDate") as month_date,
-            COUNT(DISTINCT r.id) as registrations,
-            COUNT(DISTINCT a.id) as attendance,
-            ROUND(AVG(f.rating)::numeric, 2) as avg_rating,
-            COUNT(DISTINCT f.id) FILTER (WHERE f.sentiment = 'POSITIVE' OR (f.sentiment IS NULL AND f.rating >= 4)) as pos_fb,
-            COUNT(DISTINCT f.id) as total_fb
+            SUM(COALESCE(r.reg_count, 0)) as registrations,
+            SUM(COALESCE(a.att_count, 0)) as attendance,
+            ROUND((SUM(COALESCE(f.sum_rating, 0)) / NULLIF(SUM(COALESCE(f.total_fb, 0)), 0))::numeric, 2) as avg_rating,
+            SUM(COALESCE(f.pos_fb, 0)) as pos_fb,
+            SUM(COALESCE(f.total_fb, 0)) as total_fb
         FROM "Event" e
-        LEFT JOIN "Registration" r ON e.id = r."eventId"
-        LEFT JOIN "Attendance" a ON e.id = a."eventId"
-        LEFT JOIN "Feedback" f ON e.id = f."eventId"
+        LEFT JOIN (
+            SELECT "eventId", COUNT(id) as reg_count FROM "Registration" GROUP BY "eventId"
+        ) r ON e.id = r."eventId"
+        LEFT JOIN (
+            SELECT "eventId", COUNT(id) as att_count FROM "Attendance" GROUP BY "eventId"
+        ) a ON e.id = a."eventId"
+        LEFT JOIN (
+            SELECT "eventId", 
+                   SUM(rating) as sum_rating,
+                   COUNT(id) FILTER (WHERE sentiment = 'POSITIVE' OR (sentiment IS NULL AND rating >= 4)) as pos_fb,
+                   COUNT(id) as total_fb 
+            FROM "Feedback" GROUP BY "eventId"
+        ) f ON e.id = f."eventId"
         {where_sql}
         GROUP BY month_date, month_label
         ORDER BY month_date ASC;

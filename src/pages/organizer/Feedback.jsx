@@ -35,9 +35,32 @@ export const FeedbackIntelligence = () => {
     );
   }
 
-  const feedbackSentiment = data.feedbackSentiment || MOCK_ORGANIZER_ANALYTICS.feedbackSentiment;
-  const feedbackTopics = data.feedbackTopics || MOCK_ORGANIZER_ANALYTICS.feedbackTopics;
-  const aiEventSummary = data.aiEventSummary || MOCK_ORGANIZER_ANALYTICS.aiEventSummary;
+  const hasFeedback = !!data.feedbackSentiment;
+
+  if (!hasFeedback) {
+    return (
+      <div className="space-y-6 pb-12">
+        <div className="border-b border-[#E2E8F0] pb-5">
+          <h1 className="text-2xl font-bold tracking-tight text-[#172033] flex items-center gap-2">
+            <Smile size={22} className="text-[#16A34A]" />
+            Feedback Intelligence
+          </h1>
+          <p className="text-xs text-[#64748B] mt-0.5">Aggregated sentiment indexes and natural language improvement breakdowns.</p>
+        </div>
+        <div className="py-12 text-center space-y-3 bg-[#FFFFFF] border border-[#E2E8F0] rounded-2xl shadow-xs">
+          <HelpCircle size={32} className="text-[#94A3B8] mx-auto" />
+          <h3 className="text-sm font-semibold text-[#172033]">No Feedback Data Available</h3>
+          <p className="text-xs text-[#64748B] max-w-sm mx-auto">
+            Your events haven't received any feedback yet. Feedback intelligence will appear here once students submit their reviews.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  const feedbackSentiment = data.feedbackSentiment;
+  const feedbackTopics = data.feedbackTopics;
+  const aiEventSummary = data.aiEventSummary;
 
   const donutData = [
     { name: 'Positive', value: feedbackSentiment.positive, color: '#16A34A' },

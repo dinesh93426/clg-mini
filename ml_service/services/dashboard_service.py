@@ -39,17 +39,15 @@ def get_organizer_dashboard_payload(organizer_id: Optional[str] = None) -> Dict[
 
     # Organizer KPIs
     overview_row = execute_query(f"""
+        WITH e AS (
+            SELECT id, status, "eventDate" FROM "Event" e {where_sql}
+        )
         SELECT
-            COUNT(DISTINCT e.id) as my_events,
-            COUNT(DISTINCT e.id) FILTER (WHERE e.status = 'PUBLISHED' AND e."eventDate" >= NOW()) as upcoming_events,
-            COUNT(DISTINCT r.id) as total_registrations,
-            COUNT(DISTINCT a.id) as total_attendance,
-            ROUND(AVG(f.rating)::numeric, 2) as avg_rating
-        FROM "Event" e
-        LEFT JOIN "Registration" r ON e.id = r."eventId"
-        LEFT JOIN "Attendance" a ON e.id = a."eventId"
-        LEFT JOIN "Feedback" f ON e.id = f."eventId"
-        {where_sql};
+            (SELECT COUNT(id) FROM e) as my_events,
+            (SELECT COUNT(id) FROM e WHERE status = 'PUBLISHED' AND "eventDate" >= NOW()) as upcoming_events,
+            (SELECT COUNT(id) FROM "Registration" WHERE "eventId" IN (SELECT id FROM e)) as total_registrations,
+            (SELECT COUNT(id) FROM "Attendance" WHERE "eventId" IN (SELECT id FROM e)) as total_attendance,
+            (SELECT ROUND(AVG(rating)::numeric, 2) FROM "Feedback" WHERE "eventId" IN (SELECT id FROM e)) as avg_rating;
     """, params)
 
     ov = overview_row[0] if overview_row else {}
