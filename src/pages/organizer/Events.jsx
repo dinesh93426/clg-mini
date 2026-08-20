@@ -15,6 +15,8 @@ export const OrganizerEvents = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [activeTab, setActiveTab] = useState('all'); // all | published | completed
+  const [eventToDelete, setEventToDelete] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const loadEvents = async () => {
     setLoading(true);
@@ -32,14 +34,23 @@ export const OrganizerEvents = () => {
     loadEvents();
   }, []);
 
-  const handleDelete = (id) => {
-    if (!window.confirm("Are you sure you want to delete this event from the catalogue?")) return;
+  const handleDeleteClick = (id) => {
+    setEventToDelete(id);
+  };
+
+  const confirmDelete = async () => {
+    if (!eventToDelete) return;
     
-    const idx = eventsList.findIndex(e => e.id === id);
-    if (idx !== -1) {
-      eventsList.splice(idx, 1);
-      alert('Event deleted.');
-      loadEvents();
+    setIsDeleting(true);
+    try {
+      await eventService.deleteEvent(eventToDelete);
+      setEventToDelete(null);
+      loadEvents(); // refresh the list from the database
+    } catch (error) {
+      console.error("Failed to delete event:", error);
+      alert("Failed to delete the event.");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -199,7 +210,7 @@ export const OrganizerEvents = () => {
                             <BarChart3 size={13} />
                           </button>
                           <button
-                            onClick={() => handleDelete(e.id)}
+                            onClick={() => handleDeleteClick(e.id)}
                             className="p-1.5 rounded-lg bg-[#FFFFFF] hover:bg-[#FEE2E2] text-[#64748B] hover:text-[#DC2626] border border-[#E2E8F0] transition-colors cursor-pointer"
                             title="Delete Event"
                           >
@@ -212,6 +223,45 @@ export const OrganizerEvents = () => {
                 })}
               </tbody>
             </table>
+          </div>
+        </div>
+      )}
+
+      {/* Custom Delete Confirmation Modal */}
+      {eventToDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0F172A]/40 backdrop-blur-sm">
+          <div className="bg-[#FFFFFF] rounded-2xl p-6 w-full max-w-sm shadow-xl border border-[#E2E8F0]">
+            <div className="flex items-center gap-3 text-[#DC2626] mb-4">
+              <div className="p-2 bg-[#FEE2E2] rounded-full">
+                <Trash2 size={24} />
+              </div>
+              <h3 className="text-lg font-bold text-[#172033]">Delete Event?</h3>
+            </div>
+            
+            <p className="text-sm text-[#64748B] mb-6 leading-relaxed">
+              Are you sure you want to delete this event? This action cannot be undone and all associated registrations and feedback will be lost.
+            </p>
+            
+            <div className="flex items-center gap-3">
+              <button
+                className="flex-1 py-2.5 text-xs font-semibold text-[#64748B] hover:text-[#172033] bg-[#F1F5F9] hover:bg-[#E2E8F0] rounded-xl transition-colors cursor-pointer"
+                onClick={() => setEventToDelete(null)}
+                disabled={isDeleting}
+              >
+                Cancel
+              </button>
+              <button
+                className="flex-1 py-2.5 text-xs font-semibold text-white bg-[#DC2626] hover:bg-[#B91C1C] rounded-xl shadow-xs shadow-[#DC2626]/20 transition-colors flex items-center justify-center cursor-pointer"
+                onClick={confirmDelete}
+                disabled={isDeleting}
+              >
+                {isDeleting ? (
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                ) : (
+                  'Yes, delete'
+                )}
+              </button>
+            </div>
           </div>
         </div>
       )}

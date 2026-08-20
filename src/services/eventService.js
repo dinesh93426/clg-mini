@@ -111,6 +111,30 @@ export const eventService = {
     return newEvent;
   },
 
+  deleteEvent: async (id) => {
+    await simulateNetworkDelay(400);
+    
+    if (!DEMO_MODE) {
+      try {
+        const response = await apiClient.delete(`/events/${id}`);
+        if (response.data) {
+          const idx = eventsList.findIndex(e => e.id === id);
+          if (idx !== -1) eventsList.splice(idx, 1);
+          return response.data;
+        }
+      } catch (err) {
+        console.warn("API delete event failed, falling back to local delete", err);
+      }
+    }
+    
+    const idx = eventsList.findIndex(e => e.id === id);
+    if (idx !== -1) {
+      eventsList.splice(idx, 1);
+      return { message: 'Event deleted' };
+    }
+    throw new Error('Event not found in local mock data');
+  },
+
   registerForEvent: async (eventId, userId = 'stud-01') => {
     await simulateNetworkDelay(300);
     
