@@ -340,11 +340,8 @@ export const eventService = {
     }
     
     // formData must be posted directly to allow multer to parse it correctly
-    const response = await apiClient.post(`/events/${eventId}/certificates/dispatch`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      }
-    });
+    // Do not set Content-Type manually, let Axios set it with the correct boundary
+    const response = await apiClient.post(`/events/${eventId}/certificates/dispatch`, formData);
     return response.data;
   }
 };

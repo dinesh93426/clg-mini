@@ -319,6 +319,19 @@ router.post('/:id/certificates/dispatch', authenticateToken, authorizeRoles('ORG
     let successCount = 0;
     const customTexts = texts ? JSON.parse(texts) : {};
 
+    const escapeXml = (unsafe) => {
+      return (unsafe || '').toString().replace(/[<>&'"]/g, (c) => {
+        switch (c) {
+          case '<': return '&lt;';
+          case '>': return '&gt;';
+          case '&': return '&amp;';
+          case '\'': return '&apos;';
+          case '"': return '&quot;';
+          default: return c;
+        }
+      });
+    };
+
     for (const attendance of attendances) {
       const student = attendance.student;
       
@@ -338,9 +351,9 @@ router.post('/:id/certificates/dispatch', authenticateToken, authorizeRoles('ORG
             .title { font: bold 24px sans-serif; fill: #172033; text-anchor: middle; text-transform: uppercase; letter-spacing: 2px; }
             .college { font: italic 20px serif; fill: #172033; text-anchor: middle; text-transform: uppercase; letter-spacing: 1px; }
           </style>
-          <text x="${nameX}" y="${nameY}" class="name">${student.name}</text>
-          <text x="${titleX}" y="${titleY}" class="title">${customTexts.title || event.title}</text>
-          <text x="${collegeX}" y="${collegeY}" class="college">${customTexts.college || event.college?.name || 'Central College'}</text>
+          <text x="${nameX}" y="${nameY}" class="name">${escapeXml(student.name)}</text>
+          <text x="${titleX}" y="${titleY}" class="title">${escapeXml(customTexts.title || event.title)}</text>
+          <text x="${collegeX}" y="${collegeY}" class="college">${escapeXml(customTexts.college || event.college?.name || 'Central College')}</text>
         </svg>
       `;
 
@@ -380,7 +393,7 @@ router.post('/:id/certificates/dispatch', authenticateToken, authorizeRoles('ORG
 
   } catch (error) {
     console.error('[certificates/dispatch]', error);
-    res.status(500).json({ error: 'Failed to dispatch certificates' });
+    res.status(500).json({ error: 'Failed to dispatch certificates', details: error.message });
   }
 });
 
