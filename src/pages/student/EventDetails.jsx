@@ -264,8 +264,8 @@ export const EventDetails = () => {
             </div>
           </div>
 
-          {/* Feedback Form (Shown if Event is Past, User is Registered, and hasn't submitted yet) */}
-          {registered && registrationData && new Date(event.date) < new Date() && !registrationData.feedbackSubmitted && (
+          {/* Feedback Form (Shown if Event is COMPLETED, User is Registered, ATTENDED, and hasn't submitted yet) */}
+          {registered && registrationData && event.status === 'COMPLETED' && registrationData.attendance === 'PRESENT' && !registrationData.feedbackSubmitted && (
             <div className="p-6 rounded-2xl bg-[#FFFFFF] border border-[#E2E8F0] shadow-xs space-y-4">
               <h2 className="text-sm font-bold text-[#172033] flex items-center gap-1.5">
                 <MessageSquare size={16} className="text-[#FF5A1F]" /> Rate & Review this Event

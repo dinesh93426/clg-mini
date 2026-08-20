@@ -44,25 +44,12 @@ def get_early_warning_alerts(organizer_id: Optional[str] = None, college_id: Opt
             e.status,
             e.capacity,
             e."eventDate",
-            COALESCE(r.reg_count, 0) as reg_count,
-            COALESCE(a.att_count, 0) as att_count,
-            ROUND(COALESCE(f.avg_rating, 0)::numeric, 2) as avg_rating,
-            COALESCE(f.neg_fb, 0) as neg_fb,
-            COALESCE(f.total_fb, 0) as total_fb
+            (SELECT COUNT(id) FROM "Registration" WHERE "eventId" = e.id) as reg_count,
+            (SELECT COUNT(id) FROM "Attendance" WHERE "eventId" = e.id) as att_count,
+            (SELECT AVG(rating) FROM "Feedback" WHERE "eventId" = e.id) as avg_rating,
+            (SELECT COUNT(id) FROM "Feedback" WHERE "eventId" = e.id AND (sentiment = 'NEGATIVE' OR (sentiment IS NULL AND rating <= 2 AND rating > 0))) as neg_fb,
+            (SELECT COUNT(id) FROM "Feedback" WHERE "eventId" = e.id) as total_fb
         FROM "Event" e
-        LEFT JOIN (
-            SELECT "eventId", COUNT(id) as reg_count FROM "Registration" GROUP BY "eventId"
-        ) r ON e.id = r."eventId"
-        LEFT JOIN (
-            SELECT "eventId", COUNT(id) as att_count FROM "Attendance" GROUP BY "eventId"
-        ) a ON e.id = a."eventId"
-        LEFT JOIN (
-            SELECT "eventId",
-                   AVG(rating) as avg_rating,
-                   COUNT(id) FILTER (WHERE sentiment = 'NEGATIVE' OR (sentiment IS NULL AND rating <= 2 AND rating > 0)) as neg_fb,
-                   COUNT(id) as total_fb
-            FROM "Feedback" GROUP BY "eventId"
-        ) f ON e.id = f."eventId"
         {where_sql}
         ORDER BY e."eventDate" DESC;
     """, params)

@@ -80,10 +80,16 @@ router.get('/registrations', authenticateToken, authorizeRoles('STUDENT'), async
     });
     const fbMap = Object.fromEntries(feedbacks.map(f => [f.eventId, f]));
 
+    const attendances = await prisma.attendance.findMany({
+      where: { studentId, eventId: { in: regIds } }
+    });
+    const attMap = Object.fromEntries(attendances.map(a => [a.eventId, a]));
+
     const result = regs.map(r => ({
       ...r,
       feedback: fbMap[r.eventId] || null,
       hasFeedback: !!fbMap[r.eventId],
+      attendance: attMap[r.eventId] ? attMap[r.eventId].status : null
     }));
 
     res.json(result);

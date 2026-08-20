@@ -25,29 +25,16 @@ def get_trend_analytics(period: str = "monthly", college_id: Optional[str] = Non
     params = (college_id,) if college_id else None
     rows = execute_query(f"""
         SELECT
+            e.id,
             to_char(date_trunc('month', e."eventDate"), 'Mon YYYY') as month_label,
             date_trunc('month', e."eventDate") as month_date,
-            SUM(COALESCE(r.reg_count, 0)) as registrations,
-            SUM(COALESCE(a.att_count, 0)) as attendance,
-            ROUND((SUM(COALESCE(f.sum_rating, 0)) / NULLIF(SUM(COALESCE(f.total_fb, 0)), 0))::numeric, 2) as avg_rating,
-            SUM(COALESCE(f.pos_fb, 0)) as pos_fb,
-            SUM(COALESCE(f.total_fb, 0)) as total_fb
+            (SELECT COUNT(id) FROM "Registration" WHERE "eventId" = e.id) as reg_count,
+            (SELECT COUNT(id) FROM "Attendance" WHERE "eventId" = e.id) as att_count,
+            (SELECT SUM(rating) FROM "Feedback" WHERE "eventId" = e.id) as sum_rating,
+            (SELECT COUNT(id) FROM "Feedback" WHERE "eventId" = e.id AND (sentiment = 'POSITIVE' OR (sentiment IS NULL AND rating >= 4))) as pos_fb,
+            (SELECT COUNT(id) FROM "Feedback" WHERE "eventId" = e.id) as total_fb
         FROM "Event" e
-        LEFT JOIN (
-            SELECT "eventId", COUNT(id) as reg_count FROM "Registration" GROUP BY "eventId"
-        ) r ON e.id = r."eventId"
-        LEFT JOIN (
-            SELECT "eventId", COUNT(id) as att_count FROM "Attendance" GROUP BY "eventId"
-        ) a ON e.id = a."eventId"
-        LEFT JOIN (
-            SELECT "eventId", 
-                   SUM(rating) as sum_rating,
-                   COUNT(id) FILTER (WHERE sentiment = 'POSITIVE' OR (sentiment IS NULL AND rating >= 4)) as pos_fb,
-                   COUNT(id) as total_fb 
-            FROM "Feedback" GROUP BY "eventId"
-        ) f ON e.id = f."eventId"
         {where_sql}
-        GROUP BY month_date, month_label
         ORDER BY month_date ASC;
     """, params)
 
@@ -57,19 +44,39 @@ def get_trend_analytics(period: str = "monthly", college_id: Optional[str] = Non
     ratings = []
     sentiment = []
 
+    # Aggregate by month_label in Python
+    monthly_data = {}
     for r in (rows or []):
-        lbl = r.get("month_label") or "Unknown"
-        regs = int(r.get("registrations") or 0)
-        atts = int(r.get("attendance") or 0)
-        avg_r = float(r.get("avg_rating") or 0.0)
-        tot_fb = int(r.get("total_fb") or 0)
-        pos_fb = int(r.get("pos_fb") or 0)
+        lbl = r.get("month_label")
+        if not lbl:
+            continue
+            
+        if lbl not in monthly_data:
+            monthly_data[lbl] = {
+                "regs": 0, "atts": 0, "sum_rating": 0, "tot_fb": 0, "pos_fb": 0,
+                "month_date": r.get("month_date")
+            }
+            
+        monthly_data[lbl]["regs"] += int(r.get("reg_count") or 0)
+        monthly_data[lbl]["atts"] += int(r.get("att_count") or 0)
+        monthly_data[lbl]["sum_rating"] += float(r.get("sum_rating") or 0.0)
+        monthly_data[lbl]["tot_fb"] += int(r.get("total_fb") or 0)
+        monthly_data[lbl]["pos_fb"] += int(r.get("pos_fb") or 0)
 
-        pos_pct = round((pos_fb / tot_fb * 100), 1) if tot_fb > 0 else 0.0
+    # Sort by month_date
+    sorted_months = sorted(monthly_data.values(), key=lambda x: x["month_date"])
+    
+    for month_dict in sorted_months:
+        # Find the label for this dict
+        lbl = next(k for k, v in monthly_data.items() if v == month_dict)
+        
+        tot_fb = month_dict["tot_fb"]
+        avg_r = round((month_dict["sum_rating"] / tot_fb), 2) if tot_fb > 0 else 0.0
+        pos_pct = round((month_dict["pos_fb"] / tot_fb * 100), 1) if tot_fb > 0 else 0.0
 
         labels.append(lbl)
-        registrations.append(regs)
-        attendance.append(atts)
+        registrations.append(month_dict["regs"])
+        attendance.append(month_dict["atts"])
         ratings.append(avg_r)
         sentiment.append(pos_pct)
 

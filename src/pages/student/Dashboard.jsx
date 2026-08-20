@@ -66,8 +66,9 @@ export const StudentDashboard = () => {
   // Calculate engagement stats
   const registeredCount = registrations.filter(r => r.status === 'upcoming' || r.status === 'completed').length;
   const attendedCount = registrations.filter(r => r.status === 'completed' && r.attendance).length;
-  const attendanceRate = user?.aiProfile?.attendanceRate || 0;
-  const engagementScore = user?.aiProfile?.engagementScore || 0;
+  const attendanceRate = user?.aiProfile?.attendanceRate ?? user?.attendanceRate ?? 0;
+  const engagementScore = user?.aiProfile?.engagementScore ?? user?.engagementScore ?? 0;
+  const aiProfileType = user?.aiProfile?.type || user?.clusterLabel || 'Highly Active';
 
   const statMetrics = [
     { 
@@ -120,7 +121,7 @@ export const StudentDashboard = () => {
         {/* AI Profile Badge */}
         <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FFF1EB] border border-[#FFD2C2] text-[#FF5A1F] text-xs font-semibold w-fit">
           <BrainCircuit size={13} className="text-[#FF5A1F]" />
-          <span>AI Profile: {user?.aiProfile?.type || 'Highly Active'}</span>
+          <span>AI Profile: {aiProfileType}</span>
         </div>
       </div>
 
@@ -357,20 +358,20 @@ export const StudentDashboard = () => {
               <div>
                 <div className="flex items-center justify-between text-xs text-[#64748B] mb-1">
                   <span>Behavior Quotient</span>
-                  <span className="font-semibold text-[#172033]">Active (87% Attendance)</span>
+                  <span className="font-semibold text-[#172033]">{aiProfileType} ({attendanceRate}% Attendance)</span>
                 </div>
                 <div className="w-full h-1.5 bg-[#F1F5F9] rounded-full overflow-hidden">
-                  <div className="h-full bg-[#16A34A] rounded-full" style={{ width: '87%' }}></div>
+                  <div className="h-full bg-[#16A34A] rounded-full" style={{ width: `${attendanceRate}%` }}></div>
                 </div>
               </div>
               
               <div>
                 <div className="flex items-center justify-between text-xs text-[#64748B] mb-1">
-                  <span>Technical Interest</span>
-                  <span className="font-semibold text-[#FF5A1F]">High (92%)</span>
+                  <span>Engagement Target</span>
+                  <span className="font-semibold text-[#FF5A1F]">{engagementScore} Points</span>
                 </div>
                 <div className="w-full h-1.5 bg-[#F1F5F9] rounded-full overflow-hidden">
-                  <div className="h-full bg-[#FF5A1F] rounded-full" style={{ width: '92%' }}></div>
+                  <div className="h-full bg-[#FF5A1F] rounded-full" style={{ width: `${Math.min(100, (engagementScore / 200) * 100)}%` }}></div>
                 </div>
               </div>
             </div>

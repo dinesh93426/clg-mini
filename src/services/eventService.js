@@ -233,7 +233,8 @@ export const eventService = {
               time: r.event.startTime || '10:00 AM',
               venue: r.event.venue,
               image: r.event.image || r.event.posterUrl || "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80&w=600",
-              organizer: r.event.organizer?.name || 'Organizer'
+              organizer: r.event.organizer?.name || 'Organizer',
+              status: r.event.status
             } : null
           };
         });
