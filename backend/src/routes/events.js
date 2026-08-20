@@ -283,10 +283,21 @@ if (process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD) {
     host: 'smtp.gmail.com',
     port: 465,
     secure: true,
+    connectionTimeout: 10000,
+    greetingTimeout: 5000,
+    socketTimeout: 15000,
     auth: {
       user: process.env.GMAIL_USER,
       pass: process.env.GMAIL_APP_PASSWORD
     }
+  });
+
+  // Asynchronous diagnostic verification
+  console.log('[SMTP] Initializing transporter...');
+  transporter.verify().then(() => {
+    console.log(`[SMTP] Connection successful. Host: smtp.gmail.com, Port: 465, User configured: ${!!process.env.GMAIL_USER}, Password configured: ${!!process.env.GMAIL_APP_PASSWORD}`);
+  }).catch((err) => {
+    console.error(`[SMTP] Connection failed: ${err.message}`);
   });
 }
 
@@ -335,6 +346,8 @@ router.post('/:id/certificates/dispatch', authenticateToken, authorizeRoles('ORG
     const height = metadata.height || 800;
 
     let successCount = 0;
+    let failedCount = 0;
+    const errors = [];
     const customTexts = texts ? JSON.parse(texts) : {};
 
     const escapeXml = (unsafe) => {
@@ -405,8 +418,14 @@ router.post('/:id/certificates/dispatch', authenticateToken, authorizeRoles('ORG
           console.log(`[Certificate] Email provider accepted message for student: ${student.name}`);
           successCount++;
         } catch (e) {
-          console.error(`[Certificate] Email dispatch failed: SMTP error for student ${student.id} - ${e.message}`);
-          // Don't throw here, continue with the next student
+          failedCount++;
+          let errorType = 'Unknown Error';
+          if (e.code === 'ETIMEDOUT' || e.message.includes('timeout')) errorType = 'Connection Timeout';
+          else if (e.code === 'EAUTH') errorType = 'Authentication Failed';
+          else if (e.responseCode) errorType = `SMTP Provider Rejection (${e.responseCode})`;
+          
+          console.error(`[Certificate] Email dispatch failed: SMTP error for student ${student.id} - ${errorType} - ${e.message}`);
+          errors.push({ studentId: student.id, type: errorType, message: e.message });
         }
       } else if (resend) {
         try {
@@ -429,14 +448,21 @@ router.post('/:id/certificates/dispatch', authenticateToken, authorizeRoles('ORG
           console.log(`[Certificate] Email provider accepted message for student: ${student.name}`);
           successCount++;
         } catch (e) {
-          console.error(`[Certificate] Email dispatch failed: Resend error for student ${student.id} - ${e.message}`);
-          // Don't throw here, continue with the next student
+          failedCount++;
+          const errorType = e.message.includes('Resend API') ? 'Provider Rejection' : 'API Connection Error';
+          console.error(`[Certificate] Email dispatch failed: Resend error for student ${student.id} - ${errorType} - ${e.message}`);
+          errors.push({ studentId: student.id, type: errorType, message: e.message });
         }
       }
     }
 
-    console.log(`[Certificate] Dispatch completed. Sent ${successCount} certificates.`);
-    res.json({ success: true, count: successCount });
+    console.log(`[Certificate] Dispatch completed. Sent: ${successCount}, Failed: ${failedCount}.`);
+    res.json({ 
+      success: successCount > 0, 
+      sent: successCount, 
+      failed: failedCount,
+      errors: errors.slice(0, 5) // Return max 5 errors to frontend for safety
+    });
 
   } catch (error) {
     console.error('[certificates/dispatch]', error);

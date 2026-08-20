@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { eventService } from '../../services/eventService';
 import { 
   ArrowLeft, UploadCloud, BrainCircuit, Sparkles, Send, 
-  CheckCircle, FileImage, ShieldCheck, Mail, Award
+  CheckCircle, FileImage, ShieldCheck, Mail, Award, AlertTriangle
 } from 'lucide-react';
 
 export const Certificates = () => {
@@ -16,7 +16,8 @@ export const Certificates = () => {
   const [step, setStep] = useState(1);
   const [templatePreview, setTemplatePreview] = useState(null);
   const [activeDrag, setActiveDrag] = useState(null);
-  const [successCount, setSuccessCount] = useState(0);
+  
+  const [dispatchResult, setDispatchResult] = useState({ success: false, sent: 0, failed: 0, errors: [] });
   
   const [positions, setPositions] = useState({
     name: { x: 50, y: 40, width: 75, fontSize: 20 },
@@ -111,7 +112,12 @@ export const Certificates = () => {
       }));
 
       const result = await eventService.dispatchCertificates(id, formData);
-      setSuccessCount(result?.count || 0);
+      setDispatchResult({
+        success: result?.success || false,
+        sent: result?.sent || (result?.count || 0), // fallback for old api
+        failed: result?.failed || 0,
+        errors: result?.errors || []
+      });
       setStep(4);
     } catch (err) {
       console.error(err);
@@ -427,22 +433,56 @@ export const Certificates = () => {
         </div>
       )}
 
-      {/* Step 4: Success */}
+      {/* Step 4: Success / Partial / Failure */}
       {step === 4 && (
-        <div className="bg-[#FFFFFF] rounded-2xl p-10 border border-[#BBF7D0] shadow-xs flex flex-col items-center justify-center text-center space-y-3">
-          <div className="w-16 h-16 rounded-full bg-[#DCFCE7] text-[#16A34A] flex items-center justify-center mb-1">
-            <ShieldCheck size={32} />
-          </div>
+        <div className={`bg-[#FFFFFF] rounded-2xl p-10 border shadow-xs flex flex-col items-center justify-center text-center space-y-3 ${dispatchResult.success ? 'border-[#BBF7D0]' : 'border-[#FECACA]'}`}>
           
-          <h2 className="text-xl font-bold text-[#172033]">
-            {successCount > 0 ? 'Batch Dispatched Successfully' : 'Dispatch Completed with Errors'}
+          {dispatchResult.success && dispatchResult.failed === 0 ? (
+            <div className="w-16 h-16 rounded-full bg-[#DCFCE7] text-[#16A34A] flex items-center justify-center mb-1">
+              <ShieldCheck size={32} />
+            </div>
+          ) : dispatchResult.success && dispatchResult.failed > 0 ? (
+            <div className="w-16 h-16 rounded-full bg-[#FEF3C7] text-[#D97706] flex items-center justify-center mb-1">
+              <ShieldCheck size={32} />
+            </div>
+          ) : (
+            <div className="w-16 h-16 rounded-full bg-[#FEE2E2] text-[#DC2626] flex items-center justify-center mb-1">
+              <AlertTriangle size={32} />
+            </div>
+          )}
+          
+          <h2 className={`text-xl font-bold ${dispatchResult.success ? 'text-[#172033]' : 'text-[#DC2626]'}`}>
+            {dispatchResult.success && dispatchResult.failed === 0 
+              ? 'Batch Dispatched Successfully' 
+              : dispatchResult.success && dispatchResult.failed > 0
+              ? 'Certificate dispatch completed with errors'
+              : 'Certificate dispatch failed'}
           </h2>
-          <p className="text-xs text-[#64748B] max-w-md leading-relaxed pb-4">
-            {successCount > 0 
-              ? `The AI engine generated and emailed ${successCount} out of ${eligibleCount} certificates to verified attendees of "${event?.title}".`
-              : `The dispatch completed, but 0 certificates were successfully emailed. Please check your email provider configuration (SMTP/Resend) on the server.`
-            }
-          </p>
+          
+          <div className="text-xs text-[#64748B] max-w-md leading-relaxed pb-4">
+            {dispatchResult.success && dispatchResult.failed === 0 && (
+              <p>The AI engine generated and emailed {dispatchResult.sent} certificates to verified attendees of "{event?.title}".</p>
+            )}
+            {(dispatchResult.failed > 0 || !dispatchResult.success) && (
+              <div className="flex flex-col gap-2">
+                <p>The dispatch completed with the following results:</p>
+                <div className="flex gap-4 justify-center font-bold">
+                  <span className="text-[#16A34A]">Sent: {dispatchResult.sent}</span>
+                  <span className="text-[#DC2626]">Failed: {dispatchResult.failed}</span>
+                </div>
+                {dispatchResult.errors.length > 0 && (
+                  <div className="text-left mt-2 bg-gray-50 p-2 rounded text-[10px] text-gray-600 border border-gray-200">
+                    <p className="font-semibold mb-1">Recent Errors:</p>
+                    <ul className="list-disc pl-4 space-y-1">
+                      {dispatchResult.errors.map((e, i) => (
+                        <li key={i}>{e.type}: {e.message}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
 
           <button 
             onClick={() => navigate(`/organizer/events/${id}/analytics`)}
