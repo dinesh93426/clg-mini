@@ -46,7 +46,13 @@ function normaliseEvent(ev) {
 // Get all events
 router.get('/', async (req, res) => {
   try {
+    const where = {};
+    if (req.query.organizerId) {
+      where.organizerId = req.query.organizerId;
+    }
+
     const events = await prisma.event.findMany({
+      where,
       include: {
         organizer: { select: { name: true, organizationName: true, department: true } },
         college: { select: { id: true, name: true } },

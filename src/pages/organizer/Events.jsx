@@ -19,7 +19,7 @@ export const OrganizerEvents = () => {
   const loadEvents = async () => {
     setLoading(true);
     try {
-      const data = await eventService.getEvents();
+      const data = await eventService.getEvents({ organizerId: user?.userId || user?.id });
       setEvents(data);
     } catch (err) {
       console.error(err);
