@@ -21,6 +21,11 @@ export const Certificates = () => {
     title: { x: 50, y: 65 },
     college: { x: 50, y: 80 }
   });
+  
+  const [texts, setTexts] = useState({
+    title: 'EVENT TITLE',
+    college: 'EventIntel University'
+  });
   const [activeDrag, setActiveDrag] = useState(null);
   const containerRef = useRef(null);
   const [dispatching, setDispatching] = useState(false);
@@ -32,6 +37,7 @@ export const Certificates = () => {
       try {
         const ev = await eventService.getEventById(id);
         setEvent(ev);
+        setTexts(prev => ({ ...prev, title: ev.title }));
       } catch (err) {
         console.error(err);
       } finally {
@@ -81,6 +87,10 @@ export const Certificates = () => {
       const formData = new FormData();
       formData.append('template', templateFile);
       formData.append('positions', JSON.stringify(positions));
+      formData.append('texts', JSON.stringify({
+        title: texts.title,
+        college: texts.college
+      }));
 
       await eventService.dispatchCertificates(id, formData);
       setStep(4);
@@ -207,7 +217,9 @@ export const Certificates = () => {
               
               {/* Draggable Overlays */}
               <div 
-                onMouseDown={() => handleMouseDown('name')}
+                onMouseDown={(e) => {
+                  if (e.target.tagName !== 'H2' && e.target.tagName !== 'P') handleMouseDown('name');
+                }}
                 className={`absolute -translate-x-1/2 -translate-y-1/2 p-3 text-center cursor-move transition-all ${
                   activeDrag === 'name' ? 'bg-[#EEECFF] border-2 border-[#FF5A1F]' : 'bg-[#EEECFF]/70 border border-dashed border-[#FF5A1F] hover:bg-[#EEECFF]'
                 }`}
@@ -220,7 +232,9 @@ export const Certificates = () => {
               </div>
               
               <div 
-                onMouseDown={() => handleMouseDown('title')}
+                onMouseDown={(e) => {
+                  if (e.target.tagName !== 'H2' && e.target.tagName !== 'P') handleMouseDown('title');
+                }}
                 className={`absolute -translate-x-1/2 -translate-y-1/2 p-2 text-center cursor-move transition-all ${
                   activeDrag === 'title' ? 'bg-[#EEECFF] border-2 border-[#FF5A1F]' : 'bg-[#EEECFF]/70 border border-dashed border-[#FF5A1F] hover:bg-[#EEECFF]'
                 }`}
@@ -229,11 +243,20 @@ export const Certificates = () => {
                 <span className="absolute -top-2.5 -left-1 bg-[#FF5A1F] text-white text-[8px] px-1 py-0.5 rounded font-bold uppercase tracking-wider">
                   Event Title
                 </span>
-                <p className="text-xs font-semibold text-[#172033] uppercase tracking-wider whitespace-nowrap">{event?.title}</p>
+                <p 
+                  contentEditable
+                  suppressContentEditableWarning
+                  onBlur={(e) => setTexts(prev => ({ ...prev, title: e.target.innerText }))}
+                  className="text-xs font-semibold text-[#172033] uppercase tracking-wider whitespace-nowrap outline-none cursor-text"
+                >
+                  {texts.title}
+                </p>
               </div>
 
               <div 
-                onMouseDown={() => handleMouseDown('college')}
+                onMouseDown={(e) => {
+                  if (e.target.tagName !== 'H2' && e.target.tagName !== 'P') handleMouseDown('college');
+                }}
                 className={`absolute -translate-x-1/2 -translate-y-1/2 p-2 text-center cursor-move transition-all ${
                   activeDrag === 'college' ? 'bg-[#DCFCE7] border-2 border-[#16A34A]' : 'bg-[#DCFCE7]/70 border border-dashed border-[#16A34A] hover:bg-[#DCFCE7]'
                 }`}
@@ -242,7 +265,14 @@ export const Certificates = () => {
                 <span className="absolute -top-2.5 -left-1 bg-[#16A34A] text-white text-[8px] px-1 py-0.5 rounded font-bold uppercase tracking-wider">
                   Institution
                 </span>
-                <p className="text-xs font-serif text-[#172033] uppercase tracking-wider whitespace-nowrap">EventIntel University</p>
+                <p 
+                  contentEditable
+                  suppressContentEditableWarning
+                  onBlur={(e) => setTexts(prev => ({ ...prev, college: e.target.innerText }))}
+                  className="text-xs font-serif text-[#172033] uppercase tracking-wider whitespace-nowrap outline-none cursor-text"
+                >
+                  {texts.college}
+                </p>
               </div>
 
             </div>

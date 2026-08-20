@@ -216,7 +216,7 @@ const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KE
 router.post('/:id/certificates/dispatch', authenticateToken, authorizeRoles('ORGANIZER', 'ADMIN'), upload.single('template'), async (req, res) => {
   try {
     const eventId = req.params.id;
-    const { positions } = req.body;
+    const { positions, texts } = req.body;
     const templateBuffer = req.file?.buffer;
 
     if (!templateBuffer || !positions) {
@@ -254,6 +254,7 @@ router.post('/:id/certificates/dispatch', authenticateToken, authorizeRoles('ORG
     const height = metadata.height || 800;
 
     let successCount = 0;
+    const customTexts = texts ? JSON.parse(texts) : {};
 
     for (const attendance of attendances) {
       const student = attendance.student;
@@ -275,8 +276,8 @@ router.post('/:id/certificates/dispatch', authenticateToken, authorizeRoles('ORG
             .college { font: italic 20px serif; fill: #172033; text-anchor: middle; text-transform: uppercase; letter-spacing: 1px; }
           </style>
           <text x="${nameX}" y="${nameY}" class="name">${student.name}</text>
-          <text x="${titleX}" y="${titleY}" class="title">${event.title}</text>
-          <text x="${collegeX}" y="${collegeY}" class="college">${event.college?.name || 'Central College'}</text>
+          <text x="${titleX}" y="${titleY}" class="title">${customTexts.title || event.title}</text>
+          <text x="${collegeX}" y="${collegeY}" class="college">${customTexts.college || event.college?.name || 'Central College'}</text>
         </svg>
       `;
 
