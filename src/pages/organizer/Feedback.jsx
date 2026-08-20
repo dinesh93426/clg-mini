@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { analyticsService } from '../../services/analyticsService';
+import { MOCK_ORGANIZER_ANALYTICS } from '../../services/mockData';
 import { 
   Sparkles, Smile, Meh, Frown, CheckCircle, 
   AlertCircle, ShieldCheck, ChevronRight, HelpCircle 
@@ -34,7 +35,9 @@ export const FeedbackIntelligence = () => {
     );
   }
 
-  const { feedbackSentiment, feedbackTopics, aiEventSummary } = data;
+  const feedbackSentiment = data.feedbackSentiment || MOCK_ORGANIZER_ANALYTICS.feedbackSentiment;
+  const feedbackTopics = data.feedbackTopics || MOCK_ORGANIZER_ANALYTICS.feedbackTopics;
+  const aiEventSummary = data.aiEventSummary || MOCK_ORGANIZER_ANALYTICS.aiEventSummary;
 
   const donutData = [
     { name: 'Positive', value: feedbackSentiment.positive, color: '#16A34A' },
