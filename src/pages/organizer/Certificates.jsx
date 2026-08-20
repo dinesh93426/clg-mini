@@ -15,6 +15,8 @@ export const Certificates = () => {
 
   const [step, setStep] = useState(1);
   const [templatePreview, setTemplatePreview] = useState(null);
+  const [activeDrag, setActiveDrag] = useState(null);
+  const [successCount, setSuccessCount] = useState(0);
   
   const [positions, setPositions] = useState({
     name: { x: 50, y: 40, width: 75, fontSize: 20 },
@@ -108,7 +110,8 @@ export const Certificates = () => {
         college: texts.college
       }));
 
-      await eventService.dispatchCertificates(id, formData);
+      const result = await eventService.dispatchCertificates(id, formData);
+      setSuccessCount(result?.count || 0);
       setStep(4);
     } catch (err) {
       console.error(err);
@@ -431,9 +434,14 @@ export const Certificates = () => {
             <ShieldCheck size={32} />
           </div>
           
-          <h2 className="text-xl font-bold text-[#172033]">Batch Dispatched Successfully</h2>
+          <h2 className="text-xl font-bold text-[#172033]">
+            {successCount > 0 ? 'Batch Dispatched Successfully' : 'Dispatch Completed with Errors'}
+          </h2>
           <p className="text-xs text-[#64748B] max-w-md leading-relaxed pb-4">
-            The AI engine generated and emailed {eligibleCount} certificates to verified attendees of "{event?.title}". 
+            {successCount > 0 
+              ? `The AI engine generated and emailed ${successCount} out of ${eligibleCount} certificates to verified attendees of "${event?.title}".`
+              : `The dispatch completed, but 0 certificates were successfully emailed. Please check your email provider configuration (SMTP/Resend) on the server.`
+            }
           </p>
 
           <button 
