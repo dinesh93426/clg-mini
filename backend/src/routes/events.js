@@ -87,15 +87,30 @@ router.get('/:id', async (req, res) => {
 // Create event (Organizer/Admin only)
 router.post('/', authenticateToken, authorizeRoles('ORGANIZER', 'ADMIN'), async (req, res) => {
   try {
+    const {
+      title, description, category, venue,
+      date, time, totalSeats, targetAudience, status
+    } = req.body;
+
     const event = await prisma.event.create({
       data: {
-        ...req.body,
+        title: title || 'Untitled Event',
+        description: description || '',
+        category: category || 'Technology',
+        venue: venue || 'Campus Hall',
+        eventDate: date ? new Date(date) : new Date(),
+        startTime: time || '10:00 AM',
+        endTime: time || '12:00 PM',
+        capacity: Number(totalSeats) || 100,
+        targetAudience: targetAudience || 'All Students',
+        status: status || 'PUBLISHED',
         organizerId: req.user.id,
         collegeId: req.user.collegeId
       }
     });
     res.status(201).json(event);
   } catch (error) {
+    console.error('[create event error]', error);
     res.status(500).json({ error: 'Failed to create event' });
   }
 });
