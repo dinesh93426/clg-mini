@@ -431,7 +431,7 @@ router.post('/:id/certificates/dispatch', authenticateToken, authorizeRoles('ORG
         .jpeg({ quality: 90 })
         .toBuffer();
         
-      console.log(`[Email] Certificate PDF generated for student: ${student.name}`);
+      console.log(`[Email] Certificate JPG generated for student: ${student.name}`);
       console.log(`[Email] Sending through email API for student: ${student.name}`);
 
       try {
@@ -444,9 +444,9 @@ router.post('/:id/certificates/dispatch', authenticateToken, authorizeRoles('ORG
           html: `<p>Dear ${student.name},</p><p>Thank you for participating in ${event.title}.</p><p>Please find your certificate attached to this email.</p><br><p>Regards,<br>Campus Events Portal</p>`,
           attachments: [
             {
-              filename: `${student.name.replace(/\s+/g, '_')}_Certificate.pdf`,
+              filename: `${student.name.replace(/\s+/g, '_')}_Certificate.jpg`,
               content: certificateBuffer,
-              contentType: 'application/pdf'
+              contentType: 'image/jpeg'
             }
           ]
         };
