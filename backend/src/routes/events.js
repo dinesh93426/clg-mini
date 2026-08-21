@@ -397,6 +397,15 @@ router.post('/:id/certificates/dispatch', authenticateToken, authorizeRoles('ORG
       });
     };
 
+    const TextToSVG = require('text-to-svg');
+    const path = require('path');
+    
+    // Load fonts
+    const fontSerif = TextToSVG.loadSync(path.join(__dirname, '../../fonts/Lora-BoldItalic.ttf'));
+    const fontSans = TextToSVG.loadSync(path.join(__dirname, '../../fonts/Roboto-Bold.ttf'));
+
+    const getTextPath = (textToSvg, text, options) => textToSvg.getPath(text, options);
+
     for (const attendance of attendances) {
       const student = attendance.student;
       
@@ -409,16 +418,15 @@ router.post('/:id/certificates/dispatch', authenticateToken, authorizeRoles('ORG
       const collegeX = Math.round((pos.college?.x || 50) / 100 * width);
       const collegeY = Math.round((pos.college?.y || 80) / 100 * height);
 
+      const nameStr = escapeXml(student.name);
+      const titleStr = escapeXml(customTexts.title || event.title).toUpperCase();
+      const collegeStr = escapeXml(customTexts.college || event.college?.name || 'Central College').toUpperCase();
+
       const svgText = `
-        <svg width="${width}" height="${height}">
-          <style>
-            .name { font: italic bold 50px serif; fill: #172033; text-anchor: middle; }
-            .title { font: bold 24px sans-serif; fill: #172033; text-anchor: middle; text-transform: uppercase; letter-spacing: 2px; }
-            .college { font: italic 20px serif; fill: #172033; text-anchor: middle; text-transform: uppercase; letter-spacing: 1px; }
-          </style>
-          <text x="${nameX}" y="${nameY}" class="name">${escapeXml(student.name)}</text>
-          <text x="${titleX}" y="${titleY}" class="title">${escapeXml(customTexts.title || event.title)}</text>
-          <text x="${collegeX}" y="${collegeY}" class="college">${escapeXml(customTexts.college || event.college?.name || 'Central College')}</text>
+        <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
+          ${getTextPath(fontSerif, nameStr, { x: nameX, y: nameY, fontSize: 50, anchor: 'center middle', attributes: { fill: '#172033' } })}
+          ${getTextPath(fontSans, titleStr, { x: titleX, y: titleY, fontSize: 24, anchor: 'center middle', attributes: { fill: '#172033' } })}
+          ${getTextPath(fontSerif, collegeStr, { x: collegeX, y: collegeY, fontSize: 20, anchor: 'center middle', attributes: { fill: '#172033' } })}
         </svg>
       `;
 

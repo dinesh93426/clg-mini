@@ -22,28 +22,40 @@ async function generateEventPassBuffer(event, student, registration) {
   if (!qrResponse.ok) throw new Error('Failed to fetch QR code');
   const qrBuffer = Buffer.from(await qrResponse.arrayBuffer());
 
+  const TextToSVG = require('text-to-svg');
+  const path = require('path');
+  
+  // Load fonts
+  const fontRegular = TextToSVG.loadSync(path.join(__dirname, '../../fonts/Roboto-Regular.ttf'));
+  const fontBold = TextToSVG.loadSync(path.join(__dirname, '../../fonts/Roboto-Bold.ttf'));
+
   const width = 600;
   const height = 400;
+
+  // Helper to generate SVG path from text
+  const getTextPath = (textToSvg, text, options) => {
+    return textToSvg.getPath(text, options);
+  };
 
   const svgTemplate = `
     <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
       <rect width="100%" height="100%" fill="#ffffff" rx="16" ry="16"/>
       <rect x="0" y="0" width="${width}" height="100" fill="#FF5A1F" rx="16" ry="16"/>
       
-      <text x="30" y="45" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#ffffff">EVENT PASS</text>
-      <text x="30" y="75" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="#ffffff">${event.title.substring(0, 35).replace(/&/g, '&amp;')}</text>
+      ${getTextPath(fontBold, 'EVENT PASS', { x: 30, y: 45, fontSize: 20, anchor: 'left top', attributes: { fill: '#ffffff' } })}
+      ${getTextPath(fontBold, event.title.substring(0, 35), { x: 30, y: 75, fontSize: 28, anchor: 'left top', attributes: { fill: '#ffffff' } })}
       
-      <text x="30" y="140" font-family="Arial, sans-serif" font-size="14" fill="#64748B">ATTENDEE</text>
-      <text x="30" y="165" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#172033">${student.name.replace(/&/g, '&amp;')}</text>
+      ${getTextPath(fontRegular, 'ATTENDEE', { x: 30, y: 140, fontSize: 14, anchor: 'left top', attributes: { fill: '#64748B' } })}
+      ${getTextPath(fontBold, student.name, { x: 30, y: 165, fontSize: 22, anchor: 'left top', attributes: { fill: '#172033' } })}
       
-      <text x="30" y="210" font-family="Arial, sans-serif" font-size="14" fill="#64748B">DATE &amp; TIME</text>
-      <text x="30" y="235" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#172033">${new Date(event.eventDate).toLocaleDateString()} at ${event.startTime}</text>
+      ${getTextPath(fontRegular, 'DATE & TIME', { x: 30, y: 210, fontSize: 14, anchor: 'left top', attributes: { fill: '#64748B' } })}
+      ${getTextPath(fontBold, `${new Date(event.eventDate).toLocaleDateString()} at ${event.startTime}`, { x: 30, y: 235, fontSize: 16, anchor: 'left top', attributes: { fill: '#172033' } })}
       
-      <text x="30" y="280" font-family="Arial, sans-serif" font-size="14" fill="#64748B">VENUE</text>
-      <text x="30" y="305" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#172033">${event.venue.substring(0, 40).replace(/&/g, '&amp;')}</text>
+      ${getTextPath(fontRegular, 'VENUE', { x: 30, y: 280, fontSize: 14, anchor: 'left top', attributes: { fill: '#64748B' } })}
+      ${getTextPath(fontBold, event.venue.substring(0, 40), { x: 30, y: 305, fontSize: 16, anchor: 'left top', attributes: { fill: '#172033' } })}
 
-      <text x="30" y="350" font-family="Arial, sans-serif" font-size="14" fill="#64748B">REGISTRATION ID</text>
-      <text x="30" y="375" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#172033">${registration.id.split('-')[0]}</text>
+      ${getTextPath(fontRegular, 'REGISTRATION ID', { x: 30, y: 350, fontSize: 14, anchor: 'left top', attributes: { fill: '#64748B' } })}
+      ${getTextPath(fontBold, registration.id.split('-')[0], { x: 30, y: 375, fontSize: 16, anchor: 'left top', attributes: { fill: '#172033' } })}
     </svg>
   `;
 
