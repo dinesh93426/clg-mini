@@ -9,12 +9,16 @@ const express = require('express');
 const router = express.Router();
 const prisma = require('../db');
 const { authenticateToken, authorizeRoles } = require('../middleware/auth');
+const { sendRegistrationConfirmationEmail } = require('../services/emailService');
 
 // Register for an event
 router.post('/events/:eventId/register', authenticateToken, authorizeRoles('STUDENT'), async (req, res) => {
   try {
     const { eventId } = req.params;
     const studentId = req.user.userId;
+
+    const student = await prisma.student.findUnique({ where: { id: studentId } });
+    if (!student) return res.status(404).json({ error: 'Student not found' });
 
     const event = await prisma.event.findUnique({ where: { id: eventId } });
     if (!event) return res.status(404).json({ error: 'Event not found' });
@@ -40,7 +44,9 @@ router.post('/events/:eventId/register', authenticateToken, authorizeRoles('STUD
       await prisma.eventInteraction.create({
         data: { studentId, eventId, interactionType: 'REGISTER' }
       });
-      return res.json(updated);
+      
+      const emailRes = await sendRegistrationConfirmationEmail({ student, event, registration: updated });
+      return res.json({ success: true, registration: updated, email: emailRes });
     }
 
     const registration = await prisma.registration.create({
@@ -50,7 +56,9 @@ router.post('/events/:eventId/register', authenticateToken, authorizeRoles('STUD
       data: { studentId, eventId, interactionType: 'REGISTER' }
     });
 
-    res.status(201).json(registration);
+    const emailRes = await sendRegistrationConfirmationEmail({ student, event, registration });
+
+    res.status(201).json({ success: true, registration, email: emailRes });
   } catch (err) {
     console.error('[register]', err);
     res.status(500).json({ error: 'Registration failed' });
@@ -122,6 +130,34 @@ router.post('/registrations/:regId/cancel', authenticateToken, authorizeRoles('S
   } catch (err) {
     console.error('[cancel]', err);
     res.status(500).json({ error: 'Cancellation failed' });
+  }
+});
+
+// Resend Event Pass to Email
+router.post('/registrations/:regId/resend-pass', authenticateToken, authorizeRoles('STUDENT'), async (req, res) => {
+  try {
+    const { regId } = req.params;
+    const studentId = req.user.userId;
+
+    const registration = await prisma.registration.findUnique({
+      where: { id: regId },
+      include: { event: true, student: true }
+    });
+
+    if (!registration) return res.status(404).json({ error: 'Registration not found' });
+    if (registration.studentId !== studentId) return res.status(403).json({ error: 'Access denied' });
+    if (registration.status !== 'REGISTERED') return res.status(400).json({ error: 'Registration is not active' });
+
+    const emailRes = await sendRegistrationConfirmationEmail({
+      student: registration.student,
+      event: registration.event,
+      registration
+    });
+
+    res.json({ success: true, email: emailRes });
+  } catch (err) {
+    console.error('[resend-pass]', err);
+    res.status(500).json({ error: 'Failed to resend pass' });
   }
 });
 

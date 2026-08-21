@@ -23,6 +23,8 @@ export const Registrations = () => {
 
   const [showQRModal, setShowQRModal] = useState(false);
   const [selectedQRReg, setSelectedQRReg] = useState(null);
+  const [isResending, setIsResending] = useState(false);
+  const [resendResult, setResendResult] = useState(null);
 
   const [showCertModal, setShowCertModal] = useState(false);
   const [selectedCertReg, setSelectedCertReg] = useState(null);
@@ -60,6 +62,24 @@ export const Registrations = () => {
     setComment('');
     setFeedbackResult(null);
     setShowFeedbackModal(true);
+  };
+
+  const handleResendPass = async () => {
+    if (!selectedQRReg) return;
+    setIsResending(true);
+    setResendResult(null);
+    try {
+      const result = await eventService.resendEventPass(selectedQRReg.id);
+      if (result.success) {
+        setResendResult({ success: true, message: 'Pass sent to your email successfully.' });
+      } else {
+        setResendResult({ success: false, message: 'Failed to resend pass.' });
+      }
+    } catch (err) {
+      setResendResult({ success: false, message: err.message || 'Failed to resend pass.' });
+    } finally {
+      setIsResending(false);
+    }
   };
 
   const handleOpenQR = (reg) => {
@@ -146,6 +166,26 @@ export const Registrations = () => {
             <p className="text-[11px] text-[#64748B] max-w-[220px] mx-auto leading-relaxed">
               Present this QR code to the event organizers at the venue entrance for automated attendance.
             </p>
+
+            <div className="pt-2 border-t border-[#E2E8F0]">
+              {resendResult && (
+                <div className={`text-[10px] p-2 rounded mb-2 ${resendResult.success ? 'bg-[#DCFCE7] text-[#16A34A]' : 'bg-[#FEE2E2] text-[#DC2626]'}`}>
+                  {resendResult.message}
+                </div>
+              )}
+              <button 
+                onClick={handleResendPass}
+                disabled={isResending}
+                className="w-full py-2 bg-[#F8FAFC] border border-[#E2E8F0] hover:bg-[#F1F5F9] text-[#172033] rounded-lg text-xs font-semibold shadow-sm flex items-center justify-center gap-1.5 transition-colors disabled:opacity-50"
+              >
+                {isResending ? (
+                  <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-[#172033] border-t-transparent" />
+                ) : (
+                  <Download size={14} /> 
+                )}
+                <span>Resend Pass to Email</span>
+              </button>
+            </div>
           </div>
         </div>
       )}

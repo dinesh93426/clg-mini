@@ -43,6 +43,12 @@ export const eventService = {
     return response.data;
   },
 
+  resendEventPass: async (regId) => {
+    await simulateNetworkDelay(300);
+    const response = await apiClient.post(`/registrations/${regId}/resend-pass`);
+    return response.data;
+  },
+
   getRegistrations: async () => {
     await simulateNetworkDelay(300);
     const response = await apiClient.get('/registrations');

@@ -20,6 +20,7 @@ export const EventDetails = () => {
   const [registering, setRegistering] = useState(false);
   const [showSuccessMsg, setShowSuccessMsg] = useState(false);
   const [registrationData, setRegistrationData] = useState(null);
+  const [emailStatus, setEmailStatus] = useState(null);
 
   // Feedback State
   const [rating, setRating] = useState(0);
@@ -87,9 +88,17 @@ export const EventDetails = () => {
     
     setRegistering(true);
     try {
-      await eventService.registerForEvent(event.id, user?.id);
+      const response = await eventService.registerForEvent(event.id, user?.id);
+      
+      // Handle the new response format { success, registration, email }
+      const reg = response.registration || response;
       setRegistered(true);
+      setRegistrationData(reg);
       setShowSuccessMsg(true);
+      if (response.email) {
+        setEmailStatus(response.email);
+      }
+
       setEvent(prev => ({
         ...prev,
         availableSeats: Math.max(0, prev.availableSeats - 1),
@@ -381,9 +390,26 @@ export const EventDetails = () => {
 
             {/* Success message on registration */}
             {showSuccessMsg && (
-              <div className="p-2.5 bg-[#DCFCE7] border border-[#BBF7D0] text-[#16A34A] rounded-lg text-xs text-center font-medium flex items-center gap-1.5 justify-center">
-                <ShieldCheck size={14} />
-                <span>Seat confirmed successfully</span>
+              <div className="p-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl text-xs space-y-2">
+                <div className="flex items-center gap-1.5 text-[#16A34A] font-semibold">
+                  <ShieldCheck size={14} />
+                  <span>Registration Successful</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-[#16A34A] font-semibold">
+                  <ShieldCheck size={14} />
+                  <span>Event Pass Generated</span>
+                </div>
+                {emailStatus && emailStatus.success ? (
+                  <div className="flex items-center gap-1.5 text-[#16A34A] font-semibold">
+                    <ShieldCheck size={14} />
+                    <span>Confirmation email sent to your inbox</span>
+                  </div>
+                ) : emailStatus && !emailStatus.success ? (
+                  <div className="flex gap-1.5 text-[#D97706] font-medium items-start">
+                    <AlertTriangle size={14} className="shrink-0 mt-0.5" />
+                    <span>Confirmation email could not be sent. Please try again from the portal.</span>
+                  </div>
+                ) : null}
               </div>
             )}
 
