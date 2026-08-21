@@ -1,8 +1,38 @@
 const express = require('express');
 const { authenticateToken, authorizeRoles } = require('../middleware/auth');
 const prisma = require('../db');
+const nodemailer = require('nodemailer');
 
 const router = express.Router();
+
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: Number(process.env.SMTP_PORT),
+  secure: Number(process.env.SMTP_PORT) === 465,
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASSWORD
+  },
+  connectionTimeout: 30000,
+  greetingTimeout: 30000,
+  socketTimeout: 30000
+});
+
+transporter.verify()
+  .then(() => {
+    console.log('[SMTP] Host:', process.env.SMTP_HOST);
+    console.log('[SMTP] Port:', process.env.SMTP_PORT);
+    console.log('[SMTP] User configured:', !!process.env.SMTP_USER);
+    console.log('[SMTP] Password configured:', !!process.env.SMTP_PASSWORD);
+    console.log('[SMTP] Verifying connection...');
+    console.log('[SMTP] Connection successful');
+  })
+  .catch((err) => {
+    console.error('[SMTP] Connection failed');
+    console.error('[SMTP] Code:', err.code);
+    console.error('[SMTP] Command:', err.command);
+    console.error('[SMTP] Message:', err.message);
+  });
 
 function normaliseEvent(ev) {
   const dateObj = ev.eventDate ? new Date(ev.eventDate) : null;
@@ -286,11 +316,6 @@ router.post('/:id/certificates/dispatch', authenticateToken, authorizeRoles('ORG
       return res.status(400).json({ error: 'Template image and positions are required' });
     }
 
-    if (!process.env.BREVO_API_KEY) {
-      console.error('[Email] Email provider request failed: No BREVO_API_KEY configured on the server.');
-      return res.status(500).json({ error: 'No email service configured on the server. Please check BREVO_API_KEY environment variable.' });
-    }
-
     const pos = JSON.parse(positions);
     const event = await prisma.event.findUnique({
       where: { id: eventId },
@@ -375,46 +400,48 @@ router.post('/:id/certificates/dispatch', authenticateToken, authorizeRoles('ORG
       console.log(`[Email] Sending through email API for student: ${student.name}`);
 
       try {
-        const senderEmail = process.env.SENDER_EMAIL || 'dineshsivakumar9342@gmail.com';
+        const senderEmail = process.env.SMTP_FROM || process.env.SMTP_USER || 'dineshsivakumar9342@gmail.com';
         
-        const payload = {
-          sender: { name: 'EventIntel', email: senderEmail },
-          to: [{ email: student.email, name: student.name }],
+        const mailOptions = {
+          from: senderEmail,
+          to: student.email,
           subject: `Certificate of Participation - ${event.title}`,
-          htmlContent: `<p>Dear ${student.name},</p><p>Thank you for participating in ${event.title}.</p><p>Please find your certificate attached to this email.</p><br><p>Regards,<br>Campus Events Portal</p>`,
-          attachment: [
+          html: `<p>Dear ${student.name},</p><p>Thank you for participating in ${event.title}.</p><p>Please find your certificate attached to this email.</p><br><p>Regards,<br>Campus Events Portal</p>`,
+          attachments: [
             {
-              name: `${student.name.replace(/\s+/g, '_')}_Certificate.pdf`,
-              content: certificateBuffer.toString('base64')
+              filename: `${student.name.replace(/\s+/g, '_')}_Certificate.pdf`,
+              content: certificateBuffer,
+              contentType: 'application/pdf'
             }
           ]
         };
 
-        const response = await fetch('https://api.brevo.com/v3/smtp/email', {
-          method: 'POST',
-          headers: {
-            'accept': 'application/json',
-            'api-key': process.env.BREVO_API_KEY,
-            'content-type': 'application/json'
-          },
-          body: JSON.stringify(payload)
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          throw new Error(errorData.message || `Brevo API returned status ${response.status}`);
-        }
+        const info = await transporter.sendMail(mailOptions);
         
-        console.log(`[Email] Email provider accepted message for student: ${student.name}`);
+        console.log(`[Email] Gmail accepted message for student: ${student.name}. MessageId: ${info.messageId}`);
         console.log(`[Email] Certificate email sent successfully for student: ${student.name}`);
         successCount++;
       } catch (e) {
         failedCount++;
-        const errorType = e.message.includes('Brevo API') ? 'Provider Rejection' : 'API Connection Error';
-        console.error(`[Email] Email provider request failed for student ${student.id}`);
+        let errorType = 'SMTP Error';
+        if (e.code === 'ETIMEDOUT') errorType = 'SMTP network connection problem';
+        else if (e.code === 'EAUTH') errorType = 'Gmail authentication/App Password problem';
+        else if (e.code === 'ECONNREFUSED') errorType = 'SMTP Connection Refused';
+        else if (e.code === 'ENOTFOUND') errorType = 'SMTP hostname/DNS problem';
+        
+        console.error(`[Email] SMTP request failed for student ${student.id}`);
         console.error(`[Email] Status: ${errorType}`);
-        console.error(`[Email] Error: ${e.message}`);
-        errors.push({ studentId: student.id, type: errorType, message: e.message });
+        console.error(`[Email] Error Code: ${e.code}`);
+        console.error(`[Email] Error Message: ${e.message}`);
+        
+        const safeErrorMsg = errorType || 'SMTP Connection Error';
+        errors.push({ 
+          studentId: student.id, 
+          email: student.email,
+          status: 'failed', 
+          type: 'SMTP Error',
+          message: safeErrorMsg 
+        });
       }
     }
 
