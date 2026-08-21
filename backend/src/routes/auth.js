@@ -102,14 +102,68 @@ router.post('/organizer/login', async (req, res) => {
 });
 
 // --- ADMIN AUTH ---
+router.post('/admin/register', async (req, res) => {
+  const { name, email, password, collegeName, domain } = req.body;
+  try {
+    const existing = await prisma.admin.findUnique({ where: { email } });
+    if (existing) return res.status(400).json({ error: 'Admin email already exists' });
+
+    let college = null;
+    if (collegeName) {
+      college = await prisma.college.create({
+        data: { name: collegeName, domain: domain || 'university.edu' }
+      });
+    } else {
+      college = await prisma.college.findFirst();
+      if (!college) {
+        college = await prisma.college.create({
+          data: { name: 'Main Campus University', domain: 'maincampus.edu' }
+        });
+      }
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const admin = await prisma.admin.create({
+      data: {
+        name,
+        email,
+        password: hashedPassword,
+        collegeId: college.id
+      },
+      include: { college: true }
+    });
+
+    const token = generateToken(admin.id, 'ADMIN', admin.collegeId);
+    const { password: _, ...userWithoutPassword } = admin;
+    res.status(201).json({ token, user: { ...userWithoutPassword, role: 'ADMIN', college } });
+  } catch (error) {
+    console.error('[admin/register error]', error);
+    res.status(500).json({ error: 'Failed to register admin' });
+  }
+});
+
 router.post('/admin/login', async (req, res) => {
   const { email, password } = req.body;
   try {
-    const user = await prisma.admin.findUnique({ where: { email } });
+    let user = await prisma.admin.findUnique({ where: { email }, include: { college: true } });
     if (!user) return res.status(401).json({ error: 'Invalid credentials' });
 
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) return res.status(401).json({ error: 'Invalid credentials' });
+
+    if (!user.collegeId) {
+      let college = await prisma.college.findFirst();
+      if (!college) {
+        college = await prisma.college.create({
+          data: { name: 'Main Campus University', domain: 'maincampus.edu' }
+        });
+      }
+      user = await prisma.admin.update({
+        where: { id: user.id },
+        data: { collegeId: college.id },
+        include: { college: true }
+      });
+    }
 
     const token = generateToken(user.id, 'ADMIN', user.collegeId);
     const { password: _, ...userWithoutPassword } = user;

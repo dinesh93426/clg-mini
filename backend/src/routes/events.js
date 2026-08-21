@@ -1,13 +1,14 @@
 const express = require('express');
-const { authenticateToken, authorizeRoles } = require('../middleware/auth');
+const { authenticateToken, optionalAuthenticateToken, authorizeRoles } = require('../middleware/auth');
+const { getAuthorizedScope, getScopedEventWhere } = require('../middleware/scope');
 const prisma = require('../db');
 const nodemailer = require('nodemailer');
 
 const router = express.Router();
 
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT),
+  host: process.env.SMTP_HOST || 'smtp.gmail.com',
+  port: Number(process.env.SMTP_PORT) || 465,
   secure: Number(process.env.SMTP_PORT) === 465,
   auth: {
     user: process.env.SMTP_USER,
@@ -74,41 +75,70 @@ function normaliseEvent(ev) {
   };
 }
 
-// Get all events
-router.get('/', async (req, res) => {
+// Get all events with strict scope enforcement
+router.get('/', optionalAuthenticateToken, async (req, res) => {
   try {
-    const where = {};
-    if (req.query.organizerId) {
-      where.organizerId = req.query.organizerId;
+    const scope = getAuthorizedScope(req);
+    const filterWhere = {};
+
+    if (req.query.category && req.query.category !== 'All') {
+      filterWhere.category = { equals: req.query.category, mode: 'insensitive' };
     }
+
+    if (req.query.search) {
+      filterWhere.OR = [
+        { title: { contains: req.query.search, mode: 'insensitive' } },
+        { description: { contains: req.query.search, mode: 'insensitive' } },
+        { organizer: { name: { contains: req.query.search, mode: 'insensitive' } } }
+      ];
+    }
+
+    // Build scoped query
+    const where = getScopedEventWhere(scope, filterWhere);
 
     const events = await prisma.event.findMany({
       where,
       include: {
-        organizer: { select: { name: true, organizationName: true, department: true } },
+        organizer: { select: { id: true, name: true, organizationName: true, department: true, collegeId: true } },
         college: { select: { id: true, name: true } },
-        _count: { select: { registrations: true } }
+        _count: { select: { registrations: true, attendances: { where: { status: 'PRESENT' } } } }
       },
       orderBy: { eventDate: 'asc' }
     });
+
     res.json(events.map(normaliseEvent));
   } catch (error) {
+    console.error('[GET /events error]', error);
     res.status(500).json({ error: 'Failed to fetch events' });
   }
 });
 
-// Get event by id
-router.get('/:id', async (req, res) => {
+// Get event by id with scoped authorization check
+router.get('/:id', optionalAuthenticateToken, async (req, res) => {
   try {
+    const scope = getAuthorizedScope(req);
     const event = await prisma.event.findUnique({
       where: { id: req.params.id },
       include: {
-        organizer: { select: { name: true, organizationName: true, department: true } },
+        organizer: { select: { id: true, name: true, organizationName: true, department: true, collegeId: true } },
         college: { select: { id: true, name: true } },
         _count: { select: { registrations: true, attendances: { where: { status: 'PRESENT' } } } }
       }
     });
+
     if (!event) return res.status(404).json({ error: 'Event not found' });
+
+    // Enforce ownership if requester is Admin or Organizer
+    if (scope.isAdmin && scope.collegeId && event.collegeId !== scope.collegeId) {
+      return res.status(403).json({ error: 'Forbidden: Event does not belong to your college.' });
+    }
+    if (scope.isOrganizer && event.organizerId !== scope.organizerId) {
+      // If organizer is viewing their own events catalogue
+      if (event.status !== 'PUBLISHED') {
+        return res.status(403).json({ error: 'Forbidden: You can only view your own events.' });
+      }
+    }
+
     res.json(normaliseEvent(event));
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch event' });
@@ -123,6 +153,12 @@ router.post('/', authenticateToken, authorizeRoles('ORGANIZER', 'ADMIN'), async 
       date, time, totalSeats, targetAudience, status
     } = req.body;
 
+    let collegeId = req.user.collegeId;
+    if (!collegeId && req.user.role === 'ORGANIZER') {
+      const org = await prisma.organizer.findUnique({ where: { id: req.user.id } });
+      collegeId = org?.collegeId || null;
+    }
+
     const event = await prisma.event.create({
       data: {
         title: title || 'Untitled Event',
@@ -136,7 +172,7 @@ router.post('/', authenticateToken, authorizeRoles('ORGANIZER', 'ADMIN'), async 
         targetAudience: targetAudience || 'All Students',
         status: status || 'PUBLISHED',
         organizerId: req.user.id,
-        collegeId: req.user.collegeId
+        collegeId: collegeId
       }
     });
     res.status(201).json(event);
@@ -149,7 +185,6 @@ router.post('/', authenticateToken, authorizeRoles('ORGANIZER', 'ADMIN'), async 
 // Update event (Organizer/Admin only)
 router.put('/:id', authenticateToken, authorizeRoles('ORGANIZER', 'ADMIN'), async (req, res) => {
   try {
-    // Only allow organizer to update their own event, or admin can update any
     const existingEvent = await prisma.event.findUnique({ where: { id: req.params.id } });
     if (!existingEvent) return res.status(404).json({ error: 'Event not found' });
     

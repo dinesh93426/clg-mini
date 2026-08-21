@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
-import { eventService, eventsList } from '../../services/eventService';
+import { eventService } from '../../services/eventService';
 import { 
   Search, SlidersHorizontal, Plus, Calendar, MapPin, 
   Trash2, Edit3, BarChart3, AlertCircle, ChevronLeft, ChevronRight 

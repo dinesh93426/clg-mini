@@ -365,8 +365,11 @@ router.post('/poster/:posterId/publish', authenticateToken, async (req, res) => 
 
 // ─── Direct PostgreSQL / Prisma Fallback Generators ────────────────────────
 
-async function getOrganizerDashboardFallback(organizerId) {
-  const where = organizerId ? { organizerId } : {};
+async function getOrganizerDashboardFallback(organizerId, collegeId = null) {
+  const where = {};
+  if (organizerId) where.organizerId = organizerId;
+  if (collegeId) where.collegeId = collegeId;
+
   const events = await prisma.event.findMany({
     where,
     include: {
@@ -388,8 +391,12 @@ async function getOrganizerDashboardFallback(organizerId) {
   const totalAtts = events.reduce((s, e) => s + (e._count?.attendances || 0), 0);
   const attRate = totalRegs > 0 ? parseFloat(((totalAtts / totalRegs) * 100).toFixed(1)) : 0;
 
+  const fbWhere = {};
+  if (organizerId) fbWhere.event = { organizerId };
+  if (collegeId) fbWhere.event = { collegeId };
+
   const feedbacks = await prisma.feedback.findMany({
-    where: organizerId ? { event: { organizerId } } : {}
+    where: fbWhere
   });
 
   const totalFb = feedbacks.length;
@@ -728,8 +735,14 @@ router.get('/analytics/events', authenticateToken, async (req, res) => {
     // Fall back to direct database calculation
   }
   try {
-    const fallback = await getOrganizerDashboardFallback(req.user.role === 'ORGANIZER' ? (req.user.userId || req.user.id) : null);
-    res.json(fallback.events);
+    if (req.user.role === 'ADMIN') {
+      const fallback = await getAdminDashboardFallback(req.user.collegeId);
+      const orgFallback = await getOrganizerDashboardFallback(null, req.user.collegeId);
+      res.json(orgFallback.events);
+    } else {
+      const fallback = await getOrganizerDashboardFallback(req.user.userId || req.user.id);
+      res.json(fallback.events);
+    }
   } catch (dbErr) {
     console.error('[ai/analytics/events fallback error]', dbErr);
     res.status(500).json({ error: 'Failed to retrieve event performance analytics.' });
@@ -751,8 +764,13 @@ router.get('/analytics/sentiment', authenticateToken, async (req, res) => {
     // Fall back
   }
   try {
-    const fallback = await getOrganizerDashboardFallback(req.user.role === 'ORGANIZER' ? (req.user.userId || req.user.id) : null);
-    res.json(fallback.sentiment);
+    if (req.user.role === 'ADMIN') {
+      const fallback = await getAdminDashboardFallback(req.user.collegeId);
+      res.json(fallback.sentiment);
+    } else {
+      const fallback = await getOrganizerDashboardFallback(req.user.userId || req.user.id);
+      res.json(fallback.sentiment);
+    }
   } catch (dbErr) {
     console.error('[ai/analytics/sentiment fallback error]', dbErr);
     res.status(500).json({ error: 'Failed to retrieve sentiment analytics.' });
@@ -774,8 +792,13 @@ router.get('/analytics/demand', authenticateToken, async (req, res) => {
     // Fall back
   }
   try {
-    const fallback = await getOrganizerDashboardFallback(req.user.role === 'ORGANIZER' ? (req.user.userId || req.user.id) : null);
-    res.json({ upcomingEventsForecast: fallback.demand });
+    if (req.user.role === 'ADMIN') {
+      const fallback = await getAdminDashboardFallback(req.user.collegeId);
+      res.json(fallback.demand);
+    } else {
+      const fallback = await getOrganizerDashboardFallback(req.user.userId || req.user.id);
+      res.json({ upcomingEventsForecast: fallback.demand });
+    }
   } catch (dbErr) {
     console.error('[ai/analytics/demand fallback error]', dbErr);
     res.status(500).json({ error: 'Failed to retrieve demand analytics.' });
@@ -849,8 +872,13 @@ router.get('/dashboard/events', authenticateToken, async (req, res) => {
     // Fall back
   }
   try {
-    const fallback = await getOrganizerDashboardFallback(req.user.role === 'ORGANIZER' ? (req.user.userId || req.user.id) : null);
-    res.json(fallback.events);
+    if (req.user.role === 'ADMIN') {
+      const fallback = await getOrganizerDashboardFallback(null, req.user.collegeId);
+      res.json(fallback.events);
+    } else {
+      const fallback = await getOrganizerDashboardFallback(req.user.userId || req.user.id);
+      res.json(fallback.events);
+    }
   } catch (dbErr) {
     console.error('[ai/dashboard/events fallback error]', dbErr);
     res.status(500).json({ error: 'Failed to retrieve dashboard events.' });
@@ -872,8 +900,13 @@ router.get('/dashboard/demand', authenticateToken, async (req, res) => {
     // Fall back
   }
   try {
-    const fallback = await getOrganizerDashboardFallback(req.user.role === 'ORGANIZER' ? (req.user.userId || req.user.id) : null);
-    res.json({ upcomingEventsForecast: fallback.demand });
+    if (req.user.role === 'ADMIN') {
+      const fallback = await getAdminDashboardFallback(req.user.collegeId);
+      res.json(fallback.demand);
+    } else {
+      const fallback = await getOrganizerDashboardFallback(req.user.userId || req.user.id);
+      res.json({ upcomingEventsForecast: fallback.demand });
+    }
   } catch (dbErr) {
     console.error('[ai/dashboard/demand fallback error]', dbErr);
     res.status(500).json({ error: 'Failed to retrieve dashboard demand intelligence.' });
@@ -895,8 +928,13 @@ router.get('/dashboard/sentiment', authenticateToken, async (req, res) => {
     // Fall back
   }
   try {
-    const fallback = await getOrganizerDashboardFallback(req.user.role === 'ORGANIZER' ? (req.user.userId || req.user.id) : null);
-    res.json(fallback.sentiment);
+    if (req.user.role === 'ADMIN') {
+      const fallback = await getAdminDashboardFallback(req.user.collegeId);
+      res.json(fallback.sentiment);
+    } else {
+      const fallback = await getOrganizerDashboardFallback(req.user.userId || req.user.id);
+      res.json(fallback.sentiment);
+    }
   } catch (dbErr) {
     console.error('[ai/dashboard/sentiment fallback error]', dbErr);
     res.status(500).json({ error: 'Failed to retrieve dashboard sentiment intelligence.' });
@@ -922,8 +960,13 @@ router.get('/dashboard/alerts', authenticateToken, async (req, res) => {
     // Fall back
   }
   try {
-    const fallback = await getOrganizerDashboardFallback(req.user.role === 'ORGANIZER' ? (req.user.userId || req.user.id) : null);
-    res.json({ alerts: fallback.alerts });
+    if (req.user.role === 'ADMIN') {
+      const fallback = await getOrganizerDashboardFallback(null, req.user.collegeId);
+      res.json({ alerts: fallback.alerts });
+    } else {
+      const fallback = await getOrganizerDashboardFallback(req.user.userId || req.user.id);
+      res.json({ alerts: fallback.alerts });
+    }
   } catch (dbErr) {
     console.error('[ai/dashboard/alerts fallback error]', dbErr);
     res.status(500).json({ error: 'Failed to retrieve early warning alerts.' });

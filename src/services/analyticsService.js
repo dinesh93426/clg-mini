@@ -1,127 +1,67 @@
 import apiClient, { DEMO_MODE, simulateNetworkDelay } from './api';
-import { MOCK_ORGANIZER_ANALYTICS, MOCK_ADMIN_ANALYTICS, MOCK_STUDENTS_LIST, MOCK_ORGANIZERS_LIST } from './mockData';
 
 export const analyticsService = {
   getOrganizerOverview: async () => {
-    await simulateNetworkDelay(500);
-    if (DEMO_MODE) {
-      return MOCK_ORGANIZER_ANALYTICS;
-    }
-    try {
-      const response = await apiClient.get('/organizer/analytics/overview');
-      return response.data;
-    } catch (e) {
-      console.warn("Organizer analytics fetch failed, returning empty fallback", e);
-      return {
-        totalEvents: 0,
-        publishedEvents: 0,
-        completedEvents: 0,
-        totalRegistrations: 0,
-        totalAttended: 0,
-        attendanceRate: 0,
-        avgRating: 0,
-        upcoming: [],
-        categoryBreakdown: [],
-        events: []
-      };
-    }
+    await simulateNetworkDelay(200);
+    const response = await apiClient.get('/organizer/analytics/overview');
+    return response.data;
   },
 
   getAdminOverview: async () => {
-    await simulateNetworkDelay(600);
-    if (DEMO_MODE) {
-      return MOCK_ADMIN_ANALYTICS;
-    }
+    await simulateNetworkDelay(200);
     const response = await apiClient.get('/admin/analytics/overview');
     return response.data;
   },
 
   getStudentIntelligence: async () => {
-    await simulateNetworkDelay(400);
-    if (DEMO_MODE) {
-      return {
-        clusters: MOCK_ADMIN_ANALYTICS.studentEngagement.clusters,
-        departmentParticipation: MOCK_ADMIN_ANALYTICS.studentEngagement.departmentParticipation,
-        students: MOCK_STUDENTS_LIST
-      };
-    }
+    await simulateNetworkDelay(200);
     const response = await apiClient.get('/admin/analytics/students');
     return response.data;
   },
 
   getEventIntelligence: async () => {
-    await simulateNetworkDelay(400);
-    if (DEMO_MODE) {
-      return MOCK_ADMIN_ANALYTICS.eventIntelligence;
-    }
+    await simulateNetworkDelay(200);
     const response = await apiClient.get('/admin/analytics/events');
     return response.data;
   },
 
   getSentimentIntelligence: async () => {
-    await simulateNetworkDelay(500);
-    if (DEMO_MODE) {
-      return MOCK_ADMIN_ANALYTICS.sentimentIntelligence;
-    }
+    await simulateNetworkDelay(200);
     const response = await apiClient.get('/admin/analytics/feedback');
     return response.data;
   },
 
   getDemandPredictions: async () => {
-    await simulateNetworkDelay(500);
-    if (DEMO_MODE) {
-      return MOCK_ADMIN_ANALYTICS.predictions;
-    }
+    await simulateNetworkDelay(200);
     const response = await apiClient.get('/admin/analytics/predictions');
     return response.data;
   },
 
   getAIInsights: async () => {
-    await simulateNetworkDelay(400);
-    if (DEMO_MODE) {
-      return MOCK_ADMIN_ANALYTICS.aiInsights;
-    }
+    await simulateNetworkDelay(200);
     const response = await apiClient.get('/admin/analytics/insights');
     return response.data;
   },
 
   getOrganizerDashboard: async () => {
-    await simulateNetworkDelay(400);
-    if (DEMO_MODE) {
-      return MOCK_ORGANIZER_ANALYTICS;
-    }
-    try {
-      const response = await apiClient.get('/ai/dashboard/organizer');
-      return response.data;
-    } catch (e) {
-      // Gracefully fallback to mock data if API fails
-      return MOCK_ORGANIZER_ANALYTICS;
-    }
+    await simulateNetworkDelay(200);
+    const response = await apiClient.get('/ai/dashboard/organizer');
+    return response.data;
   },
 
   getAdminDashboard: async () => {
-    await simulateNetworkDelay(400);
-    if (DEMO_MODE) {
-      return MOCK_ADMIN_ANALYTICS;
-    }
-    try {
-      const response = await apiClient.get('/ai/dashboard/admin');
-      return response.data;
-    } catch (e) {
-      throw e;
-    }
+    await simulateNetworkDelay(200);
+    const response = await apiClient.get('/ai/dashboard/admin');
+    return response.data;
   },
 
   getDashboardAlerts: async () => {
-    await simulateNetworkDelay(400);
-    if (DEMO_MODE) {
-      return MOCK_ADMIN_ANALYTICS.aiInsights; // Mock alerts
-    }
+    await simulateNetworkDelay(200);
     try {
       const response = await apiClient.get('/ai/dashboard/alerts');
       return response.data;
     } catch (e) {
-      return MOCK_ADMIN_ANALYTICS.aiInsights;
+      return { alerts: [] };
     }
   },
 
@@ -153,16 +93,12 @@ export const analyticsService = {
   },
 
   getOrganizersList: async () => {
-    await simulateNetworkDelay(300);
-    if (DEMO_MODE) {
-      return MOCK_ORGANIZERS_LIST;
-    }
+    await simulateNetworkDelay(200);
     const response = await apiClient.get('/admin/organizers');
     return response.data;
   },
 
   createOrganizer: async (data) => {
-    // This calls the new Admin-only organizer registration endpoint
     const response = await apiClient.post('/organizer/register', data);
     return response.data;
   },
