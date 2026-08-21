@@ -64,16 +64,19 @@ export const EventDetails = () => {
 
     setFeedbackSubmitting(true);
     try {
-      await eventService.submitFeedback(registrationData.id, {
-        rating,
-        comment
-      });
-      setFeedbackResult('success');
-      // Update registrationData to reflect submission so the form hides
-      setRegistrationData(prev => ({ ...prev, feedbackSubmitted: true, feedbackRating: rating, feedbackText: comment }));
+      const res = await eventService.submitFeedback(registrationData.id, rating, comment);
+      setFeedbackResult(res);
+      // We don't hide the form immediately so they can see the sentiment analysis
+      setRegistrationData(prev => ({ 
+        ...prev, 
+        feedbackSubmitted: true, 
+        feedbackRating: rating, 
+        feedbackText: comment,
+        feedbackSentiment: res.sentiment
+      }));
     } catch (err) {
       console.error(err);
-      setFeedbackResult('error');
+      setFeedbackResult({ error: true });
     } finally {
       setFeedbackSubmitting(false);
     }
@@ -264,8 +267,8 @@ export const EventDetails = () => {
             </div>
           </div>
 
-          {/* Feedback Form (Shown if Event is COMPLETED, User is Registered, ATTENDED, and hasn't submitted yet) */}
-          {registered && registrationData && event.status === 'COMPLETED' && registrationData.attendance === 'PRESENT' && !registrationData.feedbackSubmitted && (
+          {/* Feedback Form (Shown if User is Registered and hasn't submitted yet) */}
+          {registered && registrationData && !registrationData.feedbackSubmitted && (
             <div className="p-6 rounded-2xl bg-[#FFFFFF] border border-[#E2E8F0] shadow-xs space-y-4">
               <h2 className="text-sm font-bold text-[#172033] flex items-center gap-1.5">
                 <MessageSquare size={16} className="text-[#FF5A1F]" /> Rate & Review this Event
@@ -307,9 +310,9 @@ export const EventDetails = () => {
                 </div>
 
                 <div className="flex items-center justify-between">
-                  {feedbackResult === 'success' ? (
+                  {feedbackResult && !feedbackResult.error ? (
                     <span className="text-[#16A34A] text-xs font-semibold flex items-center gap-1"><ShieldCheck size={14}/> Feedback submitted successfully</span>
-                  ) : feedbackResult === 'error' ? (
+                  ) : feedbackResult && feedbackResult.error ? (
                     <span className="text-[#DC2626] text-xs font-medium">Failed to submit feedback. Try again.</span>
                   ) : (
                     <span></span>
@@ -328,7 +331,7 @@ export const EventDetails = () => {
           )}
           
           {registered && registrationData?.feedbackSubmitted && (
-             <div className="p-5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] text-center space-y-2">
+             <div className="p-5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] text-center space-y-2 flex flex-col items-center">
                 <div className="flex justify-center mb-1">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <Star
@@ -339,7 +342,16 @@ export const EventDetails = () => {
                   ))}
                 </div>
                 <h3 className="text-xs font-bold text-[#172033]">You've reviewed this event.</h3>
-                <p className="text-[11px] text-[#64748B]">Thank you for contributing to campus event intelligence!</p>
+                {registrationData.feedbackSentiment && (
+                  <span className={`inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full border mt-2
+                    ${registrationData.feedbackSentiment === 'Positive' ? 'bg-[#DCFCE7] text-[#16A34A] border-[#BBF7D0]' : 
+                      registrationData.feedbackSentiment === 'Negative' ? 'bg-[#FEE2E2] text-[#DC2626] border-[#FECACA]' : 
+                      'bg-[#F8FAFC] text-[#64748B] border-[#E2E8F0]'}`}
+                  >
+                    <Sparkles size={10} /> Sentiment: {registrationData.feedbackSentiment}
+                  </span>
+                )}
+                <p className="text-[11px] text-[#64748B] mt-2">Thank you for contributing to campus event intelligence!</p>
              </div>
           )}
 
