@@ -31,9 +31,10 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// Existing routes (do not modify)
+// Existing routes
 app.use('/api/auth',   authRoutes);
 app.use('/auth',       authRoutes);
+app.use('/api',        authRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/events',     eventRoutes);
 

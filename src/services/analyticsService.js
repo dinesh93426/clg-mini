@@ -99,7 +99,7 @@ export const analyticsService = {
   },
 
   createOrganizer: async (data) => {
-    const response = await apiClient.post('/organizer/register', data);
+    const response = await apiClient.post('/admin/organizers', data);
     return response.data;
   },
 

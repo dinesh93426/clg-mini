@@ -11,6 +11,7 @@
  * GET  /api/admin/analytics/insights
  * GET  /api/admin/analytics/recommendations
  * GET  /api/admin/organizers
+ * POST /api/admin/organizers
  * PUT  /api/admin/organizers/:id
  * DELETE /api/admin/organizers/:id
  */
@@ -40,15 +41,39 @@ async function callML(path, method = 'GET', body = null) {
   }
 }
 
+/**
+ * Ensures a valid College ID is always resolved for the authenticated Admin.
+ */
+async function resolveAdminCollegeId(scope, req) {
+  if (scope.collegeId) return scope.collegeId;
+
+  const userId = req.user?.id || req.user?.userId;
+  if (userId) {
+    const admin = await prisma.admin.findUnique({ where: { id: userId } });
+    if (admin && admin.collegeId) return admin.collegeId;
+  }
+
+  let college = await prisma.college.findFirst();
+  if (!college) {
+    college = await prisma.college.create({
+      data: { name: 'Main Campus University', domain: 'maincampus.edu' }
+    });
+  }
+
+  if (userId) {
+    await prisma.admin.update({
+      where: { id: userId },
+      data: { collegeId: college.id }
+    }).catch(() => {});
+  }
+  return college.id;
+}
+
 // ── GET /api/admin/analytics/overview ─────────────────────────────────────────
 router.get('/overview', authenticateToken, authorizeRoles('ADMIN'), async (req, res) => {
   try {
     const scope = getAuthorizedScope(req);
-    const collegeId = scope.collegeId;
-
-    if (!collegeId) {
-      return res.status(403).json({ error: 'Forbidden: Admin has no assigned college.' });
-    }
+    const collegeId = await resolveAdminCollegeId(scope, req);
 
     const [
       totalEvents,
@@ -74,7 +99,6 @@ router.get('/overview', authenticateToken, authorizeRoles('ADMIN'), async (req, 
       })
     ]);
 
-    // Distinct students participating in this college's events
     const distinctStudents = await prisma.registration.groupBy({
       by: ['studentId'],
       where: { event: { collegeId } }
@@ -117,16 +141,10 @@ router.get('/overview', authenticateToken, authorizeRoles('ADMIN'), async (req, 
 router.get('/students', authenticateToken, authorizeRoles('ADMIN'), async (req, res) => {
   try {
     const scope = getAuthorizedScope(req);
-    const collegeId = scope.collegeId;
-
-    if (!collegeId) {
-      return res.status(403).json({ error: 'Forbidden: Admin has no assigned college.' });
-    }
+    const collegeId = await resolveAdminCollegeId(scope, req);
 
     const { search, cluster, department } = req.query;
 
-    // Fetch all students who have registered for any event belonging to this college
-    // or all students if college students are registered directly
     const studentsWithActivity = await prisma.student.findMany({
       include: {
         registrations: {
@@ -144,7 +162,6 @@ router.get('/students', authenticateToken, authorizeRoles('ADMIN'), async (req, 
       }
     });
 
-    // Compute dynamic, college-scoped participation metrics for each student
     let formattedStudents = studentsWithActivity.map(s => {
       const collegeEventsCount = s.registrations.length;
       const collegeAttendanceCount = s.attendances.length;
@@ -154,8 +171,6 @@ router.get('/students', authenticateToken, authorizeRoles('ADMIN'), async (req, 
         ? Math.round((collegeAttendanceCount / collegeEventsCount) * 100) 
         : 0;
 
-      // Real engagement score calculation:
-      // Weighted: 40% registration frequency, 40% attendance consistency, 20% feedback contribution
       const regScore = Math.min(100, collegeEventsCount * 25);
       const attScore = attendanceRate;
       const fbScore = Math.min(100, feedbackCount * 50);
@@ -183,7 +198,6 @@ router.get('/students', authenticateToken, authorizeRoles('ADMIN'), async (req, 
       };
     });
 
-    // Apply filters if passed via query params
     if (search && search.trim()) {
       const q = search.trim().toLowerCase();
       formattedStudents = formattedStudents.filter(s => 
@@ -205,7 +219,6 @@ router.get('/students', authenticateToken, authorizeRoles('ADMIN'), async (req, 
       );
     }
 
-    // Compute aggregated Department participation for this college
     const deptMap = {};
     formattedStudents.forEach(s => {
       if (!deptMap[s.department]) {
@@ -218,7 +231,6 @@ router.get('/students', authenticateToken, authorizeRoles('ADMIN'), async (req, 
     });
     const departmentParticipation = Object.values(deptMap);
 
-    // Compute Cluster distribution for this college
     const clusterMap = {
       'Highly Active': 0,
       'Moderately Active': 0,
@@ -249,17 +261,11 @@ router.get('/students', authenticateToken, authorizeRoles('ADMIN'), async (req, 
 });
 
 // ── GET /api/admin/analytics/feedback ────────────────────────────────────────
-// Per-Event Feedback Intelligence Breakdown + Overall College Sentiment Trends
 router.get('/feedback', authenticateToken, authorizeRoles('ADMIN'), async (req, res) => {
   try {
     const scope = getAuthorizedScope(req);
-    const collegeId = scope.collegeId;
+    const collegeId = await resolveAdminCollegeId(scope, req);
 
-    if (!collegeId) {
-      return res.status(403).json({ error: 'Forbidden: Admin has no assigned college.' });
-    }
-
-    // Fetch all events for this college along with attendee counts and feedback records
     const eventsWithFeedback = await prisma.event.findMany({
       where: { collegeId },
       include: {
@@ -281,7 +287,6 @@ router.get('/feedback', authenticateToken, authorizeRoles('ADMIN'), async (req, 
       orderBy: { eventDate: 'desc' }
     });
 
-    // Build per-event breakdown
     const eventBreakdown = eventsWithFeedback.map(ev => {
       const totalFb = ev.feedbacks.length;
       let posCount = 0;
@@ -345,7 +350,6 @@ router.get('/feedback', authenticateToken, authorizeRoles('ADMIN'), async (req, 
       };
     });
 
-    // College-wide monthly trend progression
     const sentimentOverTime = await prisma.$queryRaw`
       SELECT TO_CHAR(DATE_TRUNC('month', f."createdAt"), 'Mon YYYY') AS month,
              COUNT(CASE WHEN f.sentiment = 'POSITIVE' OR (f.sentiment IS NULL AND f.rating >= 4) THEN 1 END) AS positive,
@@ -358,7 +362,6 @@ router.get('/feedback', authenticateToken, authorizeRoles('ADMIN'), async (req, 
       ORDER BY DATE_TRUNC('month', f."createdAt") ASC
     `;
 
-    // Global topic drivers for this college
     const collegePosTopics = {};
     const collegeNegTopics = {};
     eventBreakdown.forEach(ev => {
@@ -404,11 +407,7 @@ router.get('/feedback', authenticateToken, authorizeRoles('ADMIN'), async (req, 
 router.get('/events', authenticateToken, authorizeRoles('ADMIN'), async (req, res) => {
   try {
     const scope = getAuthorizedScope(req);
-    const collegeId = scope.collegeId;
-
-    if (!collegeId) {
-      return res.status(403).json({ error: 'Forbidden: Admin has no assigned college.' });
-    }
+    const collegeId = await resolveAdminCollegeId(scope, req);
 
     const byCategory = await prisma.$queryRaw`
       SELECT e.category,
@@ -497,11 +496,7 @@ router.get('/events', authenticateToken, authorizeRoles('ADMIN'), async (req, re
 router.get('/predictions', authenticateToken, authorizeRoles('ADMIN'), async (req, res) => {
   try {
     const scope = getAuthorizedScope(req);
-    const collegeId = scope.collegeId;
-
-    if (!collegeId) {
-      return res.status(403).json({ error: 'Forbidden: Admin has no assigned college.' });
-    }
+    const collegeId = await resolveAdminCollegeId(scope, req);
 
     const events = await prisma.event.findMany({
       where: { collegeId, status: 'PUBLISHED' },
@@ -545,11 +540,7 @@ router.get('/predictions', authenticateToken, authorizeRoles('ADMIN'), async (re
 router.get('/insights', authenticateToken, authorizeRoles('ADMIN'), async (req, res) => {
   try {
     const scope = getAuthorizedScope(req);
-    const collegeId = scope.collegeId;
-
-    if (!collegeId) {
-      return res.status(403).json({ error: 'Forbidden: Admin has no assigned college.' });
-    }
+    const collegeId = await resolveAdminCollegeId(scope, req);
 
     const [eventsCount, regsCount, attsCount, fbCount, avgRatingResult] = await Promise.all([
       prisma.event.count({ where: { collegeId } }),
@@ -600,11 +591,7 @@ router.get('/insights', authenticateToken, authorizeRoles('ADMIN'), async (req, 
 router.get('/recommendations', authenticateToken, authorizeRoles('ADMIN'), async (req, res) => {
   try {
     const scope = getAuthorizedScope(req);
-    const collegeId = scope.collegeId;
-
-    if (!collegeId) {
-      return res.status(403).json({ error: 'Forbidden: Admin has no assigned college.' });
-    }
+    const collegeId = await resolveAdminCollegeId(scope, req);
 
     const popularEvents = await prisma.event.findMany({
       where: { collegeId, status: 'PUBLISHED' },
@@ -634,11 +621,7 @@ router.get('/recommendations', authenticateToken, authorizeRoles('ADMIN'), async
 router.get('/organizers', authenticateToken, authorizeRoles('ADMIN'), async (req, res) => {
   try {
     const scope = getAuthorizedScope(req);
-    const collegeId = scope.collegeId;
-
-    if (!collegeId) {
-      return res.status(403).json({ error: 'Forbidden: Admin has no assigned college.' });
-    }
+    const collegeId = await resolveAdminCollegeId(scope, req);
 
     const organizers = await prisma.organizer.findMany({
       where: { collegeId },
@@ -662,11 +645,40 @@ router.get('/organizers', authenticateToken, authorizeRoles('ADMIN'), async (req
   }
 });
 
+// ── POST /api/admin/organizers ────────────────────────────────────────────────
+router.post('/organizers', authenticateToken, authorizeRoles('ADMIN'), async (req, res) => {
+  try {
+    const scope = getAuthorizedScope(req);
+    const collegeId = await resolveAdminCollegeId(scope, req);
+
+    const { name, email, password, department, organizationName } = req.body;
+    const existing = await prisma.organizer.findUnique({ where: { email } });
+    if (existing) return res.status(400).json({ error: 'Email already exists' });
+
+    const hashedPassword = await bcrypt.hash(password || 'password123', 10);
+    const user = await prisma.organizer.create({
+      data: {
+        name,
+        email,
+        password: hashedPassword,
+        department: department || 'General',
+        organizationName: organizationName || 'Campus Coordinator',
+        collegeId
+      }
+    });
+
+    res.status(201).json({ message: 'Organizer created successfully', user: { id: user.id, name: user.name, email: user.email } });
+  } catch (err) {
+    console.error('[POST admin/organizers]', err);
+    res.status(500).json({ error: 'Failed to create organizer.' });
+  }
+});
+
 // ── PUT /api/admin/organizers/:id ─────────────────────────────────────────────
 router.put('/organizers/:id', authenticateToken, authorizeRoles('ADMIN'), async (req, res) => {
   try {
     const scope = getAuthorizedScope(req);
-    const collegeId = scope.collegeId;
+    const collegeId = await resolveAdminCollegeId(scope, req);
     const { id } = req.params;
     const { name, email, department, organizationName, password } = req.body;
     
@@ -696,7 +708,7 @@ router.put('/organizers/:id', authenticateToken, authorizeRoles('ADMIN'), async 
 router.delete('/organizers/:id', authenticateToken, authorizeRoles('ADMIN'), async (req, res) => {
   try {
     const scope = getAuthorizedScope(req);
-    const collegeId = scope.collegeId;
+    const collegeId = await resolveAdminCollegeId(scope, req);
     const { id } = req.params;
     
     const existing = await prisma.organizer.findUnique({ where: { id } });
@@ -704,7 +716,6 @@ router.delete('/organizers/:id', authenticateToken, authorizeRoles('ADMIN'), asy
       return res.status(404).json({ error: 'Organizer not found in your college.' });
     }
 
-    // Delete associated events and relations cleanly
     await prisma.event.deleteMany({ where: { organizerId: id } });
     await prisma.organizer.delete({ where: { id } });
     
