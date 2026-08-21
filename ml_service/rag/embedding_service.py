@@ -42,15 +42,23 @@ class EmbeddingService:
     _instance: Optional["EmbeddingService"] = None
 
     def __init__(self):
+        import os
         self.model = None
+        self.use_hf_api = False
+        self.hf_api_key = os.environ.get("HUGGINGFACE_API_KEY")
         self.dimension = EMBEDDING_DIM
         logger.info(f"Initializing EmbeddingService...")
-        try:
-            from sentence_transformers import SentenceTransformer
-            self.model = SentenceTransformer(MODEL_NAME)
-            logger.info(f"SentenceTransformer ({MODEL_NAME}) loaded successfully.")
-        except Exception as e:
-            logger.warning(f"SentenceTransformer unavailable ({e}). Using deterministic embedding engine.")
+        
+        if self.hf_api_key and os.environ.get("LLM_PROVIDER") == "huggingface":
+            logger.info("HUGGINGFACE_API_KEY detected. Using Hugging Face Inference API for embeddings to save RAM.")
+            self.use_hf_api = True
+        else:
+            try:
+                from sentence_transformers import SentenceTransformer
+                self.model = SentenceTransformer(MODEL_NAME)
+                logger.info(f"SentenceTransformer ({MODEL_NAME}) loaded successfully.")
+            except Exception as e:
+                logger.warning(f"SentenceTransformer unavailable ({e}). Using deterministic embedding engine.")
 
     @classmethod
     def get_instance(cls) -> "EmbeddingService":
@@ -63,6 +71,27 @@ class EmbeddingService:
             return [0.0] * self.dimension
 
         cleaned = text.strip()
+        
+        if self.use_hf_api and self.hf_api_key:
+            import requests
+            try:
+                response = requests.post(
+                    f"https://api-inference.huggingface.co/pipeline/feature-extraction/sentence-transformers/{MODEL_NAME}",
+                    headers={"Authorization": f"Bearer {self.hf_api_key}"},
+                    json={"inputs": cleaned, "options": {"wait_for_model": True}},
+                    timeout=15
+                )
+                if response.status_code == 200:
+                    vec = response.json()
+                    # Ensure it's a flat list of floats
+                    if isinstance(vec, list) and isinstance(vec[0], list):
+                        vec = vec[0]
+                    return [float(x) for x in vec]
+                else:
+                    logger.warning(f"HF API encode error ({response.status_code}): {response.text}")
+            except Exception as e:
+                logger.warning(f"HF API request error ({e}), falling back to deterministic vector.")
+
         if self.model is not None:
             try:
                 vec = self.model.encode(cleaned, normalize_embeddings=True)
